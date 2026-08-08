@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+
+import 'controllers/session_controller.dart';
+import 'controllers/theme_controller.dart';
+import 'core/theme/app_theme.dart';
+import 'models/models.dart';
+import 'views/auth/auth_views.dart';
+import 'views/guardian/guardian_shell.dart';
+import 'views/owner/owner_shell.dart';
+import 'views/tenant/tenant_shell.dart';
+
+class CarmelitaBootstrap extends StatefulWidget {
+  const CarmelitaBootstrap({super.key});
+
+  @override
+  State<CarmelitaBootstrap> createState() => _CarmelitaBootstrapState();
+}
+
+class _CarmelitaBootstrapState extends State<CarmelitaBootstrap> {
+  final ThemeController themeController = ThemeController.instance;
+  final SessionController sessionController = SessionController.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: Listenable.merge([themeController, sessionController]),
+      builder: (context, _) {
+        return MaterialApp(
+          title: "Carmelita's Dormitory",
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          themeMode: themeController.themeMode,
+          home: _rootForSession(),
+        );
+      },
+    );
+  }
+
+  Widget _rootForSession() {
+    final user = sessionController.currentUser;
+    if (user == null) {
+      return AuthFlow(
+        skipIntro: sessionController.justSignedOut,
+      );
+    }
+
+    switch (user.role) {
+      case UserRole.tenant:
+        return const TenantShell();
+      case UserRole.guardian:
+        return const GuardianShell();
+      case UserRole.ownerCaretaker:
+        return const OwnerShell();
+    }
+  }
+}

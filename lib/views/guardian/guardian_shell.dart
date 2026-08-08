@@ -1,0 +1,19 @@
+import 'package:flutter/material.dart';
+import '../../core/widgets/adaptive_shell.dart';
+import '../shared/shared_views.dart';
+import 'guardian_pages.dart';
+
+class GuardianShell extends StatelessWidget {
+  const GuardianShell({super.key});
+  @override
+  Widget build(BuildContext context) => const AdaptiveRoleShell(
+    roleLabel: 'Guardian',
+    destinations: [
+      AppDestination(label: 'Home', icon: Icons.home_outlined, selectedIcon: Icons.home, page: GuardianDashboardPage()),
+      AppDestination(label: 'Gate Activity', icon: Icons.sensor_door_outlined, selectedIcon: Icons.sensor_door, page: GuardianGateActivityPage()),
+      AppDestination(label: 'Requests', icon: Icons.approval_outlined, selectedIcon: Icons.approval, page: GuardianCurfewRequestsPage()),
+      AppDestination(label: 'Messages', icon: Icons.chat_bubble_outline, selectedIcon: Icons.chat_bubble, page: GuardianMessagesPage()),
+      AppDestination(label: 'Profile', icon: Icons.person_outline, selectedIcon: Icons.person, page: ProfilePage()),
+    ],
+  );
+}
