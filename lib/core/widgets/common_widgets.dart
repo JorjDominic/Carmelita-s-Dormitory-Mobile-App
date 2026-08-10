@@ -38,12 +38,14 @@ class PageFrame extends StatelessWidget {
     this.actions,
     this.floatingActionButton,
     this.heroTitle,
+    this.useScriptTitle = true,
     super.key,
   });
 
   final String title;
   final String? subtitle;
   final String? heroTitle;
+  final bool useScriptTitle;
   final Widget child;
   final List<Widget>? actions;
   final Widget? floatingActionButton;
@@ -90,7 +92,13 @@ class PageFrame extends StatelessWidget {
               heroTitle ?? title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontFamily:
+                        useScriptTitle ? 'GreatVibes' : null,
+                    fontSize: useScriptTitle ? 30 : null,
+                    fontWeight:
+                        useScriptTitle ? FontWeight.w600 : FontWeight.w700,
+                  ),
             ),
             if (subtitle != null)
               Padding(
@@ -226,6 +234,7 @@ class ElegantHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.useScriptTitle = true,
     super.key,
   });
 
@@ -233,6 +242,7 @@ class ElegantHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? trailing;
+  final bool useScriptTitle;
 
   Widget _copy(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -253,7 +263,12 @@ class ElegantHeader extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                fontSize: titleSize,
+                fontFamily: useScriptTitle ? 'GreatVibes' : null,
+                fontSize: useScriptTitle ? titleSize + 10 : titleSize,
+                fontWeight:
+                    useScriptTitle ? FontWeight.w600 : FontWeight.w700,
+                height: useScriptTitle ? 1.15 : null,
+                letterSpacing: useScriptTitle ? 0 : null,
               ),
         ),
         if (subtitle != null) ...[

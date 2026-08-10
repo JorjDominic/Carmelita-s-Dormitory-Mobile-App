@@ -411,7 +411,12 @@ class _RoleMenu extends StatelessWidget {
                       "Carmelita's Dormitory",
                       style: Theme.of(context)
                           .textTheme
-                          .titleMedium,
+                          .titleMedium
+                          ?.copyWith(
+                            fontFamily: 'GreatVibes',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
+                          ),
                     ),
                     const SizedBox(height: 3),
                     Text(

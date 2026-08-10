@@ -25,6 +25,11 @@ flutter:
     - assets/branding/
     - assets/images/
 
+  fonts:
+    - family: GreatVibes
+      fonts:
+        - asset: assets/fonts/GreatVibes-Regular.ttf
+
 flutter_launcher_icons:
   android: true
   ios: true
