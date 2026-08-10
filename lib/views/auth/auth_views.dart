@@ -69,7 +69,14 @@ class SplashPage extends StatelessWidget {
         builder: (context, value, child) => Transform.scale(scale: value, child: Opacity(opacity: value, child: child)),
         child: const Column(mainAxisSize: MainAxisSize.min, children: [
           CarmelitaLogo(height: 130), SizedBox(height: 20),
-          Text("Carmelita's Dormitory", style: TextStyle(fontWeight: FontWeight.w800, fontSize: 24)),
+          Text(
+            "Carmelita's Dormitory",
+            style: TextStyle(
+              fontFamily: 'GreatVibes',
+              fontWeight: FontWeight.w600,
+              fontSize: 36,
+            ),
+          ),
         ]),
       ),
     ),
@@ -185,8 +192,13 @@ class WelcomePage extends StatelessWidget {
         const SizedBox(height: 28),
         Text(
           'Everything you need, without the clutter.',
-          style:
-              Theme.of(context).textTheme.displaySmall,
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontFamily: 'GreatVibes',
+                fontWeight: FontWeight.w600,
+                fontSize: 44,
+                height: 1.12,
+                letterSpacing: 0,
+              ),
         ),
         const SizedBox(height: 14),
         Text(
@@ -313,7 +325,15 @@ class _SignInPageState extends State<SignInPage> {
                 animation: session,
                 builder: (context, _) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Center(child: CarmelitaLogo(height: 86)), const SizedBox(height: 24),
-                  Text('Sign in', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(
+                    'Sign in',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontFamily: 'GreatVibes',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 36,
+                          height: 1.1,
+                        ),
+                  ),
                   const SizedBox(height: 6), const Text('Use the account provided by the dormitory.'), const SizedBox(height: 24),
                   TextField(controller: email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email address', prefixIcon: Icon(Icons.mail_outline))),
                   const SizedBox(height: 14),
