@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../controllers/guardian_controller.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../data/mock_data.dart';
+import '../../services/usage_stats_service.dart';
 import '../shared/shared_views.dart';
-
-
 
 class GuardianDashboardPage extends StatelessWidget {
   const GuardianDashboardPage({super.key});
@@ -14,8 +14,7 @@ class GuardianDashboardPage extends StatelessWidget {
     final controller = GuardianController.instance;
     final linkedRequests = controller.curfewRequests
         .where(
-          (request) =>
-              request.tenantName == controller.linkedTenantName,
+          (request) => request.tenantName == controller.linkedTenantName,
         )
         .toList();
 
@@ -27,8 +26,7 @@ class GuardianDashboardPage extends StatelessWidget {
           tooltip: 'Safety alerts',
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) =>
-                  const EmergencySafetyAlertsPage(),
+              builder: (_) => const EmergencySafetyAlertsPage(),
             ),
           ),
           icon: const Icon(Icons.shield_outlined),
@@ -63,8 +61,7 @@ class GuardianDashboardPage extends StatelessWidget {
               emphasis: true,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const GuardianTenantInfoPage(),
+                  builder: (_) => const GuardianTenantInfoPage(),
                 ),
               ),
               child: Row(
@@ -82,8 +79,7 @@ class GuardianDashboardPage extends StatelessWidget {
                   const SizedBox(width: 14),
                   const Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Anna Dela Cruz',
@@ -106,8 +102,7 @@ class GuardianDashboardPage extends StatelessWidget {
             const SizedBox(height: 24),
             const SectionTitle(
               'At a glance',
-              subtitle:
-                  'Gate, payment, and pending approvals',
+              subtitle: 'Gate, payment, and pending approvals',
             ),
             const SizedBox(height: 10),
             AdaptiveGrid(
@@ -120,21 +115,18 @@ class GuardianDashboardPage extends StatelessWidget {
                   icon: Icons.sensor_door_outlined,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const GuardianGateActivityPage(),
+                      builder: (_) => const GuardianGateActivityPage(),
                     ),
                   ),
                 ),
                 MetricCard(
                   label: 'Outstanding',
-                  value:
-                      money(controller.outstandingTotal),
+                  value: money(controller.outstandingTotal),
                   detail: 'Unpaid / unverified',
                   icon: Icons.payments_outlined,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const GuardianPaymentStatusPage(),
+                      builder: (_) => const GuardianPaymentStatusPage(),
                     ),
                   ),
                   highlight: true,
@@ -144,8 +136,7 @@ class GuardianDashboardPage extends StatelessWidget {
             const SizedBox(height: 24),
             const SectionTitle(
               'Needs your attention',
-              subtitle:
-                  'Requests that require a guardian decision',
+              subtitle: 'Requests that require a guardian decision',
             ),
             const SizedBox(height: 10),
             if (controller.pendingCurfewCount == 0)
@@ -167,8 +158,7 @@ class GuardianDashboardPage extends StatelessWidget {
             else
               ...linkedRequests
                   .where(
-                    (request) =>
-                        request.guardianStatus == 'Pending',
+                    (request) => request.guardianStatus == 'Pending',
                   )
                   .map(
                     (request) => AttentionCard(
@@ -177,11 +167,9 @@ class GuardianDashboardPage extends StatelessWidget {
                       subtitle:
                           '${request.destination} • Return ${timeText(request.expectedReturn)}',
                       status: request.guardianStatus,
-                      onTap: () =>
-                          Navigator.of(context).push(
+                      onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) =>
-                              const GuardianCurfewRequestsPage(),
+                          builder: (_) => const GuardianCurfewRequestsPage(),
                         ),
                       ),
                     ),
@@ -189,8 +177,7 @@ class GuardianDashboardPage extends StatelessWidget {
             const SizedBox(height: 24),
             const SectionTitle(
               'Quick access',
-              subtitle:
-                  'Common information without searching',
+              subtitle: 'Common information without searching',
             ),
             const SizedBox(height: 10),
             ActionGrid(
@@ -200,8 +187,7 @@ class GuardianDashboardPage extends StatelessWidget {
                   icon: Icons.person_outline,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const GuardianTenantInfoPage(),
+                      builder: (_) => const GuardianTenantInfoPage(),
                     ),
                   ),
                 ),
@@ -210,8 +196,7 @@ class GuardianDashboardPage extends StatelessWidget {
                   icon: Icons.receipt_long_outlined,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const GuardianPaymentStatusPage(),
+                      builder: (_) => const GuardianPaymentStatusPage(),
                     ),
                   ),
                 ),
@@ -220,8 +205,7 @@ class GuardianDashboardPage extends StatelessWidget {
                   icon: Icons.campaign_outlined,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const GuardianAnnouncementsPage(),
+                      builder: (_) => const GuardianAnnouncementsPage(),
                     ),
                   ),
                 ),
@@ -230,8 +214,7 @@ class GuardianDashboardPage extends StatelessWidget {
                   icon: Icons.emergency_outlined,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const EmergencySafetyAlertsPage(),
+                      builder: (_) => const EmergencySafetyAlertsPage(),
                     ),
                   ),
                 ),
@@ -247,17 +230,208 @@ class GuardianDashboardPage extends StatelessWidget {
 class GuardianTenantInfoPage extends StatelessWidget {
   const GuardianTenantInfoPage({super.key});
   @override
-  Widget build(BuildContext context) => const PageFrame(title: 'Tenant information', subtitle: 'Linked tenant', child: CarmelitaCard(child: Column(children: [
-    InfoRow(label: 'Tenant', value: 'Anna Dela Cruz', icon: Icons.person_outline), InfoRow(label: 'Room', value: '204 • Second Floor', icon: Icons.meeting_room_outlined), InfoRow(label: 'Bed space', value: 'Bed 2', icon: Icons.bed_outlined), InfoRow(label: 'Current status', value: 'Inside dormitory', icon: Icons.sensor_door_outlined),
-  ])));
+  Widget build(BuildContext context) => const PageFrame(
+      title: 'Tenant information',
+      subtitle: 'Linked tenant',
+      child: CarmelitaCard(
+          child: Column(children: [
+        InfoRow(
+            label: 'Tenant',
+            value: 'Anna Dela Cruz',
+            icon: Icons.person_outline),
+        InfoRow(
+            label: 'Room',
+            value: '204 • Second Floor',
+            icon: Icons.meeting_room_outlined),
+        InfoRow(label: 'Bed space', value: 'Bed 2', icon: Icons.bed_outlined),
+        InfoRow(
+            label: 'Current status',
+            value: 'Inside dormitory',
+            icon: Icons.sensor_door_outlined),
+      ])));
 }
 
-class GuardianGateActivityPage extends StatelessWidget {
+class GuardianGateActivityPage extends StatefulWidget {
   const GuardianGateActivityPage({super.key});
+
+  @override
+  State<GuardianGateActivityPage> createState() =>
+      _GuardianGateActivityPageState();
+}
+
+class _GuardianGateActivityPageState extends State<GuardianGateActivityPage>
+    with WidgetsBindingObserver {
+  bool loading = true;
+  bool hasPermission = false;
+  String? error;
+  List<AppUsageStat> usage = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    loadUsage();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) loadUsage();
+  }
+
+  Future<void> loadUsage() async {
+    if (!UsageStatsService.isSupported) {
+      if (mounted) setState(() => loading = false);
+      return;
+    }
+    try {
+      final allowed = await UsageStatsService.hasPermission();
+      final result = allowed
+          ? await UsageStatsService.getTodayUsage()
+          : const <AppUsageStat>[];
+      if (!mounted) return;
+      setState(() {
+        hasPermission = allowed;
+        usage = result;
+        error = null;
+        loading = false;
+      });
+    } on PlatformException catch (exception) {
+      if (!mounted) return;
+      setState(() {
+        error = exception.message ?? 'Could not load app activity.';
+        loading = false;
+      });
+    }
+  }
+
+  String durationText(Duration value) {
+    final hours = value.inHours;
+    final minutes = value.inMinutes.remainder(60);
+    if (hours == 0) return '${minutes < 1 ? 1 : minutes} min';
+    return minutes == 0 ? '$hours hr' : '$hours hr $minutes min';
+  }
+
+  @override
+  Widget build(BuildContext context) => PageFrame(
+        title: 'Activity',
+        subtitle: 'Today\'s device usage and recent gate events',
+        actions: [
+          IconButton(
+            tooltip: 'Refresh activity',
+            onPressed: loading ? null : loadUsage,
+            icon: const Icon(Icons.refresh_rounded),
+          ),
+        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SectionTitle('Device app activity',
+                subtitle:
+                    'Foreground usage recorded on this Android device today'),
+            const SizedBox(height: 10),
+            _usageCard(),
+            const SizedBox(height: 24),
+            const SectionTitle('Recent gate records',
+                subtitle: 'Verified IN and OUT events'),
+            const SizedBox(height: 10),
+            const _GuardianGateRecords(),
+          ],
+        ),
+      );
+
+  Widget _usageCard() {
+    if (!UsageStatsService.isSupported) {
+      return const CarmelitaCard(
+          child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Icon(Icons.phone_android_outlined),
+        title: Text('Available on Android'),
+        subtitle:
+            Text('Device app activity is not available on this platform.'),
+      ));
+    }
+    if (loading) {
+      return const CarmelitaCard(
+          child: Center(child: CircularProgressIndicator()));
+    }
+    if (!hasPermission) {
+      return CarmelitaCard(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(Icons.admin_panel_settings_outlined),
+            title: Text('Usage access is required'),
+            subtitle: Text(
+                'Allow Carmelita\'s Dormitory to read app usage in Android settings.'),
+          ),
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            onPressed: UsageStatsService.openPermissionSettings,
+            icon: const Icon(Icons.settings_outlined),
+            label: const Text('Open usage access settings'),
+          ),
+        ],
+      ));
+    }
+    if (error != null) {
+      return CarmelitaCard(
+          child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: const Icon(Icons.error_outline),
+        title: const Text('Could not load app activity'),
+        subtitle: Text(error!),
+        trailing:
+            IconButton(onPressed: loadUsage, icon: const Icon(Icons.refresh)),
+      ));
+    }
+    if (usage.isEmpty) {
+      return const CarmelitaCard(
+          child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Icon(Icons.hourglass_empty_rounded),
+        title: Text('No app activity recorded today'),
+      ));
+    }
+    return CarmelitaCard(
+        child: Column(
+      children: usage
+          .take(20)
+          .map((stat) => TimelineTile(
+                icon: Icons.apps_rounded,
+                title: stat.appName,
+                subtitle: stat.packageName,
+                trailing: Text(durationText(stat.foregroundTime),
+                    style: const TextStyle(fontWeight: FontWeight.w800)),
+              ))
+          .toList(),
+    ));
+  }
+}
+
+class _GuardianGateRecords extends StatelessWidget {
+  const _GuardianGateRecords();
   @override
   Widget build(BuildContext context) {
-    final events = GuardianController.instance.gateEvents.where((e) => e.person == 'Anna Dela Cruz').toList();
-    return PageFrame(title: 'Gate activity', subtitle: 'Recent IN and OUT events', child: CarmelitaCard(child: Column(children: events.map((e) => TimelineTile(icon: e.direction == 'IN' ? Icons.login : Icons.logout, title: '${e.direction} • ${e.verification}', subtitle: '${shortDate(e.time)} • ${timeText(e.time)}', trailing: StatusPill(e.status))).toList())));
+    final events = GuardianController.instance.gateEvents
+        .where((e) => e.person == 'Anna Dela Cruz')
+        .toList();
+    return CarmelitaCard(
+        child: Column(
+            children: events
+                .map((e) => TimelineTile(
+                    icon: e.direction == 'IN' ? Icons.login : Icons.logout,
+                    title: '${e.direction} • ${e.verification}',
+                    subtitle: '${shortDate(e.time)} • ${timeText(e.time)}',
+                    trailing: StatusPill(e.status)))
+                .toList()));
   }
 }
 
@@ -266,19 +440,56 @@ class GuardianCurfewRequestsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = GuardianController.instance;
-    return PageFrame(title: 'Curfew requests', subtitle: 'Approve or reject linked tenant requests', child: AnimatedBuilder(animation: c, builder: (context, _) => Column(children: c.curfewRequests.where((r) => r.tenantName == 'Anna Dela Cruz').map((r) => Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: CarmelitaCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [Expanded(child: Text(r.reason, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17))), StatusPill(r.guardianStatus)]), const SizedBox(height: 10),
-        InfoRow(label: 'Destination', value: r.destination), InfoRow(label: 'Expected return', value: '${shortDate(r.expectedReturn)} • ${timeText(r.expectedReturn)}'),
-        if (r.guardianStatus == 'Pending') ...[const SizedBox(height: 12), Row(children: [
-          Expanded(child: OutlinedButton(onPressed: () => c.decideCurfew(r, false), child: const Text('Reject'))), const SizedBox(width: 10), Expanded(child: FilledButton(onPressed: () => c.decideCurfew(r, true), child: const Text('Approve'))),
-        ])],
-      ])),
-    )).toList())));
+    return PageFrame(
+        title: 'Curfew requests',
+        subtitle: 'Approve or reject linked tenant requests',
+        child: AnimatedBuilder(
+            animation: c,
+            builder: (context, _) => Column(
+                children: c.curfewRequests
+                    .where((r) => r.tenantName == 'Anna Dela Cruz')
+                    .map((r) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: CarmelitaCard(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                Row(children: [
+                                  Expanded(
+                                      child: Text(r.reason,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 17))),
+                                  StatusPill(r.guardianStatus)
+                                ]),
+                                const SizedBox(height: 10),
+                                InfoRow(
+                                    label: 'Destination', value: r.destination),
+                                InfoRow(
+                                    label: 'Expected return',
+                                    value:
+                                        '${shortDate(r.expectedReturn)} • ${timeText(r.expectedReturn)}'),
+                                if (r.guardianStatus == 'Pending') ...[
+                                  const SizedBox(height: 12),
+                                  Row(children: [
+                                    Expanded(
+                                        child: OutlinedButton(
+                                            onPressed: () =>
+                                                c.decideCurfew(r, false),
+                                            child: const Text('Reject'))),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                        child: FilledButton(
+                                            onPressed: () =>
+                                                c.decideCurfew(r, true),
+                                            child: const Text('Approve'))),
+                                  ])
+                                ],
+                              ])),
+                        ))
+                    .toList())));
   }
 }
-
 
 class GuardianPaymentStatusPage extends StatelessWidget {
   const GuardianPaymentStatusPage({super.key});
@@ -309,8 +520,7 @@ class GuardianPaymentStatusPage extends StatelessWidget {
                       (payment) => TimelineTile(
                         icon: Icons.receipt_long_outlined,
                         title: payment.label,
-                        subtitle:
-                            '${money(payment.amount)} • Due '
+                        subtitle: '${money(payment.amount)} • Due '
                             '${shortDate(payment.dueDate)}',
                         trailing: StatusPill(payment.status),
                       ),
@@ -328,16 +538,31 @@ class GuardianPaymentStatusPage extends StatelessWidget {
 class GuardianAnnouncementsPage extends StatelessWidget {
   const GuardianAnnouncementsPage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'Announcements', subtitle: 'Notices relevant to guardians', child: Column(children: MockData.announcements.map((a) => Padding(padding: const EdgeInsets.only(bottom: 12), child: CarmelitaCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(a.title, style: const TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 7), Text(a.body)])))).toList()));
+  Widget build(BuildContext context) => PageFrame(
+      title: 'Announcements',
+      subtitle: 'Notices relevant to guardians',
+      child: Column(
+          children: MockData.announcements
+              .map((a) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: CarmelitaCard(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        Text(a.title,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 7),
+                        Text(a.body)
+                      ]))))
+              .toList()));
 }
-
 
 class GuardianMessagesPage extends StatefulWidget {
   const GuardianMessagesPage({super.key});
 
   @override
-  State<GuardianMessagesPage> createState() =>
-      _GuardianMessagesPageState();
+  State<GuardianMessagesPage> createState() => _GuardianMessagesPageState();
 }
 
 class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
@@ -417,8 +642,24 @@ class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
 class EmergencySafetyAlertsPage extends StatelessWidget {
   const EmergencySafetyAlertsPage({super.key});
   @override
-  Widget build(BuildContext context) => const PageFrame(title: 'Emergency & safety alerts', subtitle: 'Urgent gate and dormitory notifications', child: Column(children: [
-    CarmelitaCard(child: TimelineTile(icon: Icons.info_outline, title: 'No unresolved alerts for Anna', subtitle: 'All recent gate events are verified.', trailing: StatusPill('Clear'))), SizedBox(height: 12),
-    CarmelitaCard(child: ListTile(contentPadding: EdgeInsets.zero, leading: Icon(Icons.emergency_outlined), title: Text('Emergency contact process', style: TextStyle(fontWeight: FontWeight.w800)), subtitle: Text('Urgent alerts can route to the registered guardian and owner/caretaker after backend notification integration.'))),
-  ]));
+  Widget build(BuildContext context) => const PageFrame(
+      title: 'Emergency & safety alerts',
+      subtitle: 'Urgent gate and dormitory notifications',
+      child: Column(children: [
+        CarmelitaCard(
+            child: TimelineTile(
+                icon: Icons.info_outline,
+                title: 'No unresolved alerts for Anna',
+                subtitle: 'All recent gate events are verified.',
+                trailing: StatusPill('Clear'))),
+        SizedBox(height: 12),
+        CarmelitaCard(
+            child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.emergency_outlined),
+                title: Text('Emergency contact process',
+                    style: TextStyle(fontWeight: FontWeight.w800)),
+                subtitle: Text(
+                    'Urgent alerts can route to the registered guardian and owner/caretaker after backend notification integration.'))),
+      ]));
 }
