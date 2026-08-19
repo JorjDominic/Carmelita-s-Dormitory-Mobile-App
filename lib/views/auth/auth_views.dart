@@ -324,7 +324,7 @@ class _SignInPageState extends State<SignInPage> {
               child: AnimatedBuilder(
                 animation: session,
                 builder: (context, _) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Center(child: CarmelitaLogo(height: 86)), const SizedBox(height: 24),
+                  const Center(child: CarmelitaLogo(height: 132)), const SizedBox(height: 24),
                   Text(
                     'Sign in',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
