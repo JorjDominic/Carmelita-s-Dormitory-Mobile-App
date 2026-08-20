@@ -34,9 +34,7 @@ class CarmelitaNavScope extends InheritedWidget {
   static CarmelitaNavScope? maybeOf(
     BuildContext context,
   ) {
-    return context
-        .dependOnInheritedWidgetOfExactType<
-            CarmelitaNavScope>();
+    return context.dependOnInheritedWidgetOfExactType<CarmelitaNavScope>();
   }
 
   @override
@@ -59,12 +57,10 @@ class AdaptiveRoleShell extends StatefulWidget {
   final String roleLabel;
 
   @override
-  State<AdaptiveRoleShell> createState() =>
-      _AdaptiveRoleShellState();
+  State<AdaptiveRoleShell> createState() => _AdaptiveRoleShellState();
 }
 
-class _AdaptiveRoleShellState
-    extends State<AdaptiveRoleShell> {
+class _AdaptiveRoleShellState extends State<AdaptiveRoleShell> {
   int index = 0;
 
   void _select(int value) {
@@ -73,14 +69,12 @@ class _AdaptiveRoleShellState
   }
 
   void _openMenu() {
-    final useSidePanel =
-        MediaQuery.sizeOf(context).width >= 780;
+    final useSidePanel = MediaQuery.sizeOf(context).width >= 780;
 
     if (useSidePanel) {
       showDialog<void>(
         context: context,
-        barrierColor:
-            Colors.black.withValues(alpha: .28),
+        barrierColor: Colors.black.withValues(alpha: .28),
         builder: (dialogContext) {
           return Align(
             alignment: Alignment.centerLeft,
@@ -88,8 +82,7 @@ class _AdaptiveRoleShellState
               padding: const EdgeInsets.all(16),
               child: Material(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius:
-                    const BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(28),
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -152,31 +145,14 @@ class _AdaptiveRoleShellState
 
   @override
   Widget build(BuildContext context) {
-    final destination =
-        widget.destinations[index];
+    final destination = widget.destinations[index];
 
     return CarmelitaNavScope(
       openMenu: _openMenu,
       selectIndex: _select,
       child: Scaffold(
         extendBody: true,
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 260),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            final offset = Tween<Offset>(
-              begin: const Offset(.018, .015),
-              end: Offset.zero,
-            ).animate(animation);
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: offset,
-                child: child,
-              ),
-            );
-          },
+        body: RepaintBoundary(
           child: KeyedSubtree(
             key: ValueKey(index),
             child: destination.page,
@@ -191,7 +167,6 @@ class _AdaptiveRoleShellState
     );
   }
 }
-
 
 class _FloatingIslandNavigation extends StatelessWidget {
   const _FloatingIslandNavigation({
@@ -229,8 +204,8 @@ class _FloatingIslandNavigation extends StatelessWidget {
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 18,
-                sigmaY: 18,
+                sigmaX: 7,
+                sigmaY: 7,
               ),
               child: Container(
                 height: 68,
@@ -246,9 +221,8 @@ class _FloatingIslandNavigation extends StatelessWidget {
                     Radius.circular(30),
                   ),
                   border: Border.all(
-                    color: Theme.of(context)
-                        .dividerColor
-                        .withValues(alpha: .90),
+                    color:
+                        Theme.of(context).dividerColor.withValues(alpha: .90),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -380,18 +354,15 @@ class _RoleMenu extends StatelessWidget {
         26,
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Container(
               width: 42,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .dividerColor,
-                borderRadius:
-                    const BorderRadius.all(
+                color: Theme.of(context).dividerColor,
+                borderRadius: const BorderRadius.all(
                   Radius.circular(999),
                 ),
               ),
@@ -404,15 +375,11 @@ class _RoleMenu extends StatelessWidget {
               const SizedBox(width: 13),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Carmelita's Dormitory",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontFamily: 'GreatVibes',
                             fontWeight: FontWeight.w600,
                             fontSize: 24,
@@ -421,9 +388,7 @@ class _RoleMenu extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       roleLabel,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -448,22 +413,16 @@ class _RoleMenu extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           user.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
                           user.email,
-                          overflow:
-                              TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -475,14 +434,10 @@ class _RoleMenu extends StatelessWidget {
           const SizedBox(height: 18),
           Text(
             'MAIN',
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   letterSpacing: 1.2,
                   fontWeight: FontWeight.w800,
-                  color:
-                      Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
           ),
           const SizedBox(height: 8),
@@ -490,30 +445,23 @@ class _RoleMenu extends StatelessWidget {
             destinations.length,
             (navIndex) {
               final item = destinations[navIndex];
-              final selected =
-                  navIndex == currentIndex;
+              final selected = navIndex == currentIndex;
               return Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.only(bottom: 4),
                 child: ListTile(
                   minTileHeight: 54,
-                  shape:
-                      const RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.all(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
                       Radius.circular(16),
                     ),
                   ),
                   selected: selected,
-                  selectedTileColor:
-                      Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: .08),
+                  selectedTileColor: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: .08),
                   leading: Icon(
-                    selected
-                        ? item.selectedIcon
-                        : item.icon,
+                    selected ? item.selectedIcon : item.icon,
                   ),
                   title: Text(
                     item.label,
@@ -527,8 +475,7 @@ class _RoleMenu extends StatelessWidget {
                           size: 19,
                         )
                       : null,
-                  onTap: () =>
-                      onSelect(navIndex),
+                  onTap: () => onSelect(navIndex),
                 ),
               );
             },
@@ -537,17 +484,14 @@ class _RoleMenu extends StatelessWidget {
           const Divider(),
           ListTile(
             minTileHeight: 54,
-            leading:
-                const Icon(Icons.notifications_outlined),
+            leading: const Icon(Icons.notifications_outlined),
             title: const Text('Notifications'),
-            trailing:
-                const Icon(Icons.chevron_right_rounded),
+            trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const NotificationsPage(),
+                  builder: (_) => const NotificationsPage(),
                 ),
               );
             },
@@ -556,14 +500,12 @@ class _RoleMenu extends StatelessWidget {
             minTileHeight: 54,
             leading: const Icon(Icons.settings_outlined),
             title: const Text('Settings'),
-            trailing:
-                const Icon(Icons.chevron_right_rounded),
+            trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const SettingsPage(),
+                  builder: (_) => const SettingsPage(),
                 ),
               );
             },

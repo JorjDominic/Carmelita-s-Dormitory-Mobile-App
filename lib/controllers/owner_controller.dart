@@ -10,21 +10,22 @@ class OwnerController extends ChangeNotifier {
 
   List<TenantDirectoryEntry> get tenants =>
       List.unmodifiable(MockData.tenantDirectory);
-  List<DormRoomStatus> get rooms =>
-      List.unmodifiable(MockData.roomStatuses);
+  List<DormRoomStatus> get rooms => List.unmodifiable(MockData.roomStatuses);
   List<Payment> get payments => List.unmodifiable(MockData.payments);
   List<MaintenanceReport> get maintenance =>
       List.unmodifiable(MockData.maintenance);
-  List<GateEvent> get gateEvents =>
-      List.unmodifiable(MockData.gateEvents);
+  List<MaintenanceReport> get maintenanceByPriority {
+    const rank = {'High': 3, 'Medium': 2, 'Low': 1};
+    return [...MockData.maintenance]
+      ..sort((a, b) => (rank[b.urgency] ?? 0).compareTo(rank[a.urgency] ?? 0));
+  }
+
+  List<GateEvent> get gateEvents => List.unmodifiable(MockData.gateEvents);
   List<CurfewRequest> get curfewRequests =>
       List.unmodifiable(MockData.curfewRequests);
-  List<VisitorRequest> get visitors =>
-      List.unmodifiable(MockData.visitors);
-  List<ConcernReport> get concerns =>
-      List.unmodifiable(MockData.concerns);
-  List<DeviceStatus> get devices =>
-      List.unmodifiable(MockData.devices);
+  List<VisitorRequest> get visitors => List.unmodifiable(MockData.visitors);
+  List<ConcernReport> get concerns => List.unmodifiable(MockData.concerns);
+  List<DeviceStatus> get devices => List.unmodifiable(MockData.devices);
   List<Announcement> get announcements =>
       List.unmodifiable(MockData.announcements);
   List<OwnerConversation> get conversations =>
@@ -39,14 +40,14 @@ class OwnerController extends ChangeNotifier {
       rooms.fold<int>(0, (sum, room) => sum + room.capacity);
 
   int get pendingPaymentProofs => payments
-      .where((payment) => payment.status == 'Pending verification')
+      .where((payment) =>
+          payment.status == 'Pending verification' ||
+          payment.status == 'Pending review')
       .length;
 
   int get openMaintenance => maintenance
       .where(
-        (report) =>
-            report.status != 'Completed' &&
-            report.status != 'Closed',
+        (report) => report.status != 'Completed' && report.status != 'Closed',
       )
       .length;
 
@@ -143,21 +144,7 @@ class OwnerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addManualOverride({
-    required String reason,
-    required String action,
-  }) {
-    MockData.gateEvents.insert(
-      0,
-      GateEvent(
-        id: 'override-${DateTime.now().millisecondsSinceEpoch}',
-        person: 'Manual override',
-        direction: action,
-        time: DateTime.now(),
-        verification: reason.trim().isEmpty ? 'Caretaker override' : reason.trim(),
-        status: 'Verified',
-      ),
-    );
-    notifyListeners();
-  }
+  // Legacy migration stub only. No physical lock/relay is connected and the
+  // manual-override screen has no navigation path in the finalized app.
+  void addManualOverride({required String reason, required String action}) {}
 }

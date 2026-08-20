@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/common_widgets.dart';
 
-
 class FloorPlanCanvas extends StatefulWidget {
   const FloorPlanCanvas({
     this.onLocationSelected,
@@ -71,9 +70,7 @@ class _FloorPlanCanvasState extends State<FloorPlanCanvas> {
                     ),
                   ),
                   StatusPill(
-                    widget.monitorMode
-                        ? '2 active reports'
-                        : 'Tap a location',
+                    widget.monitorMode ? '2 active reports' : 'Tap a location',
                   ),
                 ],
               );
@@ -96,8 +93,7 @@ class _FloorPlanCanvasState extends State<FloorPlanCanvas> {
                 const spacing = 8.0;
                 final columns = constraints.maxWidth < 300 ? 2 : 3;
                 final itemWidth =
-                    (constraints.maxWidth -
-                            (spacing * (columns - 1))) /
+                    (constraints.maxWidth - (spacing * (columns - 1))) /
                         columns;
 
                 return Wrap(
@@ -136,20 +132,14 @@ class _FloorPlanCanvasState extends State<FloorPlanCanvas> {
                                     .colorScheme
                                     .primary
                                     .withValues(alpha: .12)
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .surface,
-                            borderRadius:
-                                const BorderRadius.all(
+                                : Theme.of(context).colorScheme.surface,
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(14),
                             ),
                             border: Border.all(
                               color: isSelected
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                  : Theme.of(context)
-                                      .dividerColor,
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).dividerColor,
                               width: isSelected ? 1.5 : 1,
                             ),
                           ),
@@ -172,8 +162,7 @@ class _FloorPlanCanvasState extends State<FloorPlanCanvas> {
                                   top: 0,
                                   child: CircleAvatar(
                                     radius: 6,
-                                    backgroundColor:
-                                        AppColors.warning,
+                                    backgroundColor: AppColors.warning,
                                   ),
                                 ),
                             ],
@@ -207,15 +196,27 @@ class _FloorPlanCanvasState extends State<FloorPlanCanvas> {
 }
 
 class LabeledField extends StatelessWidget {
-  const LabeledField({required this.label, this.hint, this.controller, this.maxLines = 1, this.keyboardType, super.key});
+  const LabeledField(
+      {required this.label,
+      this.hint,
+      this.controller,
+      this.maxLines = 1,
+      this.keyboardType,
+      super.key});
   final String label;
   final String? hint;
   final TextEditingController? controller;
   final int maxLines;
   final TextInputType? keyboardType;
   @override
-  Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(label, style: const TextStyle(fontWeight: FontWeight.w700)), const SizedBox(height: 8),
-    TextField(controller: controller, maxLines: maxLines, keyboardType: keyboardType, decoration: InputDecoration(hintText: hint)),
-  ]);
+  Widget build(BuildContext context) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 8),
+        TextField(
+            controller: controller,
+            maxLines: maxLines,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(hintText: hint)),
+      ]);
 }

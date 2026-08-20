@@ -3,9 +3,7 @@ import '../../controllers/tenant_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../data/mock_data.dart';
-import '../shared/shared_views.dart';
 import '../widgets/feature_widgets.dart';
-
 
 class TenantDashboardPage extends StatelessWidget {
   const TenantDashboardPage({super.key});
@@ -19,17 +17,6 @@ class TenantDashboardPage extends StatelessWidget {
     return PageFrame(
       title: 'Home',
       subtitle: 'Tenant dashboard',
-      actions: [
-        IconButton(
-          tooltip: 'Notifications',
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const NotificationsPage(),
-            ),
-          ),
-          icon: const Icon(Icons.notifications_none_rounded),
-        ),
-      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,22 +47,19 @@ class TenantDashboardPage extends StatelessWidget {
                         .colorScheme
                         .primary
                         .withValues(alpha: .10),
-                    borderRadius:
-                        const BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(18),
                     ),
                   ),
                   child: Icon(
                     Icons.bed_outlined,
-                    color:
-                        Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(width: 14),
                 const Expanded(
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Your room',
@@ -101,26 +85,26 @@ class TenantDashboardPage extends StatelessWidget {
             subtitle: 'What matters right now',
           ),
           const SizedBox(height: 10),
-          AdaptiveGrid(
-            minTileWidth: 250,
-            children: [
-              MetricCard(
+          MutedDashboardGrid(
+            items: [
+              MutedDashboardItem(
                 label: 'Amount due',
                 value: money(payment.amount),
                 detail: 'August rent • Due Aug 15',
                 icon: Icons.account_balance_wallet_outlined,
+                color: const Color(0xFFAA8A45),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const PaymentsPage(),
                   ),
                 ),
-                highlight: true,
               ),
-              MetricCard(
+              MutedDashboardItem(
                 label: 'Gate status',
                 value: 'Inside',
                 detail: 'Last IN • 8:14 PM',
                 icon: Icons.sensor_door_outlined,
+                color: const Color(0xFF56886B),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const GateCurfewPage(),
@@ -150,8 +134,7 @@ class TenantDashboardPage extends StatelessWidget {
           AttentionCard(
             icon: Icons.build_outlined,
             title: maintenance.category,
-            subtitle:
-                '${maintenance.location} • ${maintenance.description}',
+            subtitle: '${maintenance.location} • ${maintenance.description}',
             status: maintenance.status,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
@@ -165,45 +148,49 @@ class TenantDashboardPage extends StatelessWidget {
             subtitle: 'Common tasks, one tap away',
           ),
           const SizedBox(height: 10),
-          ActionGrid(
-            children: [
-              QuickAction(
+          MutedActionGrid(
+            items: [
+              MutedActionItem(
                 label: 'Upload proof',
+                detail: 'Submit a receipt',
                 icon: Icons.upload_file_outlined,
+                color: const Color(0xFF627FA8),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) =>
-                        const UploadPaymentProofPage(),
+                    builder: (_) => const UploadPaymentProofPage(),
                   ),
                 ),
               ),
-              QuickAction(
+              MutedActionItem(
                 label: 'Report issue',
+                detail: 'Request maintenance',
                 icon: Icons.handyman_outlined,
+                color: const Color(0xFFB47A52),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) =>
-                        const SubmitMaintenancePage(),
+                    builder: (_) => const SubmitMaintenancePage(),
                   ),
                 ),
               ),
-              QuickAction(
+              MutedActionItem(
                 label: 'Curfew request',
+                detail: 'Request an exception',
                 icon: Icons.schedule_outlined,
+                color: const Color(0xFF7D70A0),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) =>
-                        const CurfewExceptionPage(),
+                    builder: (_) => const CurfewExceptionPage(),
                   ),
                 ),
               ),
-              QuickAction(
+              MutedActionItem(
                 label: 'Visitor',
+                detail: 'Register a visitor',
                 icon: Icons.person_add_alt_1_outlined,
+                color: const Color(0xFF568F8E),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) =>
-                        const VisitorRequestPage(),
+                    builder: (_) => const VisitorRequestPage(),
                   ),
                 ),
               ),
@@ -215,8 +202,7 @@ class TenantDashboardPage extends StatelessWidget {
             trailing: TextButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const TenantAnnouncementsPage(),
+                  builder: (_) => const TenantAnnouncementsPage(),
                 ),
               ),
               child: const Text('View all'),
@@ -229,8 +215,7 @@ class TenantDashboardPage extends StatelessWidget {
             subtitle: MockData.announcements.first.body,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) =>
-                    const TenantAnnouncementsPage(),
+                builder: (_) => const TenantAnnouncementsPage(),
               ),
             ),
           ),
@@ -245,18 +230,51 @@ class MyRoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final room = TenantController.instance.room;
-    return PageFrame(title: 'My room', subtitle: 'Assignment and utility information', child: Column(children: [
-      const PhotoHero(image: AppAssets.room, title: 'Room 204', subtitle: 'Second Floor • Bed 2', height: 250), const SizedBox(height: 16),
-      CarmelitaCard(child: Column(children: [
-        InfoRow(label: 'Room', value: room.number, icon: Icons.meeting_room_outlined), InfoRow(label: 'Bed space', value: room.bedSpace, icon: Icons.bed_outlined),
-        InfoRow(label: 'Occupancy', value: '${room.occupied}/${room.capacity}', icon: Icons.groups_outlined), InfoRow(label: 'Utilities', value: room.utilitySummary, icon: Icons.bolt_outlined),
-      ])),
-      const SizedBox(height: 16),
-      CarmelitaCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('Roommates', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)), const SizedBox(height: 8),
-        ...room.roommates.map((name) => ListTile(contentPadding: EdgeInsets.zero, leading: const CircleAvatar(child: Icon(Icons.person_outline)), title: Text(name))),
-      ])),
-    ]));
+    return PageFrame(
+        title: 'My room',
+        subtitle: 'Assignment and utility information',
+        child: Column(children: [
+          const PhotoHero(
+              image: AppAssets.room,
+              title: 'Room 204',
+              subtitle: 'Second Floor • Bed 2',
+              height: 250),
+          const SizedBox(height: 16),
+          CarmelitaCard(
+              child: Column(children: [
+            InfoRow(
+                label: 'Room',
+                value: room.number,
+                icon: Icons.meeting_room_outlined),
+            InfoRow(
+                label: 'Bed space',
+                value: room.bedSpace,
+                icon: Icons.bed_outlined),
+            InfoRow(
+                label: 'Occupancy',
+                value: '${room.occupied}/${room.capacity}',
+                icon: Icons.groups_outlined),
+            InfoRow(
+                label: 'Utilities',
+                value: room.utilitySummary,
+                icon: Icons.bolt_outlined),
+          ])),
+          const SizedBox(height: 16),
+          CarmelitaCard(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const Text('Roommates',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                const SizedBox(height: 8),
+                ...room.roommates.map((name) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading:
+                        const CircleAvatar(child: Icon(Icons.person_outline)),
+                    title: Text(name))),
+              ])),
+        ]));
   }
 }
 
@@ -266,20 +284,75 @@ class PaymentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = TenantController.instance;
     return PageFrame(
-      title: 'Payments & utilities', subtitle: 'Balances, due dates, and history',
-      actions: [IconButton(tooltip: 'Upload payment proof', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const UploadPaymentProofPage())), icon: const Icon(Icons.upload_file_outlined))],
-      child: AnimatedBuilder(animation: c, builder: (context, _) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const AdaptiveGrid(children: [
-          MetricCard(label: 'Outstanding', value: '₱4,400', detail: 'Rent + utilities', icon: Icons.account_balance_wallet_outlined),
-          MetricCard(label: 'Next due date', value: 'Aug 10', detail: 'Utilities', icon: Icons.event_outlined),
-        ]),
-        const SizedBox(height: 22), const SectionTitle('Payment records'), const SizedBox(height: 10),
-        CarmelitaCard(child: Column(children: c.payments.map((p) => TimelineTile(icon: Icons.receipt_long_outlined, title: p.label, subtitle: '${money(p.amount)} • Due ${shortDate(p.dueDate)}', trailing: StatusPill(p.status))).toList())),
-      ])),
+      title: 'Payments & utilities',
+      subtitle: 'Balances, due dates, and history',
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Upload payment proof',
+        backgroundColor: const Color(0xFF627FA8),
+        foregroundColor: Colors.white,
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const UploadPaymentProofPage()),
+        ),
+        child: const Icon(Icons.upload_file_outlined),
+      ),
+      child: AnimatedBuilder(
+          animation: c,
+          builder: (context, _) =>
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  'ACCOUNT SUMMARY',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                        letterSpacing: 1.3,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                const MutedDashboardGrid(compact: true, items: [
+                  MutedDashboardItem(
+                      label: 'Outstanding',
+                      value: '₱4,400',
+                      detail: 'Rent + utilities',
+                      icon: Icons.account_balance_wallet_outlined,
+                      color: Color(0xFFAA8A45)),
+                  MutedDashboardItem(
+                      label: 'Next due date',
+                      value: 'Aug 10',
+                      detail: 'Utilities',
+                      icon: Icons.event_outlined,
+                      color: Color(0xFF627FA8)),
+                ]),
+                const SizedBox(height: 22),
+                const SectionTitle('Payment records'),
+                const SizedBox(height: 10),
+                ...c.payments.map(
+                  (p) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: CarmelitaCard(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      child: TimelineTile(
+                          compact: true,
+                          icon: Icons.receipt_long_outlined,
+                          color: p.status.toLowerCase().contains('verified')
+                              ? const Color(0xFF56886B)
+                              : p.status.toLowerCase().contains('rejected')
+                                  ? const Color(0xFFAA6870)
+                                  : const Color(0xFFAA8A45),
+                          title: p.label,
+                          subtitle:
+                              '${money(p.amount)} • Due ${shortDate(p.dueDate)}',
+                          trailing: StatusPill(p.status)),
+                    ),
+                  ),
+                ),
+              ])),
     );
   }
 }
-
 
 class UploadPaymentProofPage extends StatefulWidget {
   const UploadPaymentProofPage({super.key});
@@ -291,6 +364,7 @@ class UploadPaymentProofPage extends StatefulWidget {
 class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
   final amount = TextEditingController();
   final reference = TextEditingController();
+  final receiptDate = TextEditingController();
   String method = 'GCash';
   bool receiptSelected = false;
 
@@ -298,6 +372,7 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
   void dispose() {
     amount.dispose();
     reference.dispose();
+    receiptDate.dispose();
     super.dispose();
   }
 
@@ -305,7 +380,7 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
   Widget build(BuildContext context) {
     return PageFrame(
       title: 'Upload payment proof',
-      subtitle: 'Submit receipt for verification',
+      subtitle: 'Extract receipt details with OCR, review, then submit',
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 680),
         child: Column(
@@ -322,9 +397,13 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
                     ),
                   )
                   .toList(),
-              onChanged: (value) =>
-                  setState(() => method = value ?? method),
+              onChanged: (value) => setState(() => method = value ?? method),
             ),
+            const SizedBox(height: 14),
+            TextField(
+                controller: receiptDate,
+                decoration: const InputDecoration(
+                    labelText: 'Receipt date', hintText: 'Extracted by OCR')),
             const SizedBox(height: 14),
             TextField(
               controller: amount,
@@ -346,7 +425,7 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
                 setState(() => receiptSelected = true);
                 showAppSnackBar(
                   context,
-                  'Receipt selected in the frontend demo.',
+                  'Receipt selected. OCR backend is not connected; review or enter the values manually.',
                 );
               },
               child: Row(
@@ -360,7 +439,7 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
                   Expanded(
                     child: Text(
                       receiptSelected
-                          ? 'Receipt ready to submit'
+                          ? 'Receipt selected • OCR values ready for review'
                           : 'Add receipt or screenshot',
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
@@ -394,11 +473,11 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
                   );
                   showAppSnackBar(
                     context,
-                    'Payment proof submitted for verification.',
+                    'Payment proof submitted for owner/caretaker review.',
                   );
                   Navigator.of(context).pop();
                 },
-                child: const Text('Submit for verification'),
+                child: const Text('Submit for review'),
               ),
             ),
           ],
@@ -407,7 +486,6 @@ class _UploadPaymentProofPageState extends State<UploadPaymentProofPage> {
     );
   }
 }
-
 
 class TenantReportsHubPage extends StatelessWidget {
   const TenantReportsHubPage({super.key});
@@ -422,21 +500,47 @@ class TenantReportsHubPage extends StatelessWidget {
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'REPORT SUMMARY',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            MutedDashboardGrid(
+              compact: true,
+              items: [
+                MutedDashboardItem(
+                  label: 'Maintenance',
+                  value: '${controller.maintenance.length}',
+                  detail: 'Submitted issues',
+                  icon: Icons.build_outlined,
+                  color: const Color(0xFFB47A52),
+                ),
+                MutedDashboardItem(
+                  label: 'Confidential',
+                  value: '${controller.concerns.length}',
+                  detail: 'Private concerns',
+                  icon: Icons.shield_outlined,
+                  color: const Color(0xFF7D70A0),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+            const SectionTitle('Report options'),
+            const SizedBox(height: 10),
             _hub(
               context,
               'Maintenance reports',
               'Report room or property issues and follow progress.',
               Icons.build_outlined,
+              const Color(0xFFB47A52),
               const MaintenanceReportsPage(),
-            ),
-            const SizedBox(height: 12),
-            _hub(
-              context,
-              'Interactive floor plan',
-              'Select the exact room or area connected to an issue.',
-              Icons.map_outlined,
-              const InteractiveFloorPlanPage(),
             ),
             const SizedBox(height: 12),
             _hub(
@@ -444,25 +548,31 @@ class TenantReportsHubPage extends StatelessWidget {
               'Confidential concern',
               'Securely report a rule, safety, or roommate concern.',
               Icons.shield_outlined,
+              const Color(0xFF7D70A0),
               const ConfidentialConcernPage(),
             ),
             if (controller.concerns.isNotEmpty) ...[
               const SizedBox(height: 24),
               const SectionTitle('Submitted confidential concerns'),
               const SizedBox(height: 10),
-              CarmelitaCard(
-                child: Column(
-                  children: controller.concerns
-                      .map(
-                        (report) => TimelineTile(
-                          icon: Icons.shield_outlined,
-                          title: report.category,
-                          subtitle:
-                              '${report.summary}\n${shortDate(report.createdAt)}',
-                          trailing: StatusPill(report.status),
-                        ),
-                      )
-                      .toList(),
+              ...controller.concerns.map(
+                (report) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: CarmelitaCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: TimelineTile(
+                      compact: true,
+                      icon: Icons.shield_outlined,
+                      color: const Color(0xFF7D70A0),
+                      title: report.category,
+                      subtitle:
+                          '${report.summary}\n${shortDate(report.createdAt)}',
+                      trailing: StatusPill(report.status),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -477,20 +587,32 @@ class TenantReportsHubPage extends StatelessWidget {
     String title,
     String subtitle,
     IconData icon,
+    Color color,
     Widget page,
   ) {
     return CarmelitaCard(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => page),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: ListTile(
+        dense: true,
+        visualDensity: const VisualDensity(vertical: -2),
         contentPadding: EdgeInsets.zero,
-        leading: CircleAvatar(child: Icon(icon)),
+        leading: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: .075),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
         ),
-        subtitle: Text(subtitle),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 11)),
         trailing: const Icon(Icons.chevron_right),
       ),
     );
@@ -503,9 +625,77 @@ class MaintenanceReportsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = TenantController.instance;
     return PageFrame(
-      title: 'Maintenance reports', subtitle: 'Submitted issues and progress',
-      floatingActionButton: FloatingActionButton.extended(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubmitMaintenancePage())), icon: const Icon(Icons.add), label: const Text('Report issue')),
-      child: AnimatedBuilder(animation: c, builder: (context, _) => CarmelitaCard(child: Column(children: c.maintenance.map((r) => TimelineTile(icon: Icons.build_outlined, title: '${r.category} • ${r.location}', subtitle: '${r.description}\n${shortDate(r.createdAt)}', trailing: StatusPill(r.status))).toList()))),
+      title: 'Maintenance reports',
+      subtitle: 'Submitted issues and progress',
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SubmitMaintenancePage())),
+          icon: const Icon(Icons.add),
+          label: const Text('Report issue')),
+      child: AnimatedBuilder(
+          animation: c,
+          builder: (context, _) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'REPORT SUMMARY',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          letterSpacing: 1.3,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  MutedDashboardGrid(
+                    compact: true,
+                    items: [
+                      MutedDashboardItem(
+                        label: 'Open reports',
+                        value:
+                            '${c.maintenance.where((r) => r.status != 'Completed').length}',
+                        detail: 'Needs attention',
+                        icon: Icons.build_outlined,
+                        color: const Color(0xFFB47A52),
+                      ),
+                      MutedDashboardItem(
+                        label: 'High priority',
+                        value:
+                            '${c.maintenance.where((r) => r.urgency == 'High').length}',
+                        detail: 'Urgent issues',
+                        icon: Icons.priority_high_rounded,
+                        color: const Color(0xFFAA6870),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+                  const SectionTitle('Submitted reports'),
+                  const SizedBox(height: 10),
+                  ...c.maintenance.map(
+                    (r) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: CarmelitaCard(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        child: TimelineTile(
+                            compact: true,
+                            icon: Icons.build_outlined,
+                            color: r.urgency == 'High'
+                                ? const Color(0xFFAA6870)
+                                : r.urgency == 'Medium'
+                                    ? const Color(0xFFB47A52)
+                                    : const Color(0xFF627FA8),
+                            title: '${r.category} • ${r.location}',
+                            subtitle:
+                                '${r.description}\n${shortDate(r.createdAt)}',
+                            trailing: StatusPill(r.status)),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
     );
   }
 }
@@ -523,40 +713,120 @@ class _SubmitMaintenancePageState extends State<SubmitMaintenancePage> {
   String location = 'Room 204';
 
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'Submit maintenance report', subtitle: 'Describe the issue and exact location', child: ConstrainedBox(
-    constraints: const BoxConstraints(maxWidth: 760),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      DropdownButtonFormField<String>(initialValue: category, decoration: const InputDecoration(labelText: 'Issue category'), items: const ['Plumbing', 'Electrical', 'Furniture', 'Air conditioning', 'Other'].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(), onChanged: (v) => setState(() => category = v ?? category)),
-      const SizedBox(height: 14), LabeledField(label: 'Description', hint: 'Explain what is wrong and what you observed.', controller: description, maxLines: 4), const SizedBox(height: 14),
-      FloorPlanCanvas(onLocationSelected: (v) => setState(() => location = v)), const SizedBox(height: 14),
-      DropdownButtonFormField<String>(initialValue: urgency, decoration: const InputDecoration(labelText: 'Urgency'), items: const ['Low', 'Medium', 'High'].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(), onChanged: (v) => setState(() => urgency = v ?? urgency)),
-      const SizedBox(height: 14), CarmelitaCard(onTap: () => showAppSnackBar(context, 'Photo picker placeholder opened.'), child: const Row(children: [Icon(Icons.add_a_photo_outlined), SizedBox(width: 12), Expanded(child: Text('Add photo', style: TextStyle(fontWeight: FontWeight.w700))), Icon(Icons.chevron_right)])),
-      const SizedBox(height: 18), SizedBox(width: double.infinity, child: FilledButton(onPressed: () {
-        if (description.text.trim().isEmpty) { showAppSnackBar(context, 'Enter a short description first.'); return; }
-        TenantController.instance.submitMaintenance(category: category, description: description.text.trim(), location: location, urgency: urgency);
-        showAppSnackBar(context, 'Maintenance report added.'); Navigator.of(context).pop();
-      }, child: const Text('Submit report'))),
-    ]),
-  ));
+  Widget build(BuildContext context) => PageFrame(
+      title: 'Submit maintenance report',
+      subtitle: 'Describe the issue and exact location',
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 760),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          DropdownButtonFormField<String>(
+              initialValue: category,
+              decoration: const InputDecoration(labelText: 'Issue category'),
+              items: const [
+                'Plumbing',
+                'Electrical',
+                'Furniture',
+                'Air conditioning',
+                'Other'
+              ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+              onChanged: (v) => setState(() => category = v ?? category)),
+          const SizedBox(height: 14),
+          LabeledField(
+              label: 'Description',
+              hint: 'Explain what is wrong and what you observed.',
+              controller: description,
+              maxLines: 4),
+          const SizedBox(height: 14),
+          DropdownButtonFormField<String>(
+              initialValue: location,
+              decoration: const InputDecoration(labelText: 'Room / area'),
+              items: const [
+                'Room 204',
+                'Room 204 • Bathroom',
+                'Second-floor corridor',
+                'Kitchen',
+                'Laundry area',
+                'Other common area'
+              ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+              onChanged: (v) => setState(() => location = v ?? location)),
+          const SizedBox(height: 14),
+          DropdownButtonFormField<String>(
+              initialValue: urgency,
+              decoration: const InputDecoration(labelText: 'Urgency'),
+              items: const ['Low', 'Medium', 'High']
+                  .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                  .toList(),
+              onChanged: (v) => setState(() => urgency = v ?? urgency)),
+          const SizedBox(height: 14),
+          CarmelitaCard(
+              onTap: () =>
+                  showAppSnackBar(context, 'Photo picker placeholder opened.'),
+              child: const Row(children: [
+                Icon(Icons.add_a_photo_outlined),
+                SizedBox(width: 12),
+                Expanded(
+                    child: Text('Add photo',
+                        style: TextStyle(fontWeight: FontWeight.w700))),
+                Icon(Icons.chevron_right)
+              ])),
+          const SizedBox(height: 18),
+          SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                  onPressed: () {
+                    if (description.text.trim().isEmpty) {
+                      showAppSnackBar(
+                          context, 'Enter a short description first.');
+                      return;
+                    }
+                    TenantController.instance.submitMaintenance(
+                        category: category,
+                        description: description.text.trim(),
+                        location: location,
+                        urgency: urgency);
+                    showAppSnackBar(context, 'Maintenance report added.');
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Submit report'))),
+        ]),
+      ));
 }
 
 class InteractiveFloorPlanPage extends StatelessWidget {
   const InteractiveFloorPlanPage({super.key});
   @override
-  Widget build(BuildContext context) => const PageFrame(title: 'Interactive floor plan', subtitle: 'Select an exact maintenance location', child: FloorPlanCanvas());
+  Widget build(BuildContext context) => const PageFrame(
+      title: 'Interactive floor plan',
+      subtitle: 'Select an exact maintenance location',
+      child: FloorPlanCanvas());
 }
 
 class TenantAnnouncementsPage extends StatelessWidget {
   const TenantAnnouncementsPage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'Announcements', subtitle: 'Dormitory notices and reminders', child: Column(children: MockData.announcements.map((a) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: CarmelitaCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(a.title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17)), const SizedBox(height: 7), Text(a.body), const SizedBox(height: 10), Text('${shortDate(a.createdAt)} • ${a.audience}', style: Theme.of(context).textTheme.bodySmall),
-    ])),
-  )).toList()));
+  Widget build(BuildContext context) => PageFrame(
+      title: 'Announcements',
+      subtitle: 'Dormitory notices and reminders',
+      child: Column(
+          children: MockData.announcements
+              .map((a) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: CarmelitaCard(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          Text(a.title,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w800, fontSize: 17)),
+                          const SizedBox(height: 7),
+                          Text(a.body),
+                          const SizedBox(height: 10),
+                          Text('${shortDate(a.createdAt)} • ${a.audience}',
+                              style: Theme.of(context).textTheme.bodySmall),
+                        ])),
+                  ))
+              .toList()));
 }
-
 
 class TenantMessagesPage extends StatefulWidget {
   const TenantMessagesPage({super.key});
@@ -643,80 +913,147 @@ class GateCurfewPage extends StatelessWidget {
   const GateCurfewPage({super.key});
   @override
   Widget build(BuildContext context) {
-    final events = TenantController.instance.gateEvents.where((e) => e.person == 'Anna Dela Cruz').toList();
-    return PageFrame(title: 'Gate & curfew', subtitle: 'Current status and recent gate activity', child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      CarmelitaCard(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final compact = constraints.maxWidth < 330;
-            final copy = const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'CURRENT STATUS',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
+    final events = TenantController.instance.gateEvents
+        .where((e) => e.person == 'Anna Dela Cruz')
+        .toList();
+    return PageFrame(
+        title: 'Gate & curfew',
+        subtitle: 'Current status and recent gate activity',
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'GATE SUMMARY',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  letterSpacing: 1.3,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(height: 3),
-                Text(
-                  'Inside dormitory',
-                  style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                SizedBox(height: 6),
-                Text('Last IN: 8:14 PM • Face recognition'),
-              ],
-            );
-
-            if (compact) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 24,
-                        child: Icon(Icons.home_outlined),
+          ),
+          const SizedBox(height: 8),
+          CarmelitaCard(
+            padding: const EdgeInsets.all(14),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final compact = constraints.maxWidth < 330;
+                final copy = const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'CURRENT STATUS',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
                       ),
-                      SizedBox(width: 12),
-                      StatusPill('IN'),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  copy,
-                ],
-              );
-            }
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      'Inside dormitory',
+                      style: TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text('Last IN: 8:14 PM • Face recognition'),
+                  ],
+                );
 
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CircleAvatar(
-                  radius: 28,
-                  child: Icon(Icons.home_outlined),
-                ),
-                const SizedBox(width: 16),
-                Expanded(child: copy),
-                const SizedBox(width: 10),
-                const StatusPill('IN'),
-              ],
-            );
-          },
-        ),
-      ),
-      const SizedBox(height: 18), const AdaptiveGrid(children: [MetricCard(label: 'Curfew', value: '10:00 PM', detail: 'Standard schedule', icon: Icons.schedule_outlined), MetricCard(label: 'Late records', value: '0', detail: 'This month', icon: Icons.warning_amber_outlined)]),
-      const SizedBox(height: 20), Wrap(spacing: 10, runSpacing: 10, children: [
-        FilledButton.icon(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CurfewExceptionPage())), icon: const Icon(Icons.event_available_outlined), label: const Text('Request exception')),
-        OutlinedButton.icon(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VisitorRequestPage())), icon: const Icon(Icons.person_add_alt_outlined), label: const Text('Visitor request')),
-      ]),
-      const SizedBox(height: 22), const SectionTitle('Recent gate records'), const SizedBox(height: 10),
-      CarmelitaCard(child: Column(children: events.map((e) => TimelineTile(icon: e.direction == 'IN' ? Icons.login : Icons.logout, title: e.direction, subtitle: '${shortDate(e.time)} • ${timeText(e.time)} • ${e.verification}', trailing: StatusPill(e.status))).toList())),
-    ]));
+                if (compact) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundColor: Color(0x1356886B),
+                            foregroundColor: Color(0xFF56886B),
+                            child: Icon(Icons.home_outlined),
+                          ),
+                          SizedBox(width: 12),
+                          StatusPill('IN'),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      copy,
+                    ],
+                  );
+                }
+
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Color(0x1356886B),
+                      foregroundColor: Color(0xFF56886B),
+                      child: Icon(Icons.home_outlined),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(child: copy),
+                    const SizedBox(width: 10),
+                    const StatusPill('IN'),
+                  ],
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 18),
+          const MutedDashboardGrid(compact: true, items: [
+            MutedDashboardItem(
+                label: 'Curfew',
+                value: '10:00 PM',
+                detail: 'Standard schedule',
+                icon: Icons.schedule_outlined,
+                color: Color(0xFF7D70A0)),
+            MutedDashboardItem(
+                label: 'Late records',
+                value: '0',
+                detail: 'This month',
+                icon: Icons.warning_amber_outlined,
+                color: Color(0xFFAA8A45))
+          ]),
+          const SizedBox(height: 20),
+          MutedActionGrid(items: [
+            MutedActionItem(
+                label: 'Curfew exception',
+                detail: 'Request a late return',
+                color: const Color(0xFF7D70A0),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const CurfewExceptionPage())),
+                icon: Icons.event_available_outlined),
+            MutedActionItem(
+                label: 'Visitor request',
+                detail: 'Register a visitor',
+                color: const Color(0xFF568F8E),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const VisitorRequestPage())),
+                icon: Icons.person_add_alt_outlined),
+          ]),
+          const SizedBox(height: 22),
+          const SectionTitle('Recent gate records'),
+          const SizedBox(height: 10),
+          ...events.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: CarmelitaCard(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TimelineTile(
+                    compact: true,
+                    icon: e.direction == 'IN' ? Icons.login : Icons.logout,
+                    color: e.direction == 'IN'
+                        ? const Color(0xFF56886B)
+                        : const Color(0xFF627FA8),
+                    title: e.direction,
+                    subtitle:
+                        '${shortDate(e.time)} • ${timeText(e.time)} • ${e.verification}',
+                    trailing: StatusPill(e.status)),
+              ),
+            ),
+          ),
+        ]));
   }
 }
 
@@ -725,23 +1062,100 @@ class CurfewExceptionPage extends StatefulWidget {
   @override
   State<CurfewExceptionPage> createState() => _CurfewExceptionPageState();
 }
+
 class _CurfewExceptionPageState extends State<CurfewExceptionPage> {
   final reason = TextEditingController();
   final destination = TextEditingController();
   DateTime expected = DateTime(2026, 8, 9, 23);
   @override
-  Widget build(BuildContext context) => PageFrame(title: 'Curfew exception', subtitle: 'Guardian approval is required', child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 680), child: Column(children: [
-    LabeledField(label: 'Reason', hint: 'Why do you need to return late?', controller: reason, maxLines: 3), const SizedBox(height: 14),
-    LabeledField(label: 'Destination', hint: 'Where will you be?', controller: destination), const SizedBox(height: 14),
-    CarmelitaCard(child: Row(children: [const Icon(Icons.schedule_outlined), const SizedBox(width: 12), Expanded(child: Text('Expected return: ${shortDate(expected)} • ${timeText(expected)}', style: const TextStyle(fontWeight: FontWeight.w700))), TextButton(onPressed: () => setState(() => expected = expected.add(const Duration(minutes: 30))), child: const Text('+30 min'))])),
-    const SizedBox(height: 14), const CarmelitaCard(child: ListTile(contentPadding: EdgeInsets.zero, leading: Icon(Icons.verified_user_outlined), title: Text('Guardian approval required', style: TextStyle(fontWeight: FontWeight.w800)), subtitle: Text('The request goes to the linked guardian before owner/caretaker review.'))),
-    const SizedBox(height: 18), SizedBox(width: double.infinity, child: FilledButton(onPressed: () {
-      if (reason.text.trim().isEmpty || destination.text.trim().isEmpty) { showAppSnackBar(context, 'Complete the reason and destination.'); return; }
-      TenantController.instance.submitCurfew(reason: reason.text.trim(), destination: destination.text.trim(), expectedReturn: expected); showAppSnackBar(context, 'Curfew request submitted.'); Navigator.of(context).pop();
-    }, child: const Text('Submit request'))),
-  ])));
+  Widget build(BuildContext context) => PageFrame(
+      title: 'Curfew exception',
+      subtitle: 'Guardian approval is required',
+      child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 680),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'REQUEST DETAILS',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            LabeledField(
+                label: 'Reason',
+                hint: 'Why do you need to return late?',
+                controller: reason,
+                maxLines: 3),
+            const SizedBox(height: 14),
+            LabeledField(
+                label: 'Destination',
+                hint: 'Where will you be?',
+                controller: destination),
+            const SizedBox(height: 14),
+            CarmelitaCard(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(children: [
+                  Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                          color:
+                              const Color(0xFF7D70A0).withValues(alpha: .075),
+                          borderRadius: BorderRadius.circular(11)),
+                      child: const Icon(Icons.schedule_outlined,
+                          color: Color(0xFF7D70A0), size: 19)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Text(
+                          'Expected return: ${shortDate(expected)} • ${timeText(expected)}',
+                          style: const TextStyle(fontWeight: FontWeight.w700))),
+                  TextButton(
+                      onPressed: () => setState(() =>
+                          expected = expected.add(const Duration(minutes: 30))),
+                      child: const Text('+30 min'))
+                ])),
+            const SizedBox(height: 14),
+            CarmelitaCard(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: ListTile(
+                    dense: true,
+                    visualDensity: const VisualDensity(vertical: -2),
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.verified_user_outlined,
+                        color: Color(0xFF56886B)),
+                    title: const Text('Guardian confirmation',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800, fontSize: 13)),
+                    subtitle: const Text(
+                        'Guardian input supports the owner/caretaker’s final decision.',
+                        style: TextStyle(fontSize: 11)))),
+            const SizedBox(height: 18),
+            SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                    onPressed: () {
+                      if (reason.text.trim().isEmpty ||
+                          destination.text.trim().isEmpty) {
+                        showAppSnackBar(
+                            context, 'Complete the reason and destination.');
+                        return;
+                      }
+                      TenantController.instance.submitCurfew(
+                          reason: reason.text.trim(),
+                          destination: destination.text.trim(),
+                          expectedReturn: expected);
+                      showAppSnackBar(context, 'Curfew request submitted.');
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Submit request'))),
+          ])));
 }
-
 
 class VisitorRequestPage extends StatefulWidget {
   const VisitorRequestPage({super.key});
@@ -770,7 +1184,18 @@ class _VisitorRequestPageState extends State<VisitorRequestPage> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 680),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'VISITOR DETAILS',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 10),
             LabeledField(
               label: 'Visitor name',
               controller: name,
@@ -784,12 +1209,12 @@ class _VisitorRequestPageState extends State<VisitorRequestPage> {
             ),
             const SizedBox(height: 14),
             CarmelitaCard(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Column(
                 children: [
                   InfoRow(
                     label: 'Schedule',
-                    value:
-                        '${shortDate(schedule)} • ${timeText(schedule)}',
+                    value: '${shortDate(schedule)} • ${timeText(schedule)}',
                     icon: Icons.event_outlined,
                   ),
                   const SizedBox(height: 8),
@@ -799,8 +1224,8 @@ class _VisitorRequestPageState extends State<VisitorRequestPage> {
                     children: [
                       OutlinedButton(
                         onPressed: () => setState(
-                          () => schedule =
-                              schedule.add(const Duration(days: 1)),
+                          () =>
+                              schedule = schedule.add(const Duration(days: 1)),
                         ),
                         child: const Text('+1 day'),
                       ),
@@ -848,7 +1273,6 @@ class _VisitorRequestPageState extends State<VisitorRequestPage> {
   }
 }
 
-
 class ConfidentialConcernPage extends StatefulWidget {
   const ConfidentialConcernPage({super.key});
 
@@ -875,23 +1299,48 @@ class _ConfidentialConcernPageState extends State<ConfidentialConcernPage> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 720),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CarmelitaCard(
+            Text(
+              'CONFIDENTIAL REPORT',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            CarmelitaCard(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -2),
                 contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.lock_outline),
-                title: Text(
-                  'Confidential handling',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                leading: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF7D70A0).withValues(alpha: .075),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.lock_outline,
+                      color: Color(0xFF7D70A0), size: 20),
                 ),
-                subtitle: Text(
+                title: const Text(
+                  'Confidential handling',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                ),
+                subtitle: const Text(
                   'Only authorized owner/caretaker accounts should review '
                   'these reports after backend role policies are applied.',
+                  style: TextStyle(fontSize: 11),
                 ),
               ),
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+              isDense: true,
               initialValue: category,
               decoration: const InputDecoration(labelText: 'Category'),
               items: const [
@@ -943,6 +1392,31 @@ class _ConfidentialConcernPageState extends State<ConfidentialConcernPage> {
                 child: const Text('Submit confidential report'),
               ),
             ),
+            if (TenantController.instance.concerns.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              const SectionTitle('Submitted concerns'),
+              const SizedBox(height: 10),
+              ...TenantController.instance.concerns.map(
+                (report) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: CarmelitaCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: TimelineTile(
+                      compact: true,
+                      icon: Icons.shield_outlined,
+                      color: const Color(0xFF7D70A0),
+                      title: report.category,
+                      subtitle:
+                          '${report.summary}\n${shortDate(report.createdAt)}',
+                      trailing: StatusPill(report.status),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -953,16 +1427,43 @@ class _ConfidentialConcernPageState extends State<ConfidentialConcernPage> {
 class RulesPoliciesPage extends StatelessWidget {
   const RulesPoliciesPage({super.key});
   @override
-  Widget build(BuildContext context) => const PageFrame(title: 'Rules & policies', subtitle: 'Dormitory guidelines and procedures', child: Column(children: [
-    _PolicyCard(title: 'Curfew', icon: Icons.schedule_outlined, body: 'Return by the standard curfew unless an exception has been approved by the guardian and owner/caretaker.'), SizedBox(height: 12),
-    _PolicyCard(title: 'Payments', icon: Icons.payments_outlined, body: 'Submit payments according to the agreed schedule. Uploaded proof remains pending until verified.'), SizedBox(height: 12),
-    _PolicyCard(title: 'Safety and access', icon: Icons.shield_outlined, body: 'Do not allow unregistered people to enter through the gate. Report unusual access events immediately.'),
-  ]));
+  Widget build(BuildContext context) => const PageFrame(
+      title: 'Rules & policies',
+      subtitle: 'Dormitory guidelines and procedures',
+      child: Column(children: [
+        _PolicyCard(
+            title: 'Curfew',
+            icon: Icons.schedule_outlined,
+            body:
+                'Return by the standard curfew unless an exception has been approved by the guardian and owner/caretaker.'),
+        SizedBox(height: 12),
+        _PolicyCard(
+            title: 'Payments',
+            icon: Icons.payments_outlined,
+            body:
+                'Submit payments according to the agreed schedule. Uploaded proof remains pending until verified.'),
+        SizedBox(height: 12),
+        _PolicyCard(
+            title: 'Safety and access',
+            icon: Icons.shield_outlined,
+            body:
+                'Do not allow unregistered people to enter through the gate. Report unusual access events immediately.'),
+      ]));
 }
 
 class _PolicyCard extends StatelessWidget {
-  const _PolicyCard({required this.title, required this.icon, required this.body});
-  final String title; final IconData icon; final String body;
+  const _PolicyCard(
+      {required this.title, required this.icon, required this.body});
+  final String title;
+  final IconData icon;
+  final String body;
   @override
-  Widget build(BuildContext context) => CarmelitaCard(child: ListTile(contentPadding: EdgeInsets.zero, leading: CircleAvatar(child: Icon(icon)), title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)), subtitle: Padding(padding: const EdgeInsets.only(top: 6), child: Text(body))));
+  Widget build(BuildContext context) => CarmelitaCard(
+      child: ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: CircleAvatar(child: Icon(icon)),
+          title:
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+          subtitle: Padding(
+              padding: const EdgeInsets.only(top: 6), child: Text(body))));
 }

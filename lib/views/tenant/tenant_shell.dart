@@ -7,13 +7,33 @@ class TenantShell extends StatelessWidget {
   const TenantShell({super.key});
   @override
   Widget build(BuildContext context) => const AdaptiveRoleShell(
-    roleLabel: 'Tenant',
-    destinations: [
-      AppDestination(label: 'Home', icon: Icons.home_outlined, selectedIcon: Icons.home, page: TenantDashboardPage()),
-      AppDestination(label: 'Payments', icon: Icons.account_balance_wallet_outlined, selectedIcon: Icons.account_balance_wallet, page: PaymentsPage()),
-      AppDestination(label: 'Reports', icon: Icons.assignment_outlined, selectedIcon: Icons.assignment, page: TenantReportsHubPage()),
-      AppDestination(label: 'Gate', icon: Icons.sensor_door_outlined, selectedIcon: Icons.sensor_door, page: GateCurfewPage()),
-      AppDestination(label: 'Profile', icon: Icons.person_outline, selectedIcon: Icons.person, page: ProfilePage()),
-    ],
-  );
+        roleLabel: 'Tenant',
+        destinations: [
+          AppDestination(
+              label: 'Home',
+              icon: Icons.home_outlined,
+              selectedIcon: Icons.home,
+              page: TenantDashboardPage()),
+          AppDestination(
+              label: 'Payments',
+              icon: Icons.account_balance_wallet_outlined,
+              selectedIcon: Icons.account_balance_wallet,
+              page: PaymentsPage()),
+          AppDestination(
+              label: 'Reports',
+              icon: Icons.assignment_outlined,
+              selectedIcon: Icons.assignment,
+              page: TenantReportsHubPage()),
+          AppDestination(
+              label: 'Gate',
+              icon: Icons.sensor_door_outlined,
+              selectedIcon: Icons.sensor_door,
+              page: GateCurfewPage()),
+          AppDestination(
+              label: 'Profile',
+              icon: Icons.person_outline,
+              selectedIcon: Icons.person,
+              page: ProfilePage()),
+        ],
+      );
 }
