@@ -373,132 +373,318 @@ class _OwnerRouteTile extends StatelessWidget {
   }
 }
 
-class OperationsHubPage extends StatelessWidget {
+class OperationsHubPage extends StatefulWidget {
   const OperationsHubPage({super.key});
+
+  @override
+  State<OperationsHubPage> createState() => _OperationsHubPageState();
+}
+
+class _OperationsHubPageState extends State<OperationsHubPage> {
+  final searchController = TextEditingController();
+  String query = '';
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final items = <_OperationItem>[
       const _OperationItem(
+        'Tenants',
+        'Manage tenant records',
+        Icons.groups_outlined,
+        TenantDirectoryPage(),
+      ),
+      const _OperationItem(
         'Rooms',
-        'Occupancy and availability',
+        'Manage rooms',
         Icons.bed_outlined,
         RoomMonitoringPage(),
       ),
       const _OperationItem(
         'Payments',
-        'Review OCR-extracted receipt details',
+        'Track payments',
         Icons.payments_outlined,
         PaymentVerificationPage(),
       ),
       const _OperationItem(
         'Maintenance',
-        'Track and update reports',
+        'Manage requests',
         Icons.build_outlined,
         MaintenanceManagementPage(),
       ),
-      const _OperationItem('Contract expiry', 'Contracts ending soon',
+      const _OperationItem('Contract expiry', 'Track renewals',
           Icons.event_busy_outlined, ContractExpiryAlertsPage()),
-      const _OperationItem('Income & expenses', 'Monthly financial snapshot',
+      const _OperationItem('Income & expenses', 'Monitor finances',
           Icons.insights_outlined, ExpenseIncomeSummaryPage()),
       const _OperationItem(
         'Curfew',
-        'Outside tenants and requests',
+        'Review requests',
         Icons.schedule_outlined,
         CurfewMonitoringPage(),
       ),
       const _OperationItem(
         'Visitors',
-        'Expected and previous visitors',
+        'Manage visitor requests',
         Icons.people_outline,
         VisitorManagementPage(),
       ),
       const _OperationItem(
         'Confidential reports',
-        'Authorized concern review',
+        'Review private reports',
         Icons.shield_outlined,
         ConfidentialReportsPage(),
       ),
-      const _OperationItem(
-          'Disciplinary records',
-          'Verified violations and notices',
-          Icons.gavel_outlined,
-          DisciplinaryRecordsPage()),
+      const _OperationItem('Disciplinary records', 'Manage violations',
+          Icons.gavel_outlined, DisciplinaryRecordsPage()),
       const _OperationItem(
         'Announcements',
-        'Create and publish notices',
+        'Post updates',
         Icons.campaign_outlined,
         AnnouncementsManagementPage(),
       ),
       const _OperationItem(
         'Messages',
-        'Tenants and guardians',
+        'Send messages',
         Icons.chat_bubble_outline,
         OwnerMessagingPage(),
       ),
       const _OperationItem(
         'Contact directory',
-        'Guardian and emergency contacts',
+        'View important contacts',
         Icons.emergency_outlined,
         EmergencyContactsPage(),
       ),
       const _OperationItem(
         'System status',
-        'Cameras, processing, and connectivity',
+        'Monitor cameras and services',
         Icons.memory_outlined,
         IotDeviceStatusPage(),
       ),
-      const _OperationItem(
-          'Reports & analytics',
-          'Occupancy, payment, maintenance, and curfew trends',
-          Icons.analytics_outlined,
-          ReportsAnalyticsPage()),
+      const _OperationItem('Reports & analytics', 'View detailed reports',
+          Icons.analytics_outlined, ReportsAnalyticsPage()),
     ];
+
+    final filtered = items.where((item) {
+      final value = '${item.title} ${item.subtitle}'.toLowerCase();
+      return value.contains(query.toLowerCase());
+    }).toList();
+    final controller = OwnerController.instance;
 
     return PageFrame(
       title: 'Operations',
-      subtitle: 'Quick monitoring and field updates',
-      child: AdaptiveGrid(
-        minTileWidth: 250,
-        children: items
-            .map(
-              (item) => CarmelitaCard(
-                onTap: () => _ownerPush(context, item.page),
-                child: Row(
-                  children: [
-                    CircleAvatar(child: Icon(item.icon)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                            ),
+      subtitle: "Carmelita's Dormitory",
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Expanded(
+                child: TextField(
+                  controller: searchController,
+                  onChanged: (value) => setState(() => query = value.trim()),
+                  decoration: InputDecoration(
+                    hintText: 'Search operations, tenants, rooms...',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    suffixIcon: query.isEmpty
+                        ? null
+                        : IconButton(
+                            tooltip: 'Clear search',
+                            onPressed: () {
+                              searchController.clear();
+                              setState(() => query = '');
+                            },
+                            icon: const Icon(Icons.close_rounded),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            item.subtitle,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(Icons.chevron_right),
-                  ],
+                  ),
                 ),
               ),
-            )
-            .toList(),
+              const SizedBox(width: 10),
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(Icons.tune_rounded,
+                    color: Theme.of(context).colorScheme.primary),
+              ),
+            ]),
+            const SizedBox(height: 16),
+            LayoutBuilder(builder: (context, constraints) {
+              final cards = [
+                _OperationsStatus(
+                    'Occupied rooms',
+                    '${controller.occupiedBeds}/${controller.totalCapacity}',
+                    Icons.bed_outlined,
+                    const Color(0xFF56886B)),
+                _OperationsStatus(
+                    'Pending payments',
+                    '${controller.pendingPaymentProofs}',
+                    Icons.payments_outlined,
+                    const Color(0xFFAA8A45)),
+                _OperationsStatus(
+                    'Open requests',
+                    '${controller.openMaintenance}',
+                    Icons.assignment_outlined,
+                    const Color(0xFF627FA8)),
+                _OperationsStatus('Alerts', '${controller.pendingGateReviews}',
+                    Icons.warning_amber_rounded, const Color(0xFFAA6870)),
+              ];
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: constraints.maxWidth < 700 ? 4 : 4,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: constraints.maxWidth < 500 ? .67 : 1.2,
+                ),
+                itemCount: cards.length,
+                itemBuilder: (context, index) =>
+                    _OperationsStatusCard(data: cards[index]),
+              );
+            }),
+            const SizedBox(height: 24),
+            Text('Operations',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w900)),
+            const SizedBox(height: 10),
+            if (filtered.isEmpty)
+              const EmptyState(
+                  icon: Icons.search_off_rounded,
+                  title: 'No operations found',
+                  message: 'Try a different search term.')
+            else
+              LayoutBuilder(builder: (context, constraints) {
+                final columns = constraints.maxWidth >= 1000 ? 3 : 2;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: constraints.maxWidth < 520 ? 2.15 : 2.8,
+                  ),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) => _OperationShortcut(
+                    item: filtered[index],
+                    color: _operationColors[index % _operationColors.length],
+                    onTap: () => _ownerPush(context, filtered[index].page),
+                  ),
+                );
+              }),
+          ],
+        ),
       ),
     );
   }
+
+  static const _operationColors = [
+    Color(0xFF56886B),
+    Color(0xFF627FA8),
+    Color(0xFFAA8A45),
+    Color(0xFFB47A52),
+    Color(0xFF7D70A0),
+    Color(0xFF568F8E),
+    Color(0xFFAA6870),
+    Color(0xFFA86D87),
+  ];
+}
+
+class _OperationsStatus {
+  const _OperationsStatus(this.label, this.value, this.icon, this.color);
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+}
+
+class _OperationsStatusCard extends StatelessWidget {
+  const _OperationsStatusCard({required this.data});
+  final _OperationsStatus data;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: data.color.withValues(alpha: .035),
+          border: Border.all(color: data.color.withValues(alpha: .10)),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                  color: data.color.withValues(alpha: .09),
+                  borderRadius: BorderRadius.circular(9)),
+              child: Icon(data.icon, color: data.color, size: 19)),
+          const Spacer(),
+          Text(data.value,
+              style: TextStyle(
+                  color: data.color,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18)),
+          const SizedBox(height: 2),
+          Text(data.label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w700, height: 1.15)),
+        ]),
+      );
+}
+
+class _OperationShortcut extends StatelessWidget {
+  const _OperationShortcut(
+      {required this.item, required this.color, required this.onTap});
+  final _OperationItem item;
+  final Color color;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) => CarmelitaCard(
+        onTap: onTap,
+        padding: const EdgeInsets.all(10),
+        child: Row(children: [
+          Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                  color: color.withValues(alpha: .075),
+                  borderRadius: BorderRadius.circular(11)),
+              child: Icon(item.icon, color: color, size: 21)),
+          const SizedBox(width: 9),
+          Expanded(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text(item.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800, fontSize: 13)),
+                const SizedBox(height: 2),
+                Text(item.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 10)),
+              ])),
+          Icon(Icons.chevron_right_rounded,
+              size: 18, color: Theme.of(context).colorScheme.outline),
+        ]),
+      );
 }
 
 class _OperationItem {
