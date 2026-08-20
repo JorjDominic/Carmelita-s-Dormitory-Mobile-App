@@ -286,42 +286,69 @@ class PaymentsPage extends StatelessWidget {
     return PageFrame(
       title: 'Payments & utilities',
       subtitle: 'Balances, due dates, and history',
-      actions: [
-        IconButton(
-            tooltip: 'Upload payment proof',
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const UploadPaymentProofPage())),
-            icon: const Icon(Icons.upload_file_outlined))
-      ],
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Upload payment proof',
+        backgroundColor: const Color(0xFF627FA8),
+        foregroundColor: Colors.white,
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const UploadPaymentProofPage()),
+        ),
+        child: const Icon(Icons.upload_file_outlined),
+      ),
       child: AnimatedBuilder(
           animation: c,
           builder: (context, _) =>
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const AdaptiveGrid(children: [
-                  MetricCard(
+                Text(
+                  'ACCOUNT SUMMARY',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                        letterSpacing: 1.3,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                const MutedDashboardGrid(compact: true, items: [
+                  MutedDashboardItem(
                       label: 'Outstanding',
                       value: '₱4,400',
                       detail: 'Rent + utilities',
-                      icon: Icons.account_balance_wallet_outlined),
-                  MetricCard(
+                      icon: Icons.account_balance_wallet_outlined,
+                      color: Color(0xFFAA8A45)),
+                  MutedDashboardItem(
                       label: 'Next due date',
                       value: 'Aug 10',
                       detail: 'Utilities',
-                      icon: Icons.event_outlined),
+                      icon: Icons.event_outlined,
+                      color: Color(0xFF627FA8)),
                 ]),
                 const SizedBox(height: 22),
                 const SectionTitle('Payment records'),
                 const SizedBox(height: 10),
-                CarmelitaCard(
-                    child: Column(
-                        children: c.payments
-                            .map((p) => TimelineTile(
-                                icon: Icons.receipt_long_outlined,
-                                title: p.label,
-                                subtitle:
-                                    '${money(p.amount)} • Due ${shortDate(p.dueDate)}',
-                                trailing: StatusPill(p.status)))
-                            .toList())),
+                ...c.payments.map(
+                  (p) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: CarmelitaCard(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      child: TimelineTile(
+                          compact: true,
+                          icon: Icons.receipt_long_outlined,
+                          color: p.status.toLowerCase().contains('verified')
+                              ? const Color(0xFF56886B)
+                              : p.status.toLowerCase().contains('rejected')
+                                  ? const Color(0xFFAA6870)
+                                  : const Color(0xFFAA8A45),
+                          title: p.label,
+                          subtitle:
+                              '${money(p.amount)} • Due ${shortDate(p.dueDate)}',
+                          trailing: StatusPill(p.status)),
+                    ),
+                  ),
+                ),
               ])),
     );
   }

@@ -49,8 +49,10 @@ class MutedDashboardItem {
 }
 
 class MutedDashboardGrid extends StatelessWidget {
-  const MutedDashboardGrid({required this.items, super.key});
+  const MutedDashboardGrid(
+      {required this.items, this.compact = false, super.key});
   final List<MutedDashboardItem> items;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) =>
@@ -66,8 +68,11 @@ class MutedDashboardGrid extends StatelessWidget {
             crossAxisCount: columns,
             crossAxisSpacing: 8,
             mainAxisSpacing: 8,
-            childAspectRatio:
-                constraints.maxWidth < 500 && columns == 4 ? .65 : 1.15,
+            childAspectRatio: compact
+                ? (constraints.maxWidth < 500 ? 1.45 : 1.7)
+                : constraints.maxWidth < 500 && columns == 4
+                    ? .65
+                    : 1.15,
           ),
           itemBuilder: (context, index) {
             final item = items[index];
@@ -75,7 +80,7 @@ class MutedDashboardGrid extends StatelessWidget {
               onTap: item.onTap,
               borderRadius: BorderRadius.circular(16),
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(compact ? 8 : 10),
                 decoration: BoxDecoration(
                   color: item.color.withValues(alpha: .035),
                   border: Border.all(color: item.color.withValues(alpha: .10)),
@@ -85,32 +90,40 @@ class MutedDashboardGrid extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          padding: const EdgeInsets.all(7),
+                          padding: EdgeInsets.all(compact ? 5 : 7),
                           decoration: BoxDecoration(
                               color: item.color.withValues(alpha: .09),
                               borderRadius: BorderRadius.circular(9)),
-                          child: Icon(item.icon, color: item.color, size: 19)),
+                          child: Icon(item.icon,
+                              color: item.color, size: compact ? 18 : 19)),
                       const Spacer(),
                       Text(item.value,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: item.color,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 17)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(
+                                  color: item.color,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: compact ? 19 : 17)),
                       const SizedBox(height: 2),
                       Text(item.label,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.w800)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(
+                                  fontSize: compact ? 12 : 10,
+                                  fontWeight: FontWeight.w800)),
                       Text(item.detail,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall
-                              ?.copyWith(fontSize: 9)),
+                              ?.copyWith(fontSize: compact ? 11 : 9)),
                     ]),
               ),
             );
@@ -250,6 +263,12 @@ class PageFrame extends StatelessWidget {
                 floatingActionButton!,
               ],
             );
+    }
+    if (resolvedFloatingActionButton != null && navScope != null) {
+      resolvedFloatingActionButton = Padding(
+        padding: const EdgeInsets.only(bottom: 82),
+        child: resolvedFloatingActionButton,
+      );
     }
 
     return Scaffold(
@@ -1219,6 +1238,8 @@ class TimelineTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.trailing,
+    this.color,
+    this.compact = false,
     super.key,
   });
 
@@ -1226,32 +1247,44 @@ class TimelineTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final Widget? trailing;
+  final Color? color;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
+    final accent = color ?? Theme.of(context).colorScheme.primary;
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 2,
-        vertical: 3,
+      dense: compact,
+      visualDensity: compact ? const VisualDensity(vertical: -3) : null,
+      minLeadingWidth: compact ? 36 : null,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: compact ? 0 : 2,
+        vertical: compact ? 0 : 3,
       ),
       leading: Container(
-        width: 42,
-        height: 42,
+        width: compact ? 36 : 42,
+        height: compact ? 36 : 42,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: .085),
+          color: accent.withValues(alpha: .075),
           borderRadius: const BorderRadius.all(Radius.circular(14)),
         ),
         child: Icon(
           icon,
-          size: 21,
-          color: Theme.of(context).colorScheme.primary,
+          size: compact ? 18 : 21,
+          color: accent,
         ),
       ),
       title: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.w700),
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: compact ? 12.5 : null,
+        ),
       ),
-      subtitle: Text(subtitle),
+      subtitle: Text(
+        subtitle,
+        style: compact ? const TextStyle(fontSize: 11) : null,
+      ),
       trailing: trailing,
     );
   }
