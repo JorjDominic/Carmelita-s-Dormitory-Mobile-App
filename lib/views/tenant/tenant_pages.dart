@@ -500,12 +500,46 @@ class TenantReportsHubPage extends StatelessWidget {
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'REPORT SUMMARY',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            MutedDashboardGrid(
+              compact: true,
+              items: [
+                MutedDashboardItem(
+                  label: 'Maintenance',
+                  value: '${controller.maintenance.length}',
+                  detail: 'Submitted issues',
+                  icon: Icons.build_outlined,
+                  color: const Color(0xFFB47A52),
+                ),
+                MutedDashboardItem(
+                  label: 'Confidential',
+                  value: '${controller.concerns.length}',
+                  detail: 'Private concerns',
+                  icon: Icons.shield_outlined,
+                  color: const Color(0xFF7D70A0),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+            const SectionTitle('Report options'),
+            const SizedBox(height: 10),
             _hub(
               context,
               'Maintenance reports',
               'Report room or property issues and follow progress.',
               Icons.build_outlined,
+              const Color(0xFFB47A52),
               const MaintenanceReportsPage(),
             ),
             const SizedBox(height: 12),
@@ -514,25 +548,31 @@ class TenantReportsHubPage extends StatelessWidget {
               'Confidential concern',
               'Securely report a rule, safety, or roommate concern.',
               Icons.shield_outlined,
+              const Color(0xFF7D70A0),
               const ConfidentialConcernPage(),
             ),
             if (controller.concerns.isNotEmpty) ...[
               const SizedBox(height: 24),
               const SectionTitle('Submitted confidential concerns'),
               const SizedBox(height: 10),
-              CarmelitaCard(
-                child: Column(
-                  children: controller.concerns
-                      .map(
-                        (report) => TimelineTile(
-                          icon: Icons.shield_outlined,
-                          title: report.category,
-                          subtitle:
-                              '${report.summary}\n${shortDate(report.createdAt)}',
-                          trailing: StatusPill(report.status),
-                        ),
-                      )
-                      .toList(),
+              ...controller.concerns.map(
+                (report) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: CarmelitaCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: TimelineTile(
+                      compact: true,
+                      icon: Icons.shield_outlined,
+                      color: const Color(0xFF7D70A0),
+                      title: report.category,
+                      subtitle:
+                          '${report.summary}\n${shortDate(report.createdAt)}',
+                      trailing: StatusPill(report.status),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -547,20 +587,32 @@ class TenantReportsHubPage extends StatelessWidget {
     String title,
     String subtitle,
     IconData icon,
+    Color color,
     Widget page,
   ) {
     return CarmelitaCard(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => page),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: ListTile(
+        dense: true,
+        visualDensity: const VisualDensity(vertical: -2),
         contentPadding: EdgeInsets.zero,
-        leading: CircleAvatar(child: Icon(icon)),
+        leading: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: .075),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
         ),
-        subtitle: Text(subtitle),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 11)),
         trailing: const Icon(Icons.chevron_right),
       ),
     );
@@ -582,16 +634,68 @@ class MaintenanceReportsPage extends StatelessWidget {
           label: const Text('Report issue')),
       child: AnimatedBuilder(
           animation: c,
-          builder: (context, _) => CarmelitaCard(
-              child: Column(
-                  children: c.maintenance
-                      .map((r) => TimelineTile(
-                          icon: Icons.build_outlined,
-                          title: '${r.category} • ${r.location}',
-                          subtitle:
-                              '${r.description}\n${shortDate(r.createdAt)}',
-                          trailing: StatusPill(r.status)))
-                      .toList()))),
+          builder: (context, _) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'REPORT SUMMARY',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          letterSpacing: 1.3,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  MutedDashboardGrid(
+                    compact: true,
+                    items: [
+                      MutedDashboardItem(
+                        label: 'Open reports',
+                        value:
+                            '${c.maintenance.where((r) => r.status != 'Completed').length}',
+                        detail: 'Needs attention',
+                        icon: Icons.build_outlined,
+                        color: const Color(0xFFB47A52),
+                      ),
+                      MutedDashboardItem(
+                        label: 'High priority',
+                        value:
+                            '${c.maintenance.where((r) => r.urgency == 'High').length}',
+                        detail: 'Urgent issues',
+                        icon: Icons.priority_high_rounded,
+                        color: const Color(0xFFAA6870),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+                  const SectionTitle('Submitted reports'),
+                  const SizedBox(height: 10),
+                  ...c.maintenance.map(
+                    (r) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: CarmelitaCard(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        child: TimelineTile(
+                            compact: true,
+                            icon: Icons.build_outlined,
+                            color: r.urgency == 'High'
+                                ? const Color(0xFFAA6870)
+                                : r.urgency == 'Medium'
+                                    ? const Color(0xFFB47A52)
+                                    : const Color(0xFF627FA8),
+                            title: '${r.category} • ${r.location}',
+                            subtitle:
+                                '${r.description}\n${shortDate(r.createdAt)}',
+                            trailing: StatusPill(r.status)),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
     );
   }
 }
@@ -1126,23 +1230,48 @@ class _ConfidentialConcernPageState extends State<ConfidentialConcernPage> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 720),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CarmelitaCard(
+            Text(
+              'CONFIDENTIAL REPORT',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            CarmelitaCard(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -2),
                 contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.lock_outline),
-                title: Text(
-                  'Confidential handling',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                leading: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF7D70A0).withValues(alpha: .075),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.lock_outline,
+                      color: Color(0xFF7D70A0), size: 20),
                 ),
-                subtitle: Text(
+                title: const Text(
+                  'Confidential handling',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                ),
+                subtitle: const Text(
                   'Only authorized owner/caretaker accounts should review '
                   'these reports after backend role policies are applied.',
+                  style: TextStyle(fontSize: 11),
                 ),
               ),
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+              isDense: true,
               initialValue: category,
               decoration: const InputDecoration(labelText: 'Category'),
               items: const [
@@ -1194,6 +1323,31 @@ class _ConfidentialConcernPageState extends State<ConfidentialConcernPage> {
                 child: const Text('Submit confidential report'),
               ),
             ),
+            if (TenantController.instance.concerns.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              const SectionTitle('Submitted concerns'),
+              const SizedBox(height: 10),
+              ...TenantController.instance.concerns.map(
+                (report) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: CarmelitaCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: TimelineTile(
+                      compact: true,
+                      icon: Icons.shield_outlined,
+                      color: const Color(0xFF7D70A0),
+                      title: report.category,
+                      subtitle:
+                          '${report.summary}\n${shortDate(report.createdAt)}',
+                      trailing: StatusPill(report.status),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
