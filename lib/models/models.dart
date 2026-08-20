@@ -1,7 +1,12 @@
 enum UserRole { tenant, guardian, ownerCaretaker }
 
 class AppUser {
-  const AppUser({required this.id, required this.name, required this.email, required this.role, this.phone = ''});
+  const AppUser(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.role,
+      this.phone = ''});
   final String id;
   final String name;
   final String email;
@@ -10,7 +15,15 @@ class AppUser {
 }
 
 class Room {
-  const Room({required this.id, required this.number, required this.floor, required this.capacity, required this.occupied, required this.bedSpace, required this.roommates, required this.utilitySummary});
+  const Room(
+      {required this.id,
+      required this.number,
+      required this.floor,
+      required this.capacity,
+      required this.occupied,
+      required this.bedSpace,
+      required this.roommates,
+      required this.utilitySummary});
   final String id;
   final String number;
   final String floor;
@@ -22,7 +35,13 @@ class Room {
 }
 
 class Payment {
-  Payment({required this.id, required this.label, required this.amount, required this.dueDate, required this.status, this.reference});
+  Payment(
+      {required this.id,
+      required this.label,
+      required this.amount,
+      required this.dueDate,
+      required this.status,
+      this.reference});
   final String id;
   final String label;
   final double amount;
@@ -32,7 +51,15 @@ class Payment {
 }
 
 class MaintenanceReport {
-  MaintenanceReport({required this.id, required this.category, required this.description, required this.location, required this.urgency, required this.status, required this.createdAt, this.notes = ''});
+  MaintenanceReport(
+      {required this.id,
+      required this.category,
+      required this.description,
+      required this.location,
+      required this.urgency,
+      required this.status,
+      required this.createdAt,
+      this.notes = ''});
   final String id;
   final String category;
   final String description;
@@ -44,7 +71,13 @@ class MaintenanceReport {
 }
 
 class GateEvent {
-  const GateEvent({required this.id, required this.person, required this.direction, required this.time, required this.verification, required this.status});
+  const GateEvent(
+      {required this.id,
+      required this.person,
+      required this.direction,
+      required this.time,
+      required this.verification,
+      required this.status});
   final String id;
   final String person;
   final String direction;
@@ -54,7 +87,14 @@ class GateEvent {
 }
 
 class CurfewRequest {
-  CurfewRequest({required this.id, required this.tenantName, required this.reason, required this.destination, required this.expectedReturn, required this.guardianStatus, required this.ownerStatus});
+  CurfewRequest(
+      {required this.id,
+      required this.tenantName,
+      required this.reason,
+      required this.destination,
+      required this.expectedReturn,
+      required this.guardianStatus,
+      required this.ownerStatus});
   final String id;
   final String tenantName;
   final String reason;
@@ -65,7 +105,12 @@ class CurfewRequest {
 }
 
 class VisitorRequest {
-  VisitorRequest({required this.id, required this.visitorName, required this.relationship, required this.schedule, required this.status});
+  VisitorRequest(
+      {required this.id,
+      required this.visitorName,
+      required this.relationship,
+      required this.schedule,
+      required this.status});
   final String id;
   final String visitorName;
   final String relationship;
@@ -74,7 +119,12 @@ class VisitorRequest {
 }
 
 class Announcement {
-  const Announcement({required this.id, required this.title, required this.body, required this.createdAt, required this.audience});
+  const Announcement(
+      {required this.id,
+      required this.title,
+      required this.body,
+      required this.createdAt,
+      required this.audience});
   final String id;
   final String title;
   final String body;
@@ -83,7 +133,12 @@ class Announcement {
 }
 
 class ConcernReport {
-  ConcernReport({required this.id, required this.category, required this.summary, required this.status, required this.createdAt});
+  ConcernReport(
+      {required this.id,
+      required this.category,
+      required this.summary,
+      required this.status,
+      required this.createdAt});
   final String id;
   final String category;
   final String summary;
@@ -92,20 +147,24 @@ class ConcernReport {
 }
 
 class DeviceStatus {
-  const DeviceStatus({required this.name, required this.status, required this.detail});
+  const DeviceStatus(
+      {required this.name, required this.status, required this.detail});
   final String name;
   final String status;
   final String detail;
 }
 
 class AppNotification {
-  const AppNotification({required this.title, required this.body, required this.time, required this.type});
+  const AppNotification(
+      {required this.title,
+      required this.body,
+      required this.time,
+      required this.type});
   final String title;
   final String body;
   final DateTime time;
   final String type;
 }
-
 
 class ChatMessage {
   const ChatMessage({
@@ -122,7 +181,6 @@ class ChatMessage {
   final String body;
   final DateTime sentAt;
 }
-
 
 class DormRoomStatus {
   DormRoomStatus({

@@ -48,41 +48,44 @@ class _AuthFlowState extends State<AuthFlow> {
 
   @override
   Widget build(BuildContext context) => AnimatedSwitcher(
-    duration: const Duration(milliseconds: 350),
-    child: stage == 0
-        ? const SplashPage(key: ValueKey('splash'))
-        : stage == 1
-            ? WelcomePage(key: const ValueKey('welcome'), onContinue: () => setState(() => stage = 2))
-            : const SignInPage(key: ValueKey('signin')),
-  );
+        duration: const Duration(milliseconds: 350),
+        child: stage == 0
+            ? const SplashPage(key: ValueKey('splash'))
+            : stage == 1
+                ? WelcomePage(
+                    key: const ValueKey('welcome'),
+                    onContinue: () => setState(() => stage = 2))
+                : const SignInPage(key: ValueKey('signin')),
+      );
 }
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: Center(
-      child: TweenAnimationBuilder<double>(
-        duration: const Duration(milliseconds: 700),
-        tween: Tween(begin: .85, end: 1),
-        curve: Curves.easeOutCubic,
-        builder: (context, value, child) => Transform.scale(scale: value, child: Opacity(opacity: value, child: child)),
-        child: const Column(mainAxisSize: MainAxisSize.min, children: [
-          CarmelitaLogo(height: 130), SizedBox(height: 20),
-          Text(
-            "Carmelita's Dormitory",
-            style: TextStyle(
-              fontFamily: 'GreatVibes',
-              fontWeight: FontWeight.w600,
-              fontSize: 36,
-            ),
+        body: Center(
+          child: TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 700),
+            tween: Tween(begin: .85, end: 1),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, child) => Transform.scale(
+                scale: value, child: Opacity(opacity: value, child: child)),
+            child: const Column(mainAxisSize: MainAxisSize.min, children: [
+              CarmelitaLogo(height: 130),
+              SizedBox(height: 20),
+              Text(
+                "Carmelita's Dormitory",
+                style: TextStyle(
+                  fontFamily: 'GreatVibes',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 36,
+                ),
+              ),
+            ]),
           ),
-        ]),
-      ),
-    ),
-  );
+        ),
+      );
 }
-
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({
@@ -94,8 +97,7 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPhone =
-        MediaQuery.sizeOf(context).width < 720;
+    final isPhone = MediaQuery.sizeOf(context).width < 720;
 
     return Scaffold(
       body: SafeArea(
@@ -104,29 +106,27 @@ class WelcomePage extends StatelessWidget {
           child: ResponsiveContent(
             maxWidth: 1120,
             child: isPhone
-              ? Column(
-                  children: [
-                    _photo(context, height: 300),
-                    const SizedBox(height: 28),
-                    _copy(context),
-                  ],
-                )
-              : Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 11,
-                      child:
-                          _photo(context, height: 590),
-                    ),
-                    const SizedBox(width: 46),
-                    Expanded(
-                      flex: 9,
-                      child: _copy(context),
-                    ),
-                  ],
-                ),
+                ? Column(
+                    children: [
+                      _photo(context, height: 300),
+                      const SizedBox(height: 28),
+                      _copy(context),
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 11,
+                        child: _photo(context, height: 590),
+                      ),
+                      const SizedBox(width: 46),
+                      Expanded(
+                        flex: 9,
+                        child: _copy(context),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
@@ -138,8 +138,7 @@ class WelcomePage extends StatelessWidget {
     required double height,
   }) {
     return ClipRRect(
-      borderRadius:
-          const BorderRadius.all(Radius.circular(30)),
+      borderRadius: const BorderRadius.all(Radius.circular(30)),
       child: SizedBox(
         height: height,
         width: double.infinity,
@@ -185,8 +184,7 @@ class WelcomePage extends StatelessWidget {
   Widget _copy(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const CarmelitaLogo(height: 72),
         const SizedBox(height: 28),
@@ -252,12 +250,8 @@ class _OnboardingPoint extends StatelessWidget {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: Theme.of(context)
-                .colorScheme
-                .primary
-                .withValues(alpha: .08),
-            borderRadius:
-                const BorderRadius.all(Radius.circular(14)),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: .08),
+            borderRadius: const BorderRadius.all(Radius.circular(14)),
           ),
           child: Icon(
             icon,
@@ -267,19 +261,16 @@ class _OnboardingPoint extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style:
-                    Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 3),
               Text(
                 body,
-                style:
-                    Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
@@ -301,7 +292,11 @@ class _SignInPageState extends State<SignInPage> {
   final session = SessionController.instance;
 
   @override
-  void dispose() { email.dispose(); password.dispose(); super.dispose(); }
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
@@ -312,61 +307,109 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: SingleChildScrollView(
-        child: ResponsiveContent(
-        maxWidth: 980,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
-            child: CarmelitaCard(
-              padding: const EdgeInsets.all(26),
-              child: AnimatedBuilder(
-                animation: session,
-                builder: (context, _) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Center(child: CarmelitaLogo(height: 132)), const SizedBox(height: 24),
-                  Text(
-                    'Sign in',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontFamily: 'GreatVibes',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 36,
-                          height: 1.1,
-                        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: ResponsiveContent(
+              maxWidth: 980,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: CarmelitaCard(
+                    padding: const EdgeInsets.all(26),
+                    child: AnimatedBuilder(
+                      animation: session,
+                      builder: (context, _) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Center(child: CarmelitaLogo(height: 132)),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Sign in',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                    fontFamily: 'GreatVibes',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 36,
+                                    height: 1.1,
+                                  ),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                                'Use the account provided by the dormitory.'),
+                            const SizedBox(height: 24),
+                            TextField(
+                                controller: email,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: const InputDecoration(
+                                    labelText: 'Email address',
+                                    prefixIcon: Icon(Icons.mail_outline))),
+                            const SizedBox(height: 14),
+                            TextField(
+                                controller: password,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                    labelText: 'Password',
+                                    prefixIcon: Icon(Icons.lock_outline)),
+                                onSubmitted: (_) => _submit()),
+                            Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              const ForgotPasswordPage())),
+                                  child: const Text('Forgot password?'),
+                                )),
+                            SizedBox(
+                                width: double.infinity,
+                                child: FilledButton.icon(
+                                  onPressed: session.loading ? null : _submit,
+                                  icon: session.loading
+                                      ? const SizedBox(
+                                          width: 18,
+                                          height: 18,
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 2))
+                                      : const Icon(Icons.login),
+                                  label: Text(session.loading
+                                      ? 'Signing in…'
+                                      : 'Sign in'),
+                                )),
+                            const SizedBox(height: 22),
+                            Text('Frontend demo accounts',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w800)),
+                            const SizedBox(height: 10),
+                            Wrap(spacing: 8, runSpacing: 8, children: [
+                              _demoChip('Tenant', 'tenant@carmelita.demo'),
+                              _demoChip('Guardian', 'guardian@carmelita.demo'),
+                              _demoChip(
+                                  'Owner/Caretaker', 'owner@carmelita.demo'),
+                            ]),
+                            const SizedBox(height: 12),
+                            Text(
+                                'Demo authentication is isolated in the service layer so it can be replaced by Supabase Auth later.',
+                                style: Theme.of(context).textTheme.bodySmall),
+                          ]),
+                    ),
                   ),
-                  const SizedBox(height: 6), const Text('Use the account provided by the dormitory.'), const SizedBox(height: 24),
-                  TextField(controller: email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email address', prefixIcon: Icon(Icons.mail_outline))),
-                  const SizedBox(height: 14),
-                  TextField(controller: password, obscureText: true, decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock_outline)), onSubmitted: (_) => _submit()),
-                  Align(alignment: Alignment.centerRight, child: TextButton(
-                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ForgotPasswordPage())),
-                    child: const Text('Forgot password?'),
-                  )),
-                  SizedBox(width: double.infinity, child: FilledButton.icon(
-                    onPressed: session.loading ? null : _submit,
-                    icon: session.loading ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.login),
-                    label: Text(session.loading ? 'Signing in…' : 'Sign in'),
-                  )),
-                  const SizedBox(height: 22),
-                  Text('Frontend demo accounts', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 10),
-                  Wrap(spacing: 8, runSpacing: 8, children: [
-                    _demoChip('Tenant', 'tenant@carmelita.demo'),
-                    _demoChip('Guardian', 'guardian@carmelita.demo'),
-                    _demoChip('Owner/Caretaker', 'owner@carmelita.demo'),
-                  ]),
-                  const SizedBox(height: 12), Text('Demo authentication is isolated in the service layer so it can be replaced by Supabase Auth later.', style: Theme.of(context).textTheme.bodySmall),
-                ]),
+                ),
               ),
             ),
           ),
         ),
-        ),
-      ),
-    ),
-  );
+      );
 
-  Widget _demoChip(String label, String value) => ActionChip(label: Text(label), onPressed: () => setState(() { email.text = value; password.text = 'demo1234'; }));
+  Widget _demoChip(String label, String value) => ActionChip(
+      label: Text(label),
+      onPressed: () => setState(() {
+            email.text = value;
+            password.text = 'demo1234';
+          }));
 }
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -382,23 +425,48 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) => PageFrame(
-    title: 'Reset password', subtitle: 'Account recovery',
-    child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 520), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('Enter your account email. The backend can later send a recovery code or secure reset link.'), const SizedBox(height: 20),
-      TextField(controller: email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email address')), const SizedBox(height: 14),
-      SizedBox(width: double.infinity, child: FilledButton(
-        onPressed: loading ? null : () async {
-          setState(() => loading = true);
-          try {
-            await service.requestPasswordReset(email.text.trim());
-            if (!context.mounted) return;
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => OtpPage(email: email.text.trim())));
-          } catch (e) {
-            if (context.mounted) showAppSnackBar(context, e.toString().replaceFirst('Exception: ', ''));
-          } finally { if (mounted) setState(() => loading = false); }
-        },
-        child: Text(loading ? 'Sending…' : 'Continue'),
-      )),
-    ])),
-  );
+        title: 'Reset password',
+        subtitle: 'Account recovery',
+        child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text(
+                  'Enter your account email. The backend can later send a recovery code or secure reset link.'),
+              const SizedBox(height: 20),
+              TextField(
+                  controller: email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration:
+                      const InputDecoration(labelText: 'Email address')),
+              const SizedBox(height: 14),
+              SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: loading
+                        ? null
+                        : () async {
+                            setState(() => loading = true);
+                            try {
+                              await service
+                                  .requestPasswordReset(email.text.trim());
+                              if (!context.mounted) return;
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) =>
+                                      OtpPage(email: email.text.trim())));
+                            } catch (e) {
+                              if (context.mounted)
+                                showAppSnackBar(
+                                    context,
+                                    e
+                                        .toString()
+                                        .replaceFirst('Exception: ', ''));
+                            } finally {
+                              if (mounted) setState(() => loading = false);
+                            }
+                          },
+                    child: Text(loading ? 'Sending…' : 'Continue'),
+                  )),
+            ])),
+      );
 }

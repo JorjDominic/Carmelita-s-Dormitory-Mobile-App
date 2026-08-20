@@ -93,8 +93,7 @@ class PageFrame extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontFamily:
-                        useScriptTitle ? 'GreatVibes' : null,
+                    fontFamily: useScriptTitle ? 'GreatVibes' : null,
                     fontSize: useScriptTitle ? 30 : null,
                     fontWeight:
                         useScriptTitle ? FontWeight.w600 : FontWeight.w700,
@@ -121,8 +120,7 @@ class PageFrame extends StatelessWidget {
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
-          keyboardDismissBehavior:
-              ScrollViewKeyboardDismissBehavior.onDrag,
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
           ),
@@ -139,8 +137,7 @@ class PageFrame extends StatelessWidget {
               curve: Curves.easeOutCubic,
               builder: (context, value, page) {
                 return Opacity(
-                  opacity: ((value - .975) / .025)
-                      .clamp(0.0, 1.0),
+                  opacity: ((value - .975) / .025).clamp(0.0, 1.0),
                   child: Transform.translate(
                     offset: Offset(0, 12 * (1 - value)),
                     child: page,
@@ -172,8 +169,7 @@ class CarmelitaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ext = Theme.of(context)
-        .extension<CarmelitaThemeExtension>();
+    final ext = Theme.of(context).extension<CarmelitaThemeExtension>();
     final scheme = Theme.of(context).colorScheme;
 
     final content = AnimatedContainer(
@@ -181,9 +177,8 @@ class CarmelitaCard extends StatelessWidget {
       curve: Curves.easeOutCubic,
       padding: padding,
       decoration: BoxDecoration(
-        color: emphasis
-            ? scheme.primary.withValues(alpha: .075)
-            : scheme.surface,
+        color:
+            emphasis ? scheme.primary.withValues(alpha: .075) : scheme.surface,
         borderRadius: const BorderRadius.all(
           Radius.circular(22),
         ),
@@ -192,8 +187,7 @@ class CarmelitaCard extends StatelessWidget {
               ? scheme.primary.withValues(alpha: .22)
               : ext?.border ?? Theme.of(context).dividerColor,
         ),
-        boxShadow: Theme.of(context).brightness ==
-                Brightness.light
+        boxShadow: Theme.of(context).brightness == Brightness.light
             ? [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: .032),
@@ -226,7 +220,6 @@ class CarmelitaCard extends StatelessWidget {
     );
   }
 }
-
 
 class ElegantHeader extends StatelessWidget {
   const ElegantHeader({
@@ -265,8 +258,7 @@ class ElegantHeader extends StatelessWidget {
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
                 fontFamily: useScriptTitle ? 'GreatVibes' : null,
                 fontSize: useScriptTitle ? titleSize + 10 : titleSize,
-                fontWeight:
-                    useScriptTitle ? FontWeight.w600 : FontWeight.w700,
+                fontWeight: useScriptTitle ? FontWeight.w600 : FontWeight.w700,
                 height: useScriptTitle ? 1.15 : null,
                 letterSpacing: useScriptTitle ? 0 : null,
               ),
@@ -343,15 +335,13 @@ class SectionTitle extends StatelessWidget {
             children: [
               Text(
                 title,
-                style:
-                    Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 3),
                 Text(
                   subtitle!,
-                  style:
-                      Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ],
@@ -362,7 +352,6 @@ class SectionTitle extends StatelessWidget {
     );
   }
 }
-
 
 class StatusPill extends StatelessWidget {
   const StatusPill(
@@ -446,7 +435,6 @@ class StatusPill extends StatelessWidget {
   }
 }
 
-
 class MetricCard extends StatelessWidget {
   const MetricCard({
     required this.label,
@@ -480,10 +468,8 @@ class MetricCard extends StatelessWidget {
             width: iconSize,
             height: iconSize,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withValues(alpha: .09),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: .09),
               borderRadius: const BorderRadius.all(
                 Radius.circular(14),
               ),
@@ -515,10 +501,7 @@ class MetricCard extends StatelessWidget {
                 child: Text(
                   value,
                   maxLines: 1,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontSize: veryNarrow ? 18 : 21,
                         fontWeight: FontWeight.w800,
                       ),
@@ -590,7 +573,6 @@ class MetricCard extends StatelessWidget {
   }
 }
 
-
 class QuickAction extends StatelessWidget {
   const QuickAction({
     required this.label,
@@ -619,10 +601,8 @@ class QuickAction extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withValues(alpha: .09),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: .09),
               borderRadius: const BorderRadius.all(
                 Radius.circular(14),
               ),
@@ -651,7 +631,6 @@ class QuickAction extends StatelessWidget {
   }
 }
 
-
 class AdaptiveGrid extends StatelessWidget {
   const AdaptiveGrid({
     required this.children,
@@ -667,8 +646,7 @@ class AdaptiveGrid extends StatelessWidget {
     if (width < 600) return 2;
 
     const spacing = 12.0;
-    final estimated =
-        ((width + spacing) / (minTileWidth + spacing)).floor();
+    final estimated = ((width + spacing) / (minTileWidth + spacing)).floor();
     return estimated.clamp(2, 4);
   }
 
@@ -680,8 +658,7 @@ class AdaptiveGrid extends StatelessWidget {
       builder: (context, constraints) {
         final columns = _columnsFor(constraints.maxWidth);
         final itemWidth =
-            (constraints.maxWidth - (spacing * (columns - 1))) /
-                columns;
+            (constraints.maxWidth - (spacing * (columns - 1))) / columns;
 
         return Wrap(
           spacing: spacing,
@@ -700,7 +677,6 @@ class AdaptiveGrid extends StatelessWidget {
     );
   }
 }
-
 
 class ActionGrid extends StatelessWidget {
   const ActionGrid({
@@ -722,8 +698,7 @@ class ActionGrid extends StatelessWidget {
             : width < 700
                 ? 4
                 : 6;
-        final itemWidth =
-            (width - (spacing * (columns - 1))) / columns;
+        final itemWidth = (width - (spacing * (columns - 1))) / columns;
 
         return Wrap(
           spacing: spacing,
@@ -763,8 +738,7 @@ class PhotoHero extends StatelessWidget {
         : height.clamp(220, 320).toDouble();
 
     return ClipRRect(
-      borderRadius:
-          const BorderRadius.all(Radius.circular(26)),
+      borderRadius: const BorderRadius.all(Radius.circular(26)),
       child: SizedBox(
         height: effectiveHeight,
         child: Stack(
@@ -788,15 +762,11 @@ class PhotoHero extends StatelessWidget {
               right: 20,
               bottom: 18,
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium
-                        ?.copyWith(
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                         ),
@@ -819,7 +789,6 @@ class PhotoHero extends StatelessWidget {
     );
   }
 }
-
 
 class AttentionCard extends StatelessWidget {
   const AttentionCard({
@@ -849,10 +818,8 @@ class AttentionCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withValues(alpha: .09),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: .09),
               borderRadius: const BorderRadius.all(
                 Radius.circular(15),
               ),
@@ -954,18 +921,13 @@ class InfoRow extends StatelessWidget {
                       Icon(
                         icon,
                         size: 18,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 8),
                     ],
                     Text(
                       label,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
                     ),
@@ -987,8 +949,7 @@ class InfoRow extends StatelessWidget {
                   Icon(
                     icon,
                     size: 19,
-                    color:
-                        Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 10),
                 ],
@@ -996,10 +957,7 @@ class InfoRow extends StatelessWidget {
                   width: 118,
                   child: Text(
                     label,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                   ),
@@ -1043,12 +1001,8 @@ class TimelineTile extends StatelessWidget {
         width: 42,
         height: 42,
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .primary
-              .withValues(alpha: .085),
-          borderRadius:
-              const BorderRadius.all(Radius.circular(14)),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: .085),
+          borderRadius: const BorderRadius.all(Radius.circular(14)),
         ),
         child: Icon(
           icon,
@@ -1084,8 +1038,7 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(vertical: 42),
+        padding: const EdgeInsets.symmetric(vertical: 42),
         child: Column(
           children: [
             Container(
@@ -1101,26 +1054,21 @@ class EmptyState extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 34,
-                color:
-                    Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             ConstrainedBox(
-              constraints:
-                  const BoxConstraints(maxWidth: 420),
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Text(
                 message,
                 textAlign: TextAlign.center,
-                style:
-                    Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
             if (action != null) ...[
@@ -1143,16 +1091,13 @@ void showAppSnackBar(
   );
 }
 
-String money(double value) =>
-    '₱${value.toStringAsFixed(0)}';
+String money(double value) => '₱${value.toStringAsFixed(0)}';
 
-String shortDate(DateTime value) =>
-    '${value.month}/${value.day}/${value.year}';
+String shortDate(DateTime value) => '${value.month}/${value.day}/${value.year}';
 
 String timeText(DateTime value) {
-  final hour = value.hour == 0
-      ? 12
-      : (value.hour > 12 ? value.hour - 12 : value.hour);
+  final hour =
+      value.hour == 0 ? 12 : (value.hour > 12 ? value.hour - 12 : value.hour);
   final minute = value.minute.toString().padLeft(2, '0');
   return '$hour:$minute ${value.hour >= 12 ? 'PM' : 'AM'}';
 }

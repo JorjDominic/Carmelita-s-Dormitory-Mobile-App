@@ -442,7 +442,8 @@ class GuardianCurfewRequestsPage extends StatelessWidget {
     final c = GuardianController.instance;
     return PageFrame(
         title: 'Curfew requests',
-        subtitle: 'Approve or reject linked tenant requests',
+        subtitle:
+            'Provide supporting input; owner/caretaker makes the final decision',
         child: AnimatedBuilder(
             animation: c,
             builder: (context, _) => Column(
@@ -469,20 +470,21 @@ class GuardianCurfewRequestsPage extends StatelessWidget {
                                     label: 'Expected return',
                                     value:
                                         '${shortDate(r.expectedReturn)} • ${timeText(r.expectedReturn)}'),
-                                if (r.guardianStatus == 'Pending') ...[
+                                if (r.guardianStatus == 'Input pending') ...[
                                   const SizedBox(height: 12),
                                   Row(children: [
                                     Expanded(
                                         child: OutlinedButton(
                                             onPressed: () =>
                                                 c.decideCurfew(r, false),
-                                            child: const Text('Reject'))),
+                                            child: const Text('Note concern'))),
                                     const SizedBox(width: 10),
                                     Expanded(
                                         child: FilledButton(
                                             onPressed: () =>
                                                 c.decideCurfew(r, true),
-                                            child: const Text('Approve'))),
+                                            child:
+                                                const Text('Confirm details'))),
                                   ])
                                 ],
                               ])),
@@ -643,23 +645,23 @@ class EmergencySafetyAlertsPage extends StatelessWidget {
   const EmergencySafetyAlertsPage({super.key});
   @override
   Widget build(BuildContext context) => const PageFrame(
-      title: 'Emergency & safety alerts',
-      subtitle: 'Urgent gate and dormitory notifications',
+      title: 'Dormitory contact info',
+      subtitle: 'Static office and emergency contact details',
       child: Column(children: [
         CarmelitaCard(
             child: TimelineTile(
                 icon: Icons.info_outline,
-                title: 'No unresolved alerts for Anna',
-                subtitle: 'All recent gate events are verified.',
-                trailing: StatusPill('Clear'))),
+                title: 'Dormitory office',
+                subtitle: '+63 917 000 0001 • 8:00 AM–8:00 PM',
+                trailing: StatusPill('Contact'))),
         SizedBox(height: 12),
         CarmelitaCard(
             child: ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.emergency_outlined),
-                title: Text('Emergency contact process',
+                title: Text('Emergency services',
                     style: TextStyle(fontWeight: FontWeight.w800)),
                 subtitle: Text(
-                    'Urgent alerts can route to the registered guardian and owner/caretaker after backend notification integration.'))),
+                    'For immediate danger, contact local emergency services. This page is a directory, not a live SOS or push-alert feature.'))),
       ]));
 }

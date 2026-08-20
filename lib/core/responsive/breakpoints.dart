@@ -8,11 +8,9 @@ class AppBreakpoints {
 
   static double width(BuildContext context) => MediaQuery.sizeOf(context).width;
 
-  static bool isExtraSmall(BuildContext context) =>
-      width(context) < extraSmall;
+  static bool isExtraSmall(BuildContext context) => width(context) < extraSmall;
 
-  static bool isPhone(BuildContext context) =>
-      width(context) < phone;
+  static bool isPhone(BuildContext context) => width(context) < phone;
 
   static bool isTablet(BuildContext context) {
     final value = width(context);
@@ -67,8 +65,8 @@ class ResponsiveContent extends StatelessWidget {
           maxWidth: maxWidth ?? AppBreakpoints.contentMaxWidth(context),
         ),
         child: Padding(
-          padding: padding ??
-              EdgeInsets.fromLTRB(horizontal, 10, horizontal, 28),
+          padding:
+              padding ?? EdgeInsets.fromLTRB(horizontal, 10, horizontal, 28),
           child: child,
         ),
       ),

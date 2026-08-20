@@ -10,13 +10,34 @@ import '../../models/models.dart';
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
   @override
-  Widget build(BuildContext context) => PageFrame(
-    title: 'Notifications', subtitle: 'Recent updates and reminders',
-    child: CarmelitaCard(child: Column(children: MockData.notifications.map((n) => TimelineTile(
-      icon: n.type == 'Payment' ? Icons.payments_outlined : n.type == 'Gate' ? Icons.sensor_door_outlined : Icons.build_outlined,
-      title: n.title, subtitle: '${n.body}\n${shortDate(n.time)} • ${timeText(n.time)}',
-    )).toList())),
-  );
+  Widget build(BuildContext context) {
+    final ranked = [...MockData.notifications]
+      ..sort((a, b) => _urgency(b.type).compareTo(_urgency(a.type)));
+    return PageFrame(
+      title: 'Notifications',
+      subtitle: 'Updates ranked by urgency',
+      child: CarmelitaCard(
+          child: Column(
+              children: ranked
+                  .map((n) => TimelineTile(
+                        icon: n.type == 'Payment'
+                            ? Icons.payments_outlined
+                            : n.type == 'Gate'
+                                ? Icons.sensor_door_outlined
+                                : Icons.build_outlined,
+                        title: n.title,
+                        subtitle:
+                            '${n.body}\n${shortDate(n.time)} • ${timeText(n.time)}',
+                      ))
+                  .toList())),
+    );
+  }
+
+  int _urgency(String type) => type == 'Gate'
+      ? 3
+      : type == 'Payment'
+          ? 2
+          : 1;
 }
 
 class ProfilePage extends StatelessWidget {
@@ -24,28 +45,66 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = SessionController.instance.currentUser!;
-    final role = user.role == UserRole.ownerCaretaker ? 'Owner / Caretaker' : user.role == UserRole.guardian ? 'Guardian' : 'Tenant';
+    final role = user.role == UserRole.ownerCaretaker
+        ? 'Owner / Caretaker'
+        : user.role == UserRole.guardian
+            ? 'Guardian'
+            : 'Tenant';
     return PageFrame(
-      title: 'Profile', subtitle: 'Personal and contact information',
-      actions: [IconButton(tooltip: 'Notifications', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NotificationsPage())), icon: const Icon(Icons.notifications_outlined))],
+      title: 'Profile',
+      subtitle: 'Personal and contact information',
+      actions: [
+        IconButton(
+            tooltip: 'Notifications',
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const NotificationsPage())),
+            icon: const Icon(Icons.notifications_outlined))
+      ],
       child: Column(children: [
-        CarmelitaCard(child: Row(children: [
-          CircleAvatar(radius: 34, child: Text(user.name.substring(0, 1), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800))), const SizedBox(width: 16),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(user.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(user.email), const SizedBox(height: 8), StatusPill(role),
-          ])),
+        CarmelitaCard(
+            child: Row(children: [
+          CircleAvatar(
+              radius: 34,
+              child: Text(user.name.substring(0, 1),
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.w800))),
+          const SizedBox(width: 16),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text(user.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w800)),
+                const SizedBox(height: 4),
+                Text(user.email),
+                const SizedBox(height: 8),
+                StatusPill(role),
+              ])),
         ])),
         const SizedBox(height: 16),
-        CarmelitaCard(child: Column(children: [
-          InfoRow(label: 'Full name', value: user.name, icon: Icons.person_outline), InfoRow(label: 'Email', value: user.email, icon: Icons.mail_outline), InfoRow(label: 'Phone', value: user.phone, icon: Icons.phone_outlined),
+        CarmelitaCard(
+            child: Column(children: [
+          InfoRow(
+              label: 'Full name', value: user.name, icon: Icons.person_outline),
+          InfoRow(label: 'Email', value: user.email, icon: Icons.mail_outline),
+          InfoRow(
+              label: 'Phone', value: user.phone, icon: Icons.phone_outlined),
         ])),
         const SizedBox(height: 16),
-        ListTile(leading: const Icon(Icons.settings_outlined), title: const Text('Settings'), subtitle: const Text('Appearance, privacy, password, and sign out'), trailing: const Icon(Icons.chevron_right), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsPage()))),
+        ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Settings'),
+            subtitle: const Text('Appearance, privacy, password, and sign out'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const SettingsPage()))),
       ]),
     );
   }
 }
-
 
 class _ThemeModeSelector extends StatelessWidget {
   const _ThemeModeSelector({
@@ -191,9 +250,7 @@ class _ThemeModeChoice extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    color: selected
-                        ? scheme.primary
-                        : scheme.onSurface,
+                    color: selected ? scheme.primary : scheme.onSurface,
                   ),
                 ),
               ),
@@ -204,7 +261,6 @@ class _ThemeModeChoice extends StatelessWidget {
     );
   }
 }
-
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -275,6 +331,18 @@ class SettingsPage extends StatelessWidget {
                     trailing: Icon(Icons.chevron_right_rounded),
                   ),
                   const Divider(),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.fingerprint_outlined),
+                    title: const Text('Device binding',
+                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    subtitle: const Text(
+                        'Register this device and enable the native biometric app lock.'),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const DeviceBindingPage())),
+                  ),
+                  const Divider(),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.privacy_tip_outlined),
@@ -330,32 +398,96 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
+class DeviceBindingPage extends StatelessWidget {
+  const DeviceBindingPage({super.key});
+  @override
+  Widget build(BuildContext context) => PageFrame(
+        title: 'Device binding',
+        subtitle: 'One tenant account, one trusted device',
+        child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: Column(children: [
+              const CarmelitaCard(
+                  child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.phonelink_lock_outlined),
+                      title: Text('Register this device'),
+                      subtitle: Text(
+                          'Binding supports accurate geofencing and protects access with fingerprint or Face ID. Native biometric and device-token services are not connected yet.'))),
+              const SizedBox(height: 14),
+              SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                      onPressed: () => showAppSnackBar(context,
+                          'Device binding requires native biometric and backend integration.'),
+                      icon: const Icon(Icons.fingerprint),
+                      label: const Text('Bind and enable biometrics'))),
+            ])),
+      );
+}
+
 class OtpPage extends StatelessWidget {
   const OtpPage({required this.email, super.key});
   final String email;
   @override
   Widget build(BuildContext context) => PageFrame(
-    title: 'Verification code', subtitle: email,
-    child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 520), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('Enter the verification code sent to your email. This is a frontend placeholder until authentication is connected.'), const SizedBox(height: 20),
-      const TextField(keyboardType: TextInputType.number, maxLength: 6, decoration: InputDecoration(labelText: '6-digit code', prefixIcon: Icon(Icons.pin_outlined))),
-      SizedBox(width: double.infinity, child: FilledButton(onPressed: () { showAppSnackBar(context, 'Verification UI completed. Backend connection comes next.'); Navigator.of(context).popUntil((route) => route.isFirst); }, child: const Text('Verify'))),
-    ])),
-  );
+        title: 'Verification code',
+        subtitle: email,
+        child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text(
+                  'Enter the verification code sent to your email. This is a frontend placeholder until authentication is connected.'),
+              const SizedBox(height: 20),
+              const TextField(
+                  keyboardType: TextInputType.number,
+                  maxLength: 6,
+                  decoration: InputDecoration(
+                      labelText: '6-digit code',
+                      prefixIcon: Icon(Icons.pin_outlined))),
+              SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                      onPressed: () {
+                        showAppSnackBar(context,
+                            'Verification UI completed. Backend connection comes next.');
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
+                      },
+                      child: const Text('Verify'))),
+            ])),
+      );
 }
 
 class DormitoryInfoPage extends StatelessWidget {
   const DormitoryInfoPage({super.key});
   @override
   Widget build(BuildContext context) => const PageFrame(
-    title: "Carmelita's Dormitory", subtitle: 'Dormitory information',
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      PhotoHero(image: AppAssets.exterior, title: 'More than a place to stay', subtitle: 'A place to belong', height: 270), SizedBox(height: 20),
-      CarmelitaCard(child: Column(children: [
-        InfoRow(label: 'Type', value: 'Dormitory for girls', icon: Icons.home_outlined),
-        InfoRow(label: 'Room setup', value: 'Up to 4 tenants per room', icon: Icons.bed_outlined),
-        InfoRow(label: 'Location', value: 'Brgy. Concepcion, Baliwag, Bulacan', icon: Icons.location_on_outlined),
-      ])),
-    ]),
-  );
+        title: "Carmelita's Dormitory",
+        subtitle: 'Dormitory information',
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          PhotoHero(
+              image: AppAssets.exterior,
+              title: 'More than a place to stay',
+              subtitle: 'A place to belong',
+              height: 270),
+          SizedBox(height: 20),
+          CarmelitaCard(
+              child: Column(children: [
+            InfoRow(
+                label: 'Type',
+                value: 'Dormitory for girls',
+                icon: Icons.home_outlined),
+            InfoRow(
+                label: 'Room setup',
+                value: 'Up to 4 tenants per room',
+                icon: Icons.bed_outlined),
+            InfoRow(
+                label: 'Location',
+                value: 'Brgy. Concepcion, Baliwag, Bulacan',
+                icon: Icons.location_on_outlined),
+          ])),
+        ]),
+      );
 }

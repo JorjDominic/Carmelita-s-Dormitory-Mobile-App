@@ -13,7 +13,6 @@ void _ownerPush(BuildContext context, Widget page) {
   );
 }
 
-
 class OwnerDashboardPage extends StatelessWidget {
   const OwnerDashboardPage({super.key});
 
@@ -23,7 +22,7 @@ class OwnerDashboardPage extends StatelessWidget {
 
     return PageFrame(
       title: 'Dashboard',
-      subtitle: 'Owner / caretaker overview',
+      subtitle: 'Priority-ranked Today view',
       actions: [
         IconButton(
           tooltip: 'Notifications',
@@ -31,8 +30,7 @@ class OwnerDashboardPage extends StatelessWidget {
             context,
             const NotificationsPage(),
           ),
-          icon:
-              const Icon(Icons.notifications_none_rounded),
+          icon: const Icon(Icons.notifications_none_rounded),
         ),
       ],
       child: AnimatedBuilder(
@@ -54,15 +52,13 @@ class OwnerDashboardPage extends StatelessWidget {
             const PhotoHero(
               image: AppAssets.dormOverview,
               title: "Carmelita's Dormitory",
-              subtitle:
-                  'Quick monitoring for daily operations',
+              subtitle: 'Quick monitoring for daily operations',
               height: 220,
             ),
             const SizedBox(height: 22),
             const SectionTitle(
               'Property status',
-              subtitle:
-                  'The numbers that matter most right now',
+              subtitle: 'The numbers that matter most right now',
             ),
             const SizedBox(height: 10),
             AdaptiveGrid(
@@ -72,8 +68,7 @@ class OwnerDashboardPage extends StatelessWidget {
                   label: 'Occupancy',
                   value:
                       '${controller.occupiedBeds}/${controller.totalCapacity}',
-                  detail:
-                      '${controller.rooms.length} rooms',
+                  detail: '${controller.rooms.length} rooms',
                   icon: Icons.bed_outlined,
                   onTap: () => _ownerPush(
                     context,
@@ -83,8 +78,7 @@ class OwnerDashboardPage extends StatelessWidget {
                 ),
                 MetricCard(
                   label: 'Payment reviews',
-                  value:
-                      '${controller.pendingPaymentProofs}',
+                  value: '${controller.pendingPaymentProofs}',
                   detail: 'Proofs waiting',
                   icon: Icons.payments_outlined,
                   onTap: () => _ownerPush(
@@ -104,8 +98,7 @@ class OwnerDashboardPage extends StatelessWidget {
                 ),
                 MetricCard(
                   label: 'Curfew',
-                  value:
-                      '${controller.pendingCurfewReviews}',
+                  value: '${controller.pendingCurfewReviews}',
                   detail: 'Requests to review',
                   icon: Icons.schedule_outlined,
                   onTap: () => _ownerPush(
@@ -115,8 +108,7 @@ class OwnerDashboardPage extends StatelessWidget {
                 ),
                 MetricCard(
                   label: 'Gate alerts',
-                  value:
-                      '${controller.pendingGateReviews}',
+                  value: '${controller.pendingGateReviews}',
                   detail: 'Flagged events',
                   icon: Icons.security_outlined,
                   onTap: () => _ownerPush(
@@ -128,20 +120,25 @@ class OwnerDashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const SectionTitle(
-              'Requires attention',
-              subtitle:
-                  'Actionable items before routine monitoring',
+              'Today • highest priority first',
+              subtitle: 'Actionable items before routine monitoring',
+            ),
+            const SizedBox(height: 10),
+            AttentionCard(
+              icon: Icons.event_busy_outlined,
+              title: '1 contract expires within 30 days',
+              subtitle: 'Review renewal or move-out arrangements.',
+              status: 'Soon',
+              onTap: () =>
+                  _ownerPush(context, const ContractExpiryAlertsPage()),
             ),
             const SizedBox(height: 10),
             AttentionCard(
               icon: Icons.receipt_long_outlined,
               title:
                   '${controller.pendingPaymentProofs} payment proof(s) waiting',
-              subtitle:
-                  'Review uploaded proof before changing payment status.',
-              status: controller.pendingPaymentProofs > 0
-                  ? 'Pending'
-                  : 'Clear',
+              subtitle: 'Review uploaded proof before changing payment status.',
+              status: controller.pendingPaymentProofs > 0 ? 'Pending' : 'Clear',
               onTap: () => _ownerPush(
                 context,
                 const PaymentVerificationPage(),
@@ -153,10 +150,8 @@ class OwnerDashboardPage extends StatelessWidget {
               title:
                   '${controller.pendingCurfewReviews} curfew request(s) waiting',
               subtitle:
-                  'Guardian-approved requests need owner/caretaker review.',
-              status: controller.pendingCurfewReviews > 0
-                  ? 'Pending'
-                  : 'Clear',
+                  'Guardian input is supporting information; your decision is final.',
+              status: controller.pendingCurfewReviews > 0 ? 'Pending' : 'Clear',
               onTap: () => _ownerPush(
                 context,
                 const CurfewRequestReviewPage(),
@@ -165,13 +160,10 @@ class OwnerDashboardPage extends StatelessWidget {
             const SizedBox(height: 10),
             AttentionCard(
               icon: Icons.videocam_outlined,
-              title:
-                  '${controller.pendingGateReviews} flagged gate event(s)',
+              title: '${controller.pendingGateReviews} flagged gate event(s)',
               subtitle:
                   'Review identity mismatch, unrecognized person, or tailgating alerts.',
-              status: controller.pendingGateReviews > 0
-                  ? 'Review'
-                  : 'Clear',
+              status: controller.pendingGateReviews > 0 ? 'Review' : 'Clear',
               onTap: () => _ownerPush(
                 context,
                 const GateMonitoringPage(),
@@ -184,14 +176,11 @@ class OwnerDashboardPage extends StatelessWidget {
   }
 }
 
-
-
 class TenantDirectoryPage extends StatefulWidget {
   const TenantDirectoryPage({super.key});
 
   @override
-  State<TenantDirectoryPage> createState() =>
-      _TenantDirectoryPageState();
+  State<TenantDirectoryPage> createState() => _TenantDirectoryPageState();
 }
 
 class _TenantDirectoryPageState extends State<TenantDirectoryPage> {
@@ -231,8 +220,7 @@ class _TenantDirectoryPageState extends State<TenantDirectoryPage> {
                 const EmptyState(
                   icon: Icons.person_search_outlined,
                   title: 'No tenant found',
-                  message:
-                      'Try another name or room number.',
+                  message: 'Try another name or room number.',
                 )
               else
                 CarmelitaCard(
@@ -250,10 +238,9 @@ class _TenantDirectoryPageState extends State<TenantDirectoryPage> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            subtitle:
-                                Text('Room ${tenant.room} • ${tenant.bedSpace}'),
-                            trailing:
-                                StatusPill(tenant.gateStatus),
+                            subtitle: Text(
+                                'Room ${tenant.room} • ${tenant.bedSpace}'),
+                            trailing: StatusPill(tenant.gateStatus),
                             onTap: () => _ownerPush(
                               context,
                               TenantDetailsPage(
@@ -400,7 +387,7 @@ class OperationsHubPage extends StatelessWidget {
       ),
       const _OperationItem(
         'Payments',
-        'Verify uploaded proofs',
+        'Review OCR-extracted receipt details',
         Icons.payments_outlined,
         PaymentVerificationPage(),
       ),
@@ -410,12 +397,10 @@ class OperationsHubPage extends StatelessWidget {
         Icons.build_outlined,
         MaintenanceManagementPage(),
       ),
-      const _OperationItem(
-        'Floor plan',
-        'View issue locations',
-        Icons.map_outlined,
-        FloorPlanMonitoringPage(),
-      ),
+      const _OperationItem('Contract expiry', 'Contracts ending soon',
+          Icons.event_busy_outlined, ContractExpiryAlertsPage()),
+      const _OperationItem('Income & expenses', 'Monthly financial snapshot',
+          Icons.insights_outlined, ExpenseIncomeSummaryPage()),
       const _OperationItem(
         'Curfew',
         'Outside tenants and requests',
@@ -435,6 +420,11 @@ class OperationsHubPage extends StatelessWidget {
         ConfidentialReportsPage(),
       ),
       const _OperationItem(
+          'Disciplinary records',
+          'Verified violations and notices',
+          Icons.gavel_outlined,
+          DisciplinaryRecordsPage()),
+      const _OperationItem(
         'Announcements',
         'Create and publish notices',
         Icons.campaign_outlined,
@@ -447,17 +437,22 @@ class OperationsHubPage extends StatelessWidget {
         OwnerMessagingPage(),
       ),
       const _OperationItem(
-        'Emergency contacts',
-        'Guardian contact shortcuts',
+        'Contact directory',
+        'Guardian and emergency contacts',
         Icons.emergency_outlined,
         EmergencyContactsPage(),
       ),
       const _OperationItem(
-        'IoT devices',
-        'Gateway, cameras, ESP32 and sensors',
+        'System status',
+        'Cameras, processing, and connectivity',
         Icons.memory_outlined,
         IotDeviceStatusPage(),
       ),
+      const _OperationItem(
+          'Reports & analytics',
+          'Occupancy, payment, maintenance, and curfew trends',
+          Icons.analytics_outlined,
+          ReportsAnalyticsPage()),
     ];
 
     return PageFrame(
@@ -475,10 +470,8 @@ class OperationsHubPage extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             item.title,
@@ -531,7 +524,7 @@ class RoomMonitoringPage extends StatelessWidget {
 
     return PageFrame(
       title: 'Room monitoring',
-      subtitle: 'Occupancy and availability',
+      subtitle: 'Visual vacant/occupied room board',
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(
@@ -542,8 +535,7 @@ class RoomMonitoringPage extends StatelessWidget {
                 MetricCard(
                   label: 'Occupied beds',
                   value: '${controller.occupiedBeds}',
-                  detail:
-                      'of ${controller.totalCapacity} total',
+                  detail: 'of ${controller.totalCapacity} total',
                   icon: Icons.bed_outlined,
                 ),
                 MetricCard(
@@ -562,11 +554,12 @@ class RoomMonitoringPage extends StatelessWidget {
                   .map(
                     (room) => CarmelitaCard(
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          LinearProgressIndicator(
+                              value: room.occupied / room.capacity),
+                          const SizedBox(height: 12),
                           Text(
                             'Room ${room.roomNumber}',
                             style: const TextStyle(
@@ -583,9 +576,7 @@ class RoomMonitoringPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           StatusPill(
-                            room.available == 0
-                                ? 'Full'
-                                : 'Available',
+                            room.available == 0 ? 'Full' : 'Available',
                           ),
                         ],
                       ),
@@ -608,24 +599,25 @@ class PaymentVerificationPage extends StatelessWidget {
     final controller = OwnerController.instance;
 
     return PageFrame(
-      title: 'Payment verification',
-      subtitle: 'Review uploaded payment proofs',
+      title: 'Payment review',
+      subtitle: 'Confirm or correct OCR-extracted receipt details',
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) {
           final pending = controller.payments
               .where(
                 (payment) =>
-                    payment.status == 'Pending verification',
+                    payment.status == 'Pending verification' ||
+                    payment.status == 'Pending review',
               )
               .toList();
 
           if (pending.isEmpty) {
             return const EmptyState(
               icon: Icons.task_alt,
-              title: 'No pending payment proofs',
+              title: 'No pending payment reviews',
               message:
-                  'New uploads will appear here for verification.',
+                  'New receipts and their OCR-extracted values will appear here.',
             );
           }
 
@@ -633,12 +625,10 @@ class PaymentVerificationPage extends StatelessWidget {
             children: pending
                 .map(
                   (payment) => Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: CarmelitaCard(
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             payment.label,
@@ -665,8 +655,7 @@ class PaymentVerificationPage extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: OutlinedButton(
-                                  onPressed: () =>
-                                      controller.verifyPayment(
+                                  onPressed: () => controller.verifyPayment(
                                     payment,
                                     false,
                                   ),
@@ -676,12 +665,11 @@ class PaymentVerificationPage extends StatelessWidget {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: FilledButton(
-                                  onPressed: () =>
-                                      controller.verifyPayment(
+                                  onPressed: () => controller.verifyPayment(
                                     payment,
                                     true,
                                   ),
-                                  child: const Text('Approve'),
+                                  child: const Text('Confirm'),
                                 ),
                               ),
                             ],
@@ -713,7 +701,7 @@ class MaintenanceManagementPage extends StatelessWidget {
         animation: controller,
         builder: (context, _) => CarmelitaCard(
           child: Column(
-            children: controller.maintenance
+            children: controller.maintenanceByPriority
                 .map(
                   (report) => ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -756,12 +744,10 @@ class MaintenanceDetailsPage extends StatefulWidget {
   final MaintenanceReport report;
 
   @override
-  State<MaintenanceDetailsPage> createState() =>
-      _MaintenanceDetailsPageState();
+  State<MaintenanceDetailsPage> createState() => _MaintenanceDetailsPageState();
 }
 
-class _MaintenanceDetailsPageState
-    extends State<MaintenanceDetailsPage> {
+class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
   late String status = widget.report.status;
   final notes = TextEditingController();
   bool evidenceSelected = false;
@@ -815,8 +801,7 @@ class _MaintenanceDetailsPageState
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               initialValue: status,
-              decoration:
-                  const InputDecoration(labelText: 'Status'),
+              decoration: const InputDecoration(labelText: 'Status'),
               items: const [
                 'Submitted',
                 'Ongoing',
@@ -830,8 +815,7 @@ class _MaintenanceDetailsPageState
                     ),
                   )
                   .toList(),
-              onChanged: (value) =>
-                  setState(() => status = value ?? status),
+              onChanged: (value) => setState(() => status = value ?? status),
             ),
             const SizedBox(height: 14),
             TextField(
@@ -920,7 +904,7 @@ class GateMonitoringPage extends StatelessWidget {
 
     return PageFrame(
       title: 'Gate monitoring',
-      subtitle: 'IN/OUT events, recognition, and alerts',
+      subtitle: 'Facial recognition events with geofence cross-checks',
       actions: [
         IconButton(
           tooltip: 'IoT status',
@@ -939,16 +923,16 @@ class GateMonitoringPage extends StatelessWidget {
             AdaptiveGrid(
               children: [
                 const MetricCard(
-                  label: 'Gate controller',
+                  label: 'Recognition processor',
                   value: 'Online',
-                  detail: 'Normal mode',
+                  detail: 'Last capture: 8:14 PM',
                   icon: Icons.router_outlined,
                 ),
                 const MetricCard(
-                  label: 'Gate lock',
-                  value: 'Locked',
-                  detail: 'Secure',
-                  icon: Icons.lock_outline,
+                  label: 'Geofence service',
+                  value: 'Online',
+                  detail: 'Supporting location signal',
+                  icon: Icons.location_on_outlined,
                 ),
                 MetricCard(
                   label: 'Alerts',
@@ -982,27 +966,13 @@ class GateMonitoringPage extends StatelessWidget {
                             : event.direction == 'OUT'
                                 ? Icons.logout
                                 : Icons.videocam_outlined,
-                        title:
-                            '${event.person} • ${event.direction}',
-                        subtitle:
-                            '${timeText(event.time)} • '
+                        title: '${event.person} • ${event.direction}',
+                        subtitle: '${timeText(event.time)} • '
                             '${event.verification}',
                         trailing: StatusPill(event.status),
                       ),
                     )
                     .toList(),
-              ),
-            ),
-            const SizedBox(height: 14),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => _ownerPush(
-                  context,
-                  const ManualGateOverridePage(),
-                ),
-                icon: const Icon(Icons.offline_bolt_outlined),
-                label: const Text('Record manual override'),
               ),
             ),
           ],
@@ -1020,8 +990,7 @@ class _GateReviewCard extends StatefulWidget {
   final GateReviewRecord review;
 
   @override
-  State<_GateReviewCard> createState() =>
-      _GateReviewCardState();
+  State<_GateReviewCard> createState() => _GateReviewCardState();
 }
 
 class _GateReviewCardState extends State<_GateReviewCard> {
@@ -1077,8 +1046,7 @@ class _GateReviewCardState extends State<_GateReviewCard> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () =>
-                        OwnerController.instance.reviewGateEvent(
+                    onPressed: () => OwnerController.instance.reviewGateEvent(
                       review,
                       status: 'Escalated',
                       note: note.text,
@@ -1089,8 +1057,7 @@ class _GateReviewCardState extends State<_GateReviewCard> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: FilledButton(
-                    onPressed: () =>
-                        OwnerController.instance.reviewGateEvent(
+                    onPressed: () => OwnerController.instance.reviewGateEvent(
                       review,
                       status: 'Resolved',
                       note: note.text,
@@ -1111,12 +1078,10 @@ class ManualGateOverridePage extends StatefulWidget {
   const ManualGateOverridePage({super.key});
 
   @override
-  State<ManualGateOverridePage> createState() =>
-      _ManualGateOverridePageState();
+  State<ManualGateOverridePage> createState() => _ManualGateOverridePageState();
 }
 
-class _ManualGateOverridePageState
-    extends State<ManualGateOverridePage> {
+class _ManualGateOverridePageState extends State<ManualGateOverridePage> {
   final reason = TextEditingController();
   String action = 'OPEN';
 
@@ -1137,8 +1102,7 @@ class _ManualGateOverridePageState
           children: [
             DropdownButtonFormField<String>(
               initialValue: action,
-              decoration:
-                  const InputDecoration(labelText: 'Action'),
+              decoration: const InputDecoration(labelText: 'Action'),
               items: const ['OPEN', 'LOCK']
                   .map(
                     (value) => DropdownMenuItem(
@@ -1147,8 +1111,7 @@ class _ManualGateOverridePageState
                     ),
                   )
                   .toList(),
-              onChanged: (value) =>
-                  setState(() => action = value ?? action),
+              onChanged: (value) => setState(() => action = value ?? action),
             ),
             const SizedBox(height: 14),
             TextField(
@@ -1156,8 +1119,7 @@ class _ManualGateOverridePageState
               maxLines: 4,
               decoration: const InputDecoration(
                 labelText: 'Reason',
-                hintText:
-                    'Example: power interruption or verified emergency',
+                hintText: 'Example: power interruption or verified emergency',
               ),
             ),
             const SizedBox(height: 14),
@@ -1280,12 +1242,10 @@ class CurfewRequestReviewPage extends StatelessWidget {
           children: controller.curfewRequests
               .map(
                 (request) => Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: CarmelitaCard(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
@@ -1293,8 +1253,7 @@ class CurfewRequestReviewPage extends StatelessWidget {
                               child: Text(
                                 request.tenantName,
                                 style: const TextStyle(
-                                  fontWeight:
-                                      FontWeight.w800,
+                                  fontWeight: FontWeight.w800,
                                   fontSize: 17,
                                 ),
                               ),
@@ -1319,38 +1278,31 @@ class CurfewRequestReviewPage extends StatelessWidget {
                         ),
                         InfoRow(
                           label: 'Return',
-                          value:
-                              '${shortDate(request.expectedReturn)} • '
+                          value: '${shortDate(request.expectedReturn)} • '
                               '${timeText(request.expectedReturn)}',
                         ),
-                        if (request.guardianStatus ==
-                                'Approved' &&
-                            request.ownerStatus ==
-                                'Pending') ...[
+                        if (request.guardianStatus == 'Approved' &&
+                            request.ownerStatus == 'Pending') ...[
                           const SizedBox(height: 12),
                           Row(
                             children: [
                               Expanded(
                                 child: OutlinedButton(
-                                  onPressed: () =>
-                                      controller.decideCurfew(
+                                  onPressed: () => controller.decideCurfew(
                                     request,
                                     false,
                                   ),
-                                  child:
-                                      const Text('Reject'),
+                                  child: const Text('Reject'),
                                 ),
                               ),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: FilledButton(
-                                  onPressed: () =>
-                                      controller.decideCurfew(
+                                  onPressed: () => controller.decideCurfew(
                                     request,
                                     true,
                                   ),
-                                  child:
-                                      const Text('Approve'),
+                                  child: const Text('Approve'),
                                 ),
                               ),
                             ],
@@ -1385,8 +1337,7 @@ class VisitorManagementPage extends StatelessWidget {
             return const EmptyState(
               icon: Icons.people_outline,
               title: 'No visitor requests',
-              message:
-                  'Tenant visitor requests will appear here.',
+              message: 'Tenant visitor requests will appear here.',
             );
           }
 
@@ -1394,12 +1345,10 @@ class VisitorManagementPage extends StatelessWidget {
             children: controller.visitors
                 .map(
                   (visitor) => Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: CarmelitaCard(
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
@@ -1407,8 +1356,7 @@ class VisitorManagementPage extends StatelessWidget {
                                 child: Text(
                                   visitor.visitorName,
                                   style: const TextStyle(
-                                    fontWeight:
-                                        FontWeight.w800,
+                                    fontWeight: FontWeight.w800,
                                     fontSize: 17,
                                   ),
                                 ),
@@ -1423,36 +1371,30 @@ class VisitorManagementPage extends StatelessWidget {
                           ),
                           InfoRow(
                             label: 'Schedule',
-                            value:
-                                '${shortDate(visitor.schedule)} • '
+                            value: '${shortDate(visitor.schedule)} • '
                                 '${timeText(visitor.schedule)}',
                           ),
-                          if (visitor.status ==
-                              'Pending') ...[
+                          if (visitor.status == 'Pending') ...[
                             const SizedBox(height: 12),
                             Row(
                               children: [
                                 Expanded(
                                   child: OutlinedButton(
-                                    onPressed: () =>
-                                        controller.decideVisitor(
+                                    onPressed: () => controller.decideVisitor(
                                       visitor,
                                       false,
                                     ),
-                                    child:
-                                        const Text('Reject'),
+                                    child: const Text('Reject'),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: FilledButton(
-                                    onPressed: () =>
-                                        controller.decideVisitor(
+                                    onPressed: () => controller.decideVisitor(
                                       visitor,
                                       true,
                                     ),
-                                    child:
-                                        const Text('Approve'),
+                                    child: const Text('Approve'),
                                   ),
                                 ),
                               ],
@@ -1487,12 +1429,10 @@ class ConfidentialReportsPage extends StatelessWidget {
           children: controller.concerns
               .map(
                 (report) => Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: CarmelitaCard(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
@@ -1500,8 +1440,7 @@ class ConfidentialReportsPage extends StatelessWidget {
                               child: Text(
                                 report.category,
                                 style: const TextStyle(
-                                  fontWeight:
-                                      FontWeight.w800,
+                                  fontWeight: FontWeight.w800,
                                 ),
                               ),
                             ),
@@ -1513,9 +1452,7 @@ class ConfidentialReportsPage extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           shortDate(report.createdAt),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 12),
                         Wrap(
@@ -1523,9 +1460,7 @@ class ConfidentialReportsPage extends StatelessWidget {
                           runSpacing: 8,
                           children: [
                             OutlinedButton(
-                              onPressed: () =>
-                                  controller
-                                      .updateConcernStatus(
+                              onPressed: () => controller.updateConcernStatus(
                                 report,
                                 'Under review',
                               ),
@@ -1534,14 +1469,11 @@ class ConfidentialReportsPage extends StatelessWidget {
                               ),
                             ),
                             FilledButton(
-                              onPressed: () =>
-                                  controller
-                                      .updateConcernStatus(
+                              onPressed: () => controller.updateConcernStatus(
                                 report,
                                 'Resolved',
                               ),
-                              child:
-                                  const Text('Resolve'),
+                              child: const Text('Resolve'),
                             ),
                           ],
                         ),
@@ -1665,8 +1597,7 @@ class _AnnouncementsManagementPageState
             const SizedBox(height: 10),
             ...controller.announcements.map(
               (announcement) => Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: CarmelitaCard(
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -1729,8 +1660,7 @@ class OwnerMessagingPage extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    trailing:
-                        const Icon(Icons.chevron_right),
+                    trailing: const Icon(Icons.chevron_right),
                     onTap: () => _ownerPush(
                       context,
                       OwnerConversationPage(
@@ -1756,12 +1686,10 @@ class OwnerConversationPage extends StatefulWidget {
   final OwnerConversation conversation;
 
   @override
-  State<OwnerConversationPage> createState() =>
-      _OwnerConversationPageState();
+  State<OwnerConversationPage> createState() => _OwnerConversationPageState();
 }
 
-class _OwnerConversationPageState
-    extends State<OwnerConversationPage> {
+class _OwnerConversationPageState extends State<OwnerConversationPage> {
   final message = TextEditingController();
 
   @override
@@ -1788,28 +1716,22 @@ class _OwnerConversationPageState
                   children: widget.conversation.messages
                       .map(
                         (item) => Align(
-                          alignment:
-                              item.senderRole ==
-                                      'ownerCaretaker'
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
+                          alignment: item.senderRole == 'ownerCaretaker'
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
                           child: Container(
-                            constraints:
-                                const BoxConstraints(
+                            constraints: const BoxConstraints(
                               maxWidth: 560,
                             ),
-                            margin:
-                                const EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                               vertical: 6,
                             ),
                             child: Text(
                               '${item.senderName}: ${item.body}\n'
                               '${timeText(item.sentAt)}',
-                              textAlign:
-                                  item.senderRole ==
-                                          'ownerCaretaker'
-                                      ? TextAlign.right
-                                      : TextAlign.left,
+                              textAlign: item.senderRole == 'ownerCaretaker'
+                                  ? TextAlign.right
+                                  : TextAlign.left,
                             ),
                           ),
                         ),
@@ -1833,8 +1755,7 @@ class _OwnerConversationPageState
                       );
                       message.clear();
                     },
-                    icon:
-                        const Icon(Icons.send_outlined),
+                    icon: const Icon(Icons.send_outlined),
                   ),
                 ),
                 onSubmitted: (value) {
@@ -1862,8 +1783,8 @@ class EmergencyContactsPage extends StatelessWidget {
     final controller = OwnerController.instance;
 
     return PageFrame(
-      title: 'Emergency contacts',
-      subtitle: 'Guardian contact shortcuts',
+      title: 'Dormitory contact directory',
+      subtitle: 'Guardian and emergency contacts for internal reference',
       child: CarmelitaCard(
         child: Column(
           children: controller.tenants
@@ -1912,8 +1833,8 @@ class IotDeviceStatusPage extends StatelessWidget {
     final controller = OwnerController.instance;
 
     return PageFrame(
-      title: 'IoT device status',
-      subtitle: 'Gateway and gate hardware indicators',
+      title: 'System status',
+      subtitle: 'Camera, processing device, and connectivity',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1928,9 +1849,8 @@ class IotDeviceStatusPage extends StatelessWidget {
                 ),
               ),
               subtitle: Text(
-                'These states are still mock values. Real heartbeat, '
-                'camera availability, fingerprint state, lock state, '
-                'and sensor connectivity will come from the backend/IoT layer.',
+                'These states are mock values. Live camera captures, processing '
+                'heartbeats, and connectivity require the backend monitoring feed.',
               ),
             ),
           ),
@@ -1941,10 +1861,8 @@ class IotDeviceStatusPage extends StatelessWidget {
                 .map(
                   (device) => CarmelitaCard(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
@@ -1967,9 +1885,7 @@ class IotDeviceStatusPage extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           device.detail,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -1981,4 +1897,120 @@ class IotDeviceStatusPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class ContractExpiryAlertsPage extends StatelessWidget {
+  const ContractExpiryAlertsPage({super.key});
+  @override
+  Widget build(BuildContext context) => const PageFrame(
+        title: 'Contract expiry alerts',
+        subtitle: 'Tenants with contracts ending soon',
+        child: Column(children: [
+          CarmelitaCard(
+              child: TimelineTile(
+                  icon: Icons.event_busy_outlined,
+                  title: 'Ella Garcia • Room 105',
+                  subtitle: 'Expires September 5, 2026 • 16 days remaining',
+                  trailing: StatusPill('Soon'))),
+          SizedBox(height: 12),
+          CarmelitaCard(
+              child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.cloud_off_outlined),
+                  title: Text('Backend data required'),
+                  subtitle: Text(
+                      'Contract dates are sample values until tenant contracts are stored in the backend.'))),
+        ]),
+      );
+}
+
+class ExpenseIncomeSummaryPage extends StatelessWidget {
+  const ExpenseIncomeSummaryPage({super.key});
+  @override
+  Widget build(BuildContext context) => const PageFrame(
+        title: 'Expense & income summary',
+        subtitle: 'August 2026 monthly snapshot',
+        child: Column(children: [
+          AdaptiveGrid(children: [
+            MetricCard(
+                label: 'Collected rent',
+                value: '₱17,500',
+                detail: '5 recorded payments',
+                icon: Icons.savings_outlined),
+            MetricCard(
+                label: 'Outstanding',
+                value: '₱7,900',
+                detail: 'Rent and utilities',
+                icon: Icons.pending_actions_outlined),
+            MetricCard(
+                label: 'Penalties',
+                value: '₱350',
+                detail: 'Recorded this month',
+                icon: Icons.receipt_long_outlined),
+          ]),
+          SizedBox(height: 14),
+          CarmelitaCard(
+              child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.cloud_off_outlined),
+                  title: Text('Backend data required'),
+                  subtitle: Text(
+                      'Totals are illustrative until payment and expense ledgers are persisted.'))),
+        ]),
+      );
+}
+
+class DisciplinaryRecordsPage extends StatelessWidget {
+  const DisciplinaryRecordsPage({super.key});
+  @override
+  Widget build(BuildContext context) => const PageFrame(
+        title: 'Disciplinary records',
+        subtitle: 'Verified violations and issued notices by tenant',
+        child: EmptyState(
+            icon: Icons.gavel_outlined,
+            title: 'No disciplinary records',
+            message:
+                'Backend storage and links to confidential reports are not connected yet.'),
+      );
+}
+
+class ReportsAnalyticsPage extends StatelessWidget {
+  const ReportsAnalyticsPage({super.key});
+  @override
+  Widget build(BuildContext context) => const PageFrame(
+        title: 'Reports & analytics',
+        subtitle: 'Operational drill-downs',
+        child: Column(children: [
+          AdaptiveGrid(children: [
+            MetricCard(
+                label: 'Occupancy',
+                value: '75%',
+                detail: '30 of 40 beds',
+                icon: Icons.bed_outlined),
+            MetricCard(
+                label: 'Payment compliance',
+                value: '67%',
+                detail: 'Current sample records',
+                icon: Icons.payments_outlined),
+            MetricCard(
+                label: 'Open maintenance',
+                value: '2',
+                detail: '1 medium • 1 low',
+                icon: Icons.build_outlined),
+            MetricCard(
+                label: 'Curfew flags',
+                value: '1',
+                detail: 'Awaiting final review',
+                icon: Icons.schedule_outlined),
+          ]),
+          SizedBox(height: 14),
+          CarmelitaCard(
+              child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.cloud_off_outlined),
+                  title: Text('Backend data required'),
+                  subtitle: Text(
+                      'Date filters, historical trends, and exports need persisted operational data.'))),
+        ]),
+      );
 }

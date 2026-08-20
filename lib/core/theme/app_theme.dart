@@ -73,66 +73,69 @@ class AppTheme {
     final textTheme = ThemeData(
       brightness: brightness,
       useMaterial3: true,
-    ).textTheme.apply(
-      bodyColor: scheme.onSurface,
-      displayColor: scheme.onSurface,
-    ).copyWith(
-      displaySmall: TextStyle(
-        fontSize: 34,
-        height: 1.05,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -1.0,
-        color: scheme.onSurface,
-        fontFamilyFallback: const ['Georgia', 'Times New Roman'],
-      ),
-      headlineMedium: TextStyle(
-        fontSize: 28,
-        height: 1.10,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -.55,
-        color: scheme.onSurface,
-        fontFamilyFallback: const ['Georgia', 'Times New Roman'],
-      ),
-      headlineSmall: TextStyle(
-        fontSize: 23,
-        height: 1.15,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -.35,
-        color: scheme.onSurface,
-      ),
-      titleLarge: TextStyle(
-        fontSize: 20,
-        height: 1.20,
-        fontWeight: FontWeight.w700,
-        color: scheme.onSurface,
-      ),
-      titleMedium: TextStyle(
-        fontSize: 16,
-        height: 1.25,
-        fontWeight: FontWeight.w700,
-        color: scheme.onSurface,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        height: 1.45,
-        color: scheme.onSurface,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        height: 1.42,
-        color: scheme.onSurface,
-      ),
-      bodySmall: TextStyle(
-        fontSize: 12.5,
-        height: 1.35,
-        color: scheme.onSurface.withValues(alpha: .68),
-      ),
-      labelLarge: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: scheme.onSurface,
-      ),
-    );
+    )
+        .textTheme
+        .apply(
+          bodyColor: scheme.onSurface,
+          displayColor: scheme.onSurface,
+        )
+        .copyWith(
+          displaySmall: TextStyle(
+            fontSize: 34,
+            height: 1.05,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -1.0,
+            color: scheme.onSurface,
+            fontFamilyFallback: const ['Georgia', 'Times New Roman'],
+          ),
+          headlineMedium: TextStyle(
+            fontSize: 28,
+            height: 1.10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -.55,
+            color: scheme.onSurface,
+            fontFamilyFallback: const ['Georgia', 'Times New Roman'],
+          ),
+          headlineSmall: TextStyle(
+            fontSize: 23,
+            height: 1.15,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -.35,
+            color: scheme.onSurface,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 20,
+            height: 1.20,
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurface,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 16,
+            height: 1.25,
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurface,
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            height: 1.45,
+            color: scheme.onSurface,
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 14,
+            height: 1.42,
+            color: scheme.onSurface,
+          ),
+          bodySmall: TextStyle(
+            fontSize: 12.5,
+            height: 1.35,
+            color: scheme.onSurface.withValues(alpha: .68),
+          ),
+          labelLarge: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurface,
+          ),
+        );
 
     return ThemeData(
       useMaterial3: true,
@@ -171,9 +174,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: brightness == Brightness.light
-            ? Colors.white
-            : surfaceMuted,
+        fillColor: brightness == Brightness.light ? Colors.white : surfaceMuted,
         labelStyle: TextStyle(
           color: scheme.onSurface.withValues(alpha: .72),
         ),
@@ -200,8 +201,7 @@ class AppTheme {
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
           minimumSize: const Size(48, 50),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           shape: const RoundedRectangleBorder(
             borderRadius: mediumRadius,
           ),
@@ -215,8 +215,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: scheme.primary,
           minimumSize: const Size(48, 50),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           side: BorderSide(color: border),
           shape: const RoundedRectangleBorder(
             borderRadius: mediumRadius,
@@ -277,8 +276,7 @@ class AppTheme {
   }
 }
 
-class CarmelitaThemeExtension
-    extends ThemeExtension<CarmelitaThemeExtension> {
+class CarmelitaThemeExtension extends ThemeExtension<CarmelitaThemeExtension> {
   const CarmelitaThemeExtension({
     required this.surfaceMuted,
     required this.border,

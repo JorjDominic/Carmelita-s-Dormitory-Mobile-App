@@ -21,7 +21,7 @@ class GuardianController extends ChangeNotifier {
       .where(
         (request) =>
             request.tenantName == linkedTenantName &&
-            request.guardianStatus == 'Pending',
+            request.guardianStatus == 'Input pending',
       )
       .length;
 
@@ -29,9 +29,9 @@ class GuardianController extends ChangeNotifier {
       .where((payment) => payment.status != 'Verified')
       .fold<double>(0, (sum, payment) => sum + payment.amount);
 
-  void decideCurfew(CurfewRequest request, bool approve) {
-    request.guardianStatus = approve ? 'Approved' : 'Rejected';
-    request.ownerStatus = approve ? 'Pending' : 'Closed';
+  void decideCurfew(CurfewRequest request, bool confirm) {
+    request.guardianStatus = confirm ? 'Confirmed' : 'Concern noted';
+    request.ownerStatus = 'Pending';
     notifyListeners();
   }
 

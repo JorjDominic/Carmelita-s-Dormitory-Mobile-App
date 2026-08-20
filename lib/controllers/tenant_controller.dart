@@ -33,7 +33,7 @@ class TenantController extends ChangeNotifier {
         label: '$method payment submission',
         amount: amount,
         dueDate: DateTime.now(),
-        status: 'Pending verification',
+        status: 'Pending review',
         reference: reference.trim().isEmpty ? null : reference.trim(),
       ),
     );
@@ -74,8 +74,8 @@ class TenantController extends ChangeNotifier {
         reason: reason,
         destination: destination,
         expectedReturn: expectedReturn,
-        guardianStatus: 'Pending',
-        ownerStatus: 'Waiting for guardian',
+        guardianStatus: 'Input pending',
+        ownerStatus: 'Pending',
       ),
     );
     notifyListeners();
