@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/session_controller.dart';
+import '../../data/mock_data.dart';
 import '../constants/app_assets.dart';
 import '../constants/app_colors.dart';
 import '../responsive/breakpoints.dart';
@@ -215,6 +217,40 @@ class PageFrame extends StatelessWidget {
     final navScope = CarmelitaNavScope.maybeOf(context);
     final canPop = Navigator.of(context).canPop();
     final extraBottom = navScope == null ? 24.0 : 132.0;
+    final canShowNotifications =
+        SessionController.instance.currentUser != null &&
+            title.toLowerCase() != 'notifications';
+    final actionSpaceOccupied = actions?.isNotEmpty ?? false;
+
+    void openNotifications() => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const _GlobalNotificationsPage()),
+        );
+
+    final notificationButton = IconButton(
+      tooltip: 'Notifications',
+      onPressed: openNotifications,
+      icon: const Icon(Icons.notifications_none_rounded),
+    );
+
+    Widget? resolvedFloatingActionButton = floatingActionButton;
+    if (canShowNotifications && actionSpaceOccupied) {
+      final notificationFab = IconButton(
+        tooltip: 'Notifications',
+        onPressed: openNotifications,
+        icon: const Icon(Icons.notifications_none_rounded),
+      );
+      resolvedFloatingActionButton = floatingActionButton == null
+          ? notificationFab
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                notificationFab,
+                const SizedBox(height: 12),
+                floatingActionButton!,
+              ],
+            );
+    }
 
     return Scaffold(
       extendBody: navScope != null,
@@ -273,10 +309,11 @@ class PageFrame extends StatelessWidget {
         ),
         actions: [
           ...?actions,
+          if (canShowNotifications && !actionSpaceOccupied) notificationButton,
           const SizedBox(width: 10),
         ],
       ),
-      floatingActionButton: floatingActionButton,
+      floatingActionButton: resolvedFloatingActionButton,
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -307,6 +344,42 @@ class PageFrame extends StatelessWidget {
               child: child,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GlobalNotificationsPage extends StatelessWidget {
+  const _GlobalNotificationsPage();
+
+  int _urgency(String type) => type == 'Gate'
+      ? 3
+      : type == 'Payment'
+          ? 2
+          : 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final ranked = [...MockData.notifications]
+      ..sort((a, b) => _urgency(b.type).compareTo(_urgency(a.type)));
+    return PageFrame(
+      title: 'Notifications',
+      subtitle: 'Updates ranked by urgency',
+      child: CarmelitaCard(
+        child: Column(
+          children: ranked
+              .map((notification) => TimelineTile(
+                    icon: notification.type == 'Payment'
+                        ? Icons.payments_outlined
+                        : notification.type == 'Gate'
+                            ? Icons.sensor_door_outlined
+                            : Icons.build_outlined,
+                    title: notification.title,
+                    subtitle:
+                        '${notification.body}\n${shortDate(notification.time)} • ${timeText(notification.time)}',
+                  ))
+              .toList(),
         ),
       ),
     );

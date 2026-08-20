@@ -4,7 +4,6 @@ import '../../controllers/guardian_controller.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../data/mock_data.dart';
 import '../../services/usage_stats_service.dart';
-import '../shared/shared_views.dart';
 
 class GuardianDashboardPage extends StatelessWidget {
   const GuardianDashboardPage({super.key});
@@ -30,15 +29,6 @@ class GuardianDashboardPage extends StatelessWidget {
             ),
           ),
           icon: const Icon(Icons.shield_outlined),
-        ),
-        IconButton(
-          tooltip: 'Notifications',
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const NotificationsPage(),
-            ),
-          ),
-          icon: const Icon(Icons.notifications_none_rounded),
         ),
       ],
       child: AnimatedBuilder(

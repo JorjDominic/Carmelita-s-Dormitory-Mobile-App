@@ -3,7 +3,6 @@ import '../../controllers/tenant_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../data/mock_data.dart';
-import '../shared/shared_views.dart';
 import '../widgets/feature_widgets.dart';
 
 class TenantDashboardPage extends StatelessWidget {
@@ -18,17 +17,6 @@ class TenantDashboardPage extends StatelessWidget {
     return PageFrame(
       title: 'Home',
       subtitle: 'Tenant dashboard',
-      actions: [
-        IconButton(
-          tooltip: 'Notifications',
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const NotificationsPage(),
-            ),
-          ),
-          icon: const Icon(Icons.notifications_none_rounded),
-        ),
-      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -4,7 +4,6 @@ import '../../controllers/owner_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../models/models.dart';
-import '../shared/shared_views.dart';
 import '../widgets/feature_widgets.dart';
 
 void _ownerPush(BuildContext context, Widget page) {
@@ -23,16 +22,6 @@ class OwnerDashboardPage extends StatelessWidget {
     return PageFrame(
       title: 'Dashboard',
       subtitle: 'Priority-ranked Today view',
-      actions: [
-        IconButton(
-          tooltip: 'Notifications',
-          onPressed: () => _ownerPush(
-            context,
-            const NotificationsPage(),
-          ),
-          icon: const Icon(Icons.notifications_none_rounded),
-        ),
-      ],
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(

@@ -53,13 +53,6 @@ class ProfilePage extends StatelessWidget {
     return PageFrame(
       title: 'Profile',
       subtitle: 'Personal and contact information',
-      actions: [
-        IconButton(
-            tooltip: 'Notifications',
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const NotificationsPage())),
-            icon: const Icon(Icons.notifications_outlined))
-      ],
       child: Column(children: [
         CarmelitaCard(
             child: Row(children: [
