@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../controllers/session_controller.dart';
 import '../../data/mock_data.dart';
+import '../../models/models.dart';
 import '../constants/app_assets.dart';
 import '../constants/app_colors.dart';
 import '../responsive/breakpoints.dart';
@@ -273,6 +274,30 @@ class PageFrame extends StatelessWidget {
             title.toLowerCase() != 'notifications';
     final actionSpaceOccupied =
         (actions?.isNotEmpty ?? false) && !notificationInHeader;
+    final ownerSection = SessionController.instance.currentUser?.role ==
+            UserRole.ownerCaretaker &&
+        title != 'Dashboard' &&
+        title != 'Operations' &&
+        title != 'Profile' &&
+        title != 'Notifications';
+    final pageChild = ownerSection
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'OWNER / CARETAKER',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                      letterSpacing: 1.25,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(height: 10),
+              child,
+            ],
+          )
+        : child;
 
     void openNotifications() => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const _GlobalNotificationsPage()),
@@ -399,7 +424,7 @@ class PageFrame extends StatelessWidget {
                   ),
                 );
               },
-              child: child,
+              child: pageChild,
             ),
           ),
         ),

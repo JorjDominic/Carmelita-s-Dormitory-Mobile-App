@@ -215,33 +215,42 @@ class _TenantDirectoryPageState extends State<TenantDirectoryPage> {
                   message: 'Try another name or room number.',
                 )
               else
-                CarmelitaCard(
-                  child: Column(
-                    children: filtered
-                        .map(
-                          (tenant) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: CircleAvatar(
-                              child: Text(tenant.name[0]),
-                            ),
-                            title: Text(
-                              tenant.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            subtitle: Text(
-                                'Room ${tenant.room} • ${tenant.bedSpace}'),
-                            trailing: StatusPill(tenant.gateStatus),
-                            onTap: () => _ownerPush(
-                              context,
-                              TenantDetailsPage(
-                                tenant: tenant,
-                              ),
-                            ),
+                ...filtered.map(
+                  (tenant) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: CarmelitaCard(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      child: ListTile(
+                        dense: true,
+                        visualDensity: const VisualDensity(vertical: -2),
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          radius: 19,
+                          backgroundColor:
+                              const Color(0xFF56886B).withValues(alpha: .10),
+                          foregroundColor: const Color(0xFF56886B),
+                          child: Text(tenant.name[0]),
+                        ),
+                        title: Text(
+                          tenant.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
                           ),
-                        )
-                        .toList(),
+                        ),
+                        subtitle:
+                            Text('Room ${tenant.room} • ${tenant.bedSpace}'),
+                        trailing: StatusPill(tenant.gateStatus),
+                        onTap: () => _ownerPush(
+                          context,
+                          TenantDetailsPage(
+                            tenant: tenant,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
             ],
@@ -1083,16 +1092,16 @@ class GateMonitoringPage extends StatelessWidget {
     return PageFrame(
       title: 'Gate monitoring',
       subtitle: 'Facial recognition events with geofence cross-checks',
-      actions: [
-        IconButton(
-          tooltip: 'IoT status',
-          onPressed: () => _ownerPush(
-            context,
-            const IotDeviceStatusPage(),
-          ),
-          icon: const Icon(Icons.memory_outlined),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'System status',
+        backgroundColor: const Color(0xFF568F8E),
+        foregroundColor: Colors.white,
+        onPressed: () => _ownerPush(
+          context,
+          const IotDeviceStatusPage(),
         ),
-      ],
+        child: const Icon(Icons.memory_outlined),
+      ),
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(
@@ -1134,23 +1143,32 @@ class GateMonitoringPage extends StatelessWidget {
             ],
             const SectionTitle('Recent gate events'),
             const SizedBox(height: 10),
-            CarmelitaCard(
-              child: Column(
-                children: controller.gateEvents
-                    .map(
-                      (event) => TimelineTile(
-                        icon: event.direction == 'IN'
-                            ? Icons.login
-                            : event.direction == 'OUT'
-                                ? Icons.logout
-                                : Icons.videocam_outlined,
-                        title: '${event.person} • ${event.direction}',
-                        subtitle: '${timeText(event.time)} • '
-                            '${event.verification}',
-                        trailing: StatusPill(event.status),
-                      ),
-                    )
-                    .toList(),
+            ...controller.gateEvents.map(
+              (event) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: CarmelitaCard(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  child: TimelineTile(
+                    compact: true,
+                    icon: event.direction == 'IN'
+                        ? Icons.login
+                        : event.direction == 'OUT'
+                            ? Icons.logout
+                            : Icons.videocam_outlined,
+                    color: event.status == 'Review'
+                        ? const Color(0xFFAA6870)
+                        : event.direction == 'IN'
+                            ? const Color(0xFF56886B)
+                            : const Color(0xFF627FA8),
+                    title: '${event.person} • ${event.direction}',
+                    subtitle: '${timeText(event.time)} • '
+                        '${event.verification}',
+                    trailing: StatusPill(event.status),
+                  ),
+                ),
               ),
             ),
           ],
@@ -1815,40 +1833,47 @@ class OwnerMessagingPage extends StatelessWidget {
       subtitle: 'Tenant and guardian conversations',
       child: AnimatedBuilder(
         animation: controller,
-        builder: (context, _) => CarmelitaCard(
-          child: Column(
-            children: controller.conversations
-                .map(
-                  (conversation) => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      child: Text(
-                        conversation.personName[0],
+        builder: (context, _) => Column(
+          children: controller.conversations
+              .map(
+                (conversation) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: CarmelitaCard(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: ListTile(
+                      dense: true,
+                      visualDensity: const VisualDensity(vertical: -2),
+                      contentPadding: EdgeInsets.zero,
+                      leading: CircleAvatar(
+                        child: Text(
+                          conversation.personName[0],
+                        ),
                       ),
-                    ),
-                    title: Text(
-                      conversation.personName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
+                      title: Text(
+                        conversation.personName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    subtitle: Text(
-                      '${conversation.personRole} • '
-                      '${conversation.messages.last.body}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _ownerPush(
-                      context,
-                      OwnerConversationPage(
-                        conversation: conversation,
+                      subtitle: Text(
+                        '${conversation.personRole} • '
+                        '${conversation.messages.last.body}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _ownerPush(
+                        context,
+                        OwnerConversationPage(
+                          conversation: conversation,
+                        ),
                       ),
                     ),
                   ),
-                )
-                .toList(),
-          ),
+                ),
+              )
+              .toList(),
         ),
       ),
     );
@@ -1888,8 +1913,17 @@ class _OwnerConversationPageState extends State<OwnerConversationPage> {
         child: AnimatedBuilder(
           animation: controller,
           builder: (context, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text('CONVERSATION',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                      letterSpacing: 1.3,
+                      color: Theme.of(context).colorScheme.primary)),
+              const SizedBox(height: 8),
               CarmelitaCard(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   children: widget.conversation.messages
                       .map(
@@ -1904,12 +1938,47 @@ class _OwnerConversationPageState extends State<OwnerConversationPage> {
                             margin: const EdgeInsets.symmetric(
                               vertical: 6,
                             ),
-                            child: Text(
-                              '${item.senderName}: ${item.body}\n'
-                              '${timeText(item.sentAt)}',
-                              textAlign: item.senderRole == 'ownerCaretaker'
-                                  ? TextAlign.right
-                                  : TextAlign.left,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 9),
+                            decoration: BoxDecoration(
+                              color: item.senderRole == 'ownerCaretaker'
+                                  ? const Color(0xFF627FA8)
+                                      .withValues(alpha: .10)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest
+                                      .withValues(alpha: .55),
+                              borderRadius: BorderRadius.only(
+                                topLeft: const Radius.circular(15),
+                                topRight: const Radius.circular(15),
+                                bottomLeft: Radius.circular(
+                                    item.senderRole == 'ownerCaretaker'
+                                        ? 15
+                                        : 4),
+                                bottomRight: Radius.circular(
+                                    item.senderRole == 'ownerCaretaker'
+                                        ? 4
+                                        : 15),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment:
+                                  item.senderRole == 'ownerCaretaker'
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
+                              children: [
+                                Text(item.senderName,
+                                    style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800)),
+                                const SizedBox(height: 2),
+                                Text(item.body,
+                                    style: const TextStyle(fontSize: 13)),
+                                const SizedBox(height: 3),
+                                Text(timeText(item.sentAt),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              ],
                             ),
                           ),
                         ),
@@ -1922,6 +1991,7 @@ class _OwnerConversationPageState extends State<OwnerConversationPage> {
                 controller: message,
                 decoration: InputDecoration(
                   hintText: 'Write a message',
+                  prefixIcon: const Icon(Icons.chat_bubble_outline_rounded),
                   suffixIcon: IconButton(
                     onPressed: () {
                       if (message.text.trim().isEmpty) {

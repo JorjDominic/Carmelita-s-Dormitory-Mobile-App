@@ -45,11 +45,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = SessionController.instance.currentUser!;
-    final role = user.role == UserRole.ownerCaretaker
-        ? 'Owner / Caretaker'
-        : user.role == UserRole.guardian
-            ? 'Guardian'
-            : 'Tenant';
     return PageFrame(
       title: 'Profile',
       subtitle: 'Personal and contact information',
@@ -57,7 +52,115 @@ class ProfilePage extends StatelessWidget {
           ? _TenantProfileContent(user: user)
           : user.role == UserRole.guardian
               ? _GuardianProfileContent(user: user)
-              : Column(children: [
+              : _OwnerProfileContent(user: user),
+    );
+  }
+}
+
+class _OwnerProfileContent extends StatelessWidget {
+  const _OwnerProfileContent({required this.user});
+  final AppUser user;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'OWNER / CARETAKER PROFILE',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  letterSpacing: 1.3,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          const SizedBox(height: 8),
+          CarmelitaCard(
+            padding: const EdgeInsets.all(14),
+            child: Row(children: [
+              CircleAvatar(
+                radius: 27,
+                backgroundColor: const Color(0xFF627FA8).withValues(alpha: .10),
+                foregroundColor: const Color(0xFF627FA8),
+                child: Text(user.name.substring(0, 1),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w900)),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(user.name,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 2),
+                  Text(user.email,
+                      style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 6),
+                  const StatusPill('Owner / Caretaker'),
+                ],
+              )),
+            ]),
+          ),
+          const SizedBox(height: 20),
+          const SectionTitle('Account information'),
+          const SizedBox(height: 10),
+          _TenantProfileRow(
+              icon: Icons.person_outline,
+              color: const Color(0xFF56886B),
+              label: 'Full name',
+              value: user.name),
+          const SizedBox(height: 8),
+          _TenantProfileRow(
+              icon: Icons.mail_outline,
+              color: const Color(0xFF627FA8),
+              label: 'Email',
+              value: user.email),
+          const SizedBox(height: 8),
+          _TenantProfileRow(
+              icon: Icons.phone_outlined,
+              color: const Color(0xFF7D70A0),
+              label: 'Phone',
+              value: user.phone),
+          const SizedBox(height: 8),
+          const _TenantProfileRow(
+              icon: Icons.admin_panel_settings_outlined,
+              color: Color(0xFFB47A52),
+              label: 'Access level',
+              value: 'Full dormitory administration'),
+          const SizedBox(height: 20),
+          const SectionTitle('Account'),
+          const SizedBox(height: 10),
+          CarmelitaCard(
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const SettingsPage())),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: const ListTile(
+              dense: true,
+              visualDensity: VisualDensity(vertical: -2),
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.settings_outlined),
+              title: Text('Settings',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+              subtitle: Text('Appearance, privacy, password, and sign out',
+                  style: TextStyle(fontSize: 11)),
+              trailing: Icon(Icons.chevron_right_rounded),
+            ),
+          ),
+        ],
+      );
+}
+
+/* Legacy generic profile retained only for source-history readability.
+class _LegacyGenericProfile extends StatelessWidget {
+  const _LegacyGenericProfile({required this.user, required this.role});
+  final AppUser user;
+  final String role;
+  @override
+  Widget build(BuildContext context) => Column(children: [
                   CarmelitaCard(
                       child: Row(children: [
                     CircleAvatar(
@@ -106,10 +209,9 @@ class ProfilePage extends StatelessWidget {
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => const SettingsPage()))),
-                ]),
-    );
-  }
+            ]);
 }
+*/
 
 class _GuardianProfileContent extends StatelessWidget {
   const _GuardianProfileContent({required this.user});
