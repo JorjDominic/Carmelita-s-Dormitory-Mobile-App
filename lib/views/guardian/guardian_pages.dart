@@ -20,6 +20,7 @@ class GuardianDashboardPage extends StatelessWidget {
     return PageFrame(
       title: 'Home',
       subtitle: 'Guardian dashboard',
+      notificationInHeader: true,
       actions: [
         IconButton(
           tooltip: 'Safety alerts',
@@ -105,7 +106,7 @@ class GuardianDashboardPage extends StatelessWidget {
                   color: const Color(0xFF56886B),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => const GuardianGateActivityPage(),
+                      builder: (_) => const GuardianCurfewOverviewPage(),
                     ),
                   ),
                 ),
@@ -247,6 +248,116 @@ class GuardianTenantInfoPage extends StatelessWidget {
             value: 'Inside dormitory',
             icon: Icons.sensor_door_outlined),
       ])));
+}
+
+class GuardianCurfewOverviewPage extends StatelessWidget {
+  const GuardianCurfewOverviewPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = GuardianController.instance;
+    final events = controller.gateEvents
+        .where((event) => event.person == controller.linkedTenantName)
+        .toList();
+    return PageFrame(
+      title: 'Curfew',
+      subtitle: 'Linked tenant status and curfew activity',
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'CURFEW SUMMARY',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            const MutedDashboardGrid(
+              compact: true,
+              items: [
+                MutedDashboardItem(
+                  label: 'Current status',
+                  value: 'Inside',
+                  detail: 'Last IN 8:14 PM',
+                  icon: Icons.home_outlined,
+                  color: Color(0xFF56886B),
+                ),
+                MutedDashboardItem(
+                  label: 'Standard curfew',
+                  value: '10:00 PM',
+                  detail: 'Daily schedule',
+                  icon: Icons.schedule_outlined,
+                  color: Color(0xFF7D70A0),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            MutedActionGrid(
+              items: [
+                MutedActionItem(
+                  label: 'Curfew requests',
+                  detail: 'Provide supporting input',
+                  icon: Icons.approval_outlined,
+                  color: const Color(0xFF7D70A0),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const GuardianCurfewRequestsPage(),
+                  )),
+                ),
+                MutedActionItem(
+                  label: 'Tenant information',
+                  detail: 'View linked tenant',
+                  icon: Icons.person_outline,
+                  color: const Color(0xFF56886B),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const GuardianTenantInfoPage(),
+                  )),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+            const SectionTitle('Recent gate records'),
+            const SizedBox(height: 10),
+            if (events.isEmpty)
+              const EmptyState(
+                icon: Icons.sensor_door_outlined,
+                title: 'No recent gate records',
+                message: 'Recognized entries and exits will appear here.',
+              )
+            else
+              ...events.map(
+                (event) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: CarmelitaCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: TimelineTile(
+                      compact: true,
+                      icon: event.direction == 'IN'
+                          ? Icons.login_rounded
+                          : Icons.logout_rounded,
+                      color: event.direction == 'IN'
+                          ? const Color(0xFF56886B)
+                          : const Color(0xFF627FA8),
+                      title: event.direction,
+                      subtitle:
+                          '${shortDate(event.time)} • ${timeText(event.time)} • ${event.verification}',
+                      trailing: StatusPill(event.status),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class GuardianGateActivityPage extends StatefulWidget {
@@ -440,54 +551,92 @@ class GuardianCurfewRequestsPage extends StatelessWidget {
     final c = GuardianController.instance;
     return PageFrame(
         title: 'Curfew requests',
-        subtitle:
-            'Provide supporting input; owner/caretaker makes the final decision',
+        subtitle: 'Review requests and provide guardian input',
         child: AnimatedBuilder(
             animation: c,
-            builder: (context, _) => Column(
-                children: c.curfewRequests
-                    .where((r) => r.tenantName == 'Anna Dela Cruz')
-                    .map((r) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: CarmelitaCard(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                Row(children: [
-                                  Expanded(
-                                      child: Text(r.reason,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 17))),
-                                  StatusPill(r.guardianStatus)
-                                ]),
-                                const SizedBox(height: 10),
-                                InfoRow(
-                                    label: 'Destination', value: r.destination),
-                                InfoRow(
-                                    label: 'Expected return',
-                                    value:
-                                        '${shortDate(r.expectedReturn)} • ${timeText(r.expectedReturn)}'),
-                                if (r.guardianStatus == 'Input pending') ...[
-                                  const SizedBox(height: 12),
-                                  Row(children: [
-                                    Expanded(
-                                        child: OutlinedButton(
-                                            onPressed: () =>
-                                                c.decideCurfew(r, false),
-                                            child: const Text('Note concern'))),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                        child: FilledButton(
-                                            onPressed: () =>
-                                                c.decideCurfew(r, true),
-                                            child:
-                                                const Text('Confirm details'))),
-                                  ])
-                                ],
-                              ])),
-                        ))
-                    .toList())));
+            builder: (context, _) =>
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    'REQUEST SUMMARY',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          letterSpacing: 1.3,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  MutedDashboardGrid(
+                    compact: true,
+                    items: [
+                      MutedDashboardItem(
+                        label: 'Needs input',
+                        value: '${c.pendingCurfewCount}',
+                        detail: 'Guardian response',
+                        icon: Icons.pending_actions_outlined,
+                        color: const Color(0xFFAA8A45),
+                      ),
+                      MutedDashboardItem(
+                        label: 'Total requests',
+                        value:
+                            '${c.curfewRequests.where((r) => r.tenantName == c.linkedTenantName).length}',
+                        detail: 'Linked tenant',
+                        icon: Icons.schedule_outlined,
+                        color: const Color(0xFF7D70A0),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+                  const SectionTitle('Curfew requests'),
+                  const SizedBox(height: 10),
+                  ...c.curfewRequests
+                      .where((r) => r.tenantName == 'Anna Dela Cruz')
+                      .map((r) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: CarmelitaCard(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(children: [
+                                        Expanded(
+                                            child: Text(r.reason,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: 17))),
+                                        StatusPill(r.guardianStatus)
+                                      ]),
+                                      const SizedBox(height: 10),
+                                      InfoRow(
+                                          label: 'Destination',
+                                          value: r.destination),
+                                      InfoRow(
+                                          label: 'Expected return',
+                                          value:
+                                              '${shortDate(r.expectedReturn)} • ${timeText(r.expectedReturn)}'),
+                                      if (r.guardianStatus ==
+                                          'Input pending') ...[
+                                        const SizedBox(height: 12),
+                                        Row(children: [
+                                          Expanded(
+                                              child: OutlinedButton(
+                                                  onPressed: () =>
+                                                      c.decideCurfew(r, false),
+                                                  child: const Text(
+                                                      'Note concern'))),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                              child: FilledButton(
+                                                  onPressed: () =>
+                                                      c.decideCurfew(r, true),
+                                                  child: const Text(
+                                                      'Confirm details'))),
+                                        ])
+                                      ],
+                                    ])),
+                          )),
+                ])));
   }
 }
 
@@ -586,8 +735,20 @@ class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
         child: AnimatedBuilder(
           animation: controller,
           builder: (context, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'CONVERSATION',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                      letterSpacing: 1.3,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(height: 8),
               CarmelitaCard(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   children: controller.messages
                       .map(
@@ -598,12 +759,44 @@ class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
                           child: Container(
                             constraints: const BoxConstraints(maxWidth: 560),
                             margin: const EdgeInsets.symmetric(vertical: 6),
-                            child: Text(
-                              '${item.senderName}: ${item.body}\n'
-                              '${timeText(item.sentAt)}',
-                              textAlign: item.senderRole == 'guardian'
-                                  ? TextAlign.right
-                                  : TextAlign.left,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 9,
+                            ),
+                            decoration: BoxDecoration(
+                              color: item.senderRole == 'guardian'
+                                  ? const Color(0xFF627FA8)
+                                      .withValues(alpha: .10)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest
+                                      .withValues(alpha: .55),
+                              borderRadius: BorderRadius.only(
+                                topLeft: const Radius.circular(15),
+                                topRight: const Radius.circular(15),
+                                bottomLeft: Radius.circular(
+                                    item.senderRole == 'guardian' ? 15 : 4),
+                                bottomRight: Radius.circular(
+                                    item.senderRole == 'guardian' ? 4 : 15),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: item.senderRole == 'guardian'
+                                  ? CrossAxisAlignment.end
+                                  : CrossAxisAlignment.start,
+                              children: [
+                                Text(item.senderName,
+                                    style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800)),
+                                const SizedBox(height: 2),
+                                Text(item.body,
+                                    style: const TextStyle(fontSize: 13)),
+                                const SizedBox(height: 3),
+                                Text(timeText(item.sentAt),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              ],
                             ),
                           ),
                         ),
@@ -616,6 +809,7 @@ class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
                 controller: message,
                 decoration: InputDecoration(
                   hintText: 'Write a message',
+                  prefixIcon: const Icon(Icons.chat_bubble_outline_rounded),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.send_outlined),
                     onPressed: () {

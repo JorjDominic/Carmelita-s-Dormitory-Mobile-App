@@ -55,58 +55,158 @@ class ProfilePage extends StatelessWidget {
       subtitle: 'Personal and contact information',
       child: user.role == UserRole.tenant
           ? _TenantProfileContent(user: user)
-          : Column(children: [
-              CarmelitaCard(
-                  child: Row(children: [
-                CircleAvatar(
-                    radius: 34,
-                    child: Text(user.name.substring(0, 1),
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w800))),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                      Text(user.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
-                      Text(user.email),
-                      const SizedBox(height: 8),
-                      StatusPill(role),
-                    ])),
-              ])),
-              const SizedBox(height: 16),
-              CarmelitaCard(
-                  child: Column(children: [
-                InfoRow(
-                    label: 'Full name',
-                    value: user.name,
-                    icon: Icons.person_outline),
-                InfoRow(
-                    label: 'Email',
-                    value: user.email,
-                    icon: Icons.mail_outline),
-                InfoRow(
-                    label: 'Phone',
-                    value: user.phone,
-                    icon: Icons.phone_outlined),
-              ])),
-              const SizedBox(height: 16),
-              ListTile(
-                  leading: const Icon(Icons.settings_outlined),
-                  title: const Text('Settings'),
-                  subtitle:
-                      const Text('Appearance, privacy, password, and sign out'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SettingsPage()))),
-            ]),
+          : user.role == UserRole.guardian
+              ? _GuardianProfileContent(user: user)
+              : Column(children: [
+                  CarmelitaCard(
+                      child: Row(children: [
+                    CircleAvatar(
+                        radius: 34,
+                        child: Text(user.name.substring(0, 1),
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w800))),
+                    const SizedBox(width: 16),
+                    Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          Text(user.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.w800)),
+                          const SizedBox(height: 4),
+                          Text(user.email),
+                          const SizedBox(height: 8),
+                          StatusPill(role),
+                        ])),
+                  ])),
+                  const SizedBox(height: 16),
+                  CarmelitaCard(
+                      child: Column(children: [
+                    InfoRow(
+                        label: 'Full name',
+                        value: user.name,
+                        icon: Icons.person_outline),
+                    InfoRow(
+                        label: 'Email',
+                        value: user.email,
+                        icon: Icons.mail_outline),
+                    InfoRow(
+                        label: 'Phone',
+                        value: user.phone,
+                        icon: Icons.phone_outlined),
+                  ])),
+                  const SizedBox(height: 16),
+                  ListTile(
+                      leading: const Icon(Icons.settings_outlined),
+                      title: const Text('Settings'),
+                      subtitle: const Text(
+                          'Appearance, privacy, password, and sign out'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const SettingsPage()))),
+                ]),
     );
   }
+}
+
+class _GuardianProfileContent extends StatelessWidget {
+  const _GuardianProfileContent({required this.user});
+  final AppUser user;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'GUARDIAN PROFILE',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  letterSpacing: 1.3,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          const SizedBox(height: 8),
+          CarmelitaCard(
+            padding: const EdgeInsets.all(14),
+            child: Row(children: [
+              CircleAvatar(
+                radius: 27,
+                backgroundColor: const Color(0xFF7D70A0).withValues(alpha: .10),
+                foregroundColor: const Color(0xFF7D70A0),
+                child: Text(user.name.substring(0, 1),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w900)),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(user.name,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w800)),
+                    const SizedBox(height: 2),
+                    Text(user.email,
+                        style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(height: 6),
+                    const StatusPill('Guardian'),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 20),
+          const SectionTitle('Contact information'),
+          const SizedBox(height: 10),
+          _TenantProfileRow(
+              icon: Icons.person_outline,
+              color: const Color(0xFF56886B),
+              label: 'Full name',
+              value: user.name),
+          const SizedBox(height: 8),
+          _TenantProfileRow(
+              icon: Icons.mail_outline,
+              color: const Color(0xFF627FA8),
+              label: 'Email',
+              value: user.email),
+          const SizedBox(height: 8),
+          _TenantProfileRow(
+              icon: Icons.phone_outlined,
+              color: const Color(0xFF7D70A0),
+              label: 'Phone',
+              value: user.phone),
+          const SizedBox(height: 8),
+          const _TenantProfileRow(
+              icon: Icons.family_restroom_outlined,
+              color: Color(0xFFB47A52),
+              label: 'Linked tenant',
+              value: 'Anna Dela Cruz • Room 204'),
+          const SizedBox(height: 20),
+          const SectionTitle('Account'),
+          const SizedBox(height: 10),
+          CarmelitaCard(
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const SettingsPage())),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: const ListTile(
+              dense: true,
+              visualDensity: VisualDensity(vertical: -2),
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.settings_outlined),
+              title: Text('Settings',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+              subtitle: Text('Appearance, privacy, password, and sign out',
+                  style: TextStyle(fontSize: 11)),
+              trailing: Icon(Icons.chevron_right_rounded),
+            ),
+          ),
+        ],
+      );
 }
 
 class _TenantProfileContent extends StatelessWidget {

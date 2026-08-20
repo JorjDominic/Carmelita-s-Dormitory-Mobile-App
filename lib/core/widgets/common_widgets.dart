@@ -8,6 +8,42 @@ import '../responsive/breakpoints.dart';
 import '../theme/app_theme.dart';
 import 'adaptive_shell.dart';
 
+Color mutedAccentForIcon(BuildContext context, IconData icon) {
+  if (icon == Icons.payments_outlined ||
+      icon == Icons.receipt_long_outlined ||
+      icon == Icons.account_balance_wallet_outlined) {
+    return const Color(0xFFAA8A45);
+  }
+  if (icon == Icons.warning_amber_outlined ||
+      icon == Icons.priority_high_rounded ||
+      icon == Icons.emergency_outlined) {
+    return const Color(0xFFAA6870);
+  }
+  if (icon == Icons.build_outlined ||
+      icon == Icons.handyman_outlined ||
+      icon == Icons.tune_outlined) {
+    return const Color(0xFFB47A52);
+  }
+  if (icon == Icons.shield_outlined ||
+      icon == Icons.schedule_outlined ||
+      icon == Icons.gavel_outlined) {
+    return const Color(0xFF7D70A0);
+  }
+  if (icon == Icons.person_outline ||
+      icon == Icons.groups_outlined ||
+      icon == Icons.bed_outlined ||
+      icon == Icons.home_outlined) {
+    return const Color(0xFF56886B);
+  }
+  if (icon == Icons.sensor_door_outlined ||
+      icon == Icons.videocam_outlined ||
+      icon == Icons.memory_outlined ||
+      icon == Icons.timeline_outlined) {
+    return const Color(0xFF568F8E);
+  }
+  return const Color(0xFF627FA8);
+}
+
 class CarmelitaLogo extends StatelessWidget {
   const CarmelitaLogo({
     this.height = 56,
@@ -214,6 +250,7 @@ class PageFrame extends StatelessWidget {
     this.floatingActionButton,
     this.heroTitle,
     this.useScriptTitle = true,
+    this.notificationInHeader = false,
     super.key,
   });
 
@@ -221,6 +258,7 @@ class PageFrame extends StatelessWidget {
   final String? subtitle;
   final String? heroTitle;
   final bool useScriptTitle;
+  final bool notificationInHeader;
   final Widget child;
   final List<Widget>? actions;
   final Widget? floatingActionButton;
@@ -233,7 +271,8 @@ class PageFrame extends StatelessWidget {
     final canShowNotifications =
         SessionController.instance.currentUser != null &&
             title.toLowerCase() != 'notifications';
-    final actionSpaceOccupied = actions?.isNotEmpty ?? false;
+    final actionSpaceOccupied =
+        (actions?.isNotEmpty ?? false) && !notificationInHeader;
 
     void openNotifications() => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const _GlobalNotificationsPage()),
@@ -408,7 +447,7 @@ class _GlobalNotificationsPage extends StatelessWidget {
 class CarmelitaCard extends StatelessWidget {
   const CarmelitaCard({
     required this.child,
-    this.padding = const EdgeInsets.all(18),
+    this.padding = const EdgeInsets.all(16),
     this.onTap,
     this.emphasis = false,
     super.key,
@@ -432,7 +471,7 @@ class CarmelitaCard extends StatelessWidget {
         color:
             emphasis ? scheme.primary.withValues(alpha: .075) : scheme.surface,
         borderRadius: const BorderRadius.all(
-          Radius.circular(22),
+          Radius.circular(20),
         ),
         border: Border.all(
           color: emphasis
@@ -462,7 +501,7 @@ class CarmelitaCard extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: const BorderRadius.all(
-              Radius.circular(22),
+              Radius.circular(20),
             ),
             onTap: onTap,
             child: content,
@@ -711,14 +750,14 @@ class MetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarmelitaCard(
       onTap: onTap,
+      padding: const EdgeInsets.all(14),
       emphasis: highlight,
-      padding: const EdgeInsets.all(15),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final veryNarrow = constraints.maxWidth < 145;
           final iconSize = veryNarrow ? 40.0 : 44.0;
 
-          final accent = color ?? Theme.of(context).colorScheme.primary;
+          final accent = color ?? mutedAccentForIcon(context, icon);
           final iconBox = Container(
             width: iconSize,
             height: iconSize,
@@ -843,7 +882,7 @@ class QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = color ?? Theme.of(context).colorScheme.primary;
+    final accent = color ?? mutedAccentForIcon(context, icon);
     return CarmelitaCard(
       onTap: onTap,
       padding: const EdgeInsets.symmetric(
@@ -1064,8 +1103,10 @@ class AttentionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = mutedAccentForIcon(context, icon);
     return CarmelitaCard(
       onTap: onTap,
+      padding: const EdgeInsets.all(14),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final compact = constraints.maxWidth < 320;
@@ -1074,8 +1115,7 @@ class AttentionCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: .09),
+              color: accent.withValues(alpha: .075),
               borderRadius: const BorderRadius.all(
                 Radius.circular(15),
               ),
@@ -1083,7 +1123,7 @@ class AttentionCard extends StatelessWidget {
             alignment: Alignment.center,
             child: Icon(
               icon,
-              color: Theme.of(context).colorScheme.primary,
+              color: accent,
             ),
           );
 
@@ -1166,7 +1206,7 @@ class InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 370;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: compact
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1177,7 +1217,7 @@ class InfoRow extends StatelessWidget {
                       Icon(
                         icon,
                         size: 18,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: mutedAccentForIcon(context, icon!),
                       ),
                       const SizedBox(width: 8),
                     ],
@@ -1205,7 +1245,7 @@ class InfoRow extends StatelessWidget {
                   Icon(
                     icon,
                     size: 19,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: mutedAccentForIcon(context, icon!),
                   ),
                   const SizedBox(width: 10),
                 ],
@@ -1239,7 +1279,7 @@ class TimelineTile extends StatelessWidget {
     required this.subtitle,
     this.trailing,
     this.color,
-    this.compact = false,
+    this.compact = true,
     super.key,
   });
 
@@ -1252,7 +1292,7 @@ class TimelineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = color ?? Theme.of(context).colorScheme.primary;
+    final accent = color ?? mutedAccentForIcon(context, icon);
     return ListTile(
       dense: compact,
       visualDensity: compact ? const VisualDensity(vertical: -3) : null,
@@ -1306,6 +1346,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = mutedAccentForIcon(context, icon);
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 42),
@@ -1315,16 +1356,13 @@ class EmptyState extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withValues(alpha: .08),
+                color: accent.withValues(alpha: .075),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
                 size: 34,
-                color: Theme.of(context).colorScheme.primary,
+                color: accent,
               ),
             ),
             const SizedBox(height: 16),

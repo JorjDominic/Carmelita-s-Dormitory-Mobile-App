@@ -15,10 +15,10 @@ class GuardianShell extends StatelessWidget {
               selectedIcon: Icons.home,
               page: GuardianDashboardPage()),
           AppDestination(
-              label: 'Activity',
-              icon: Icons.timeline_outlined,
-              selectedIcon: Icons.timeline,
-              page: GuardianGateActivityPage()),
+              label: 'Curfew',
+              icon: Icons.schedule_outlined,
+              selectedIcon: Icons.schedule,
+              page: GuardianCurfewOverviewPage()),
           AppDestination(
               label: 'Requests',
               icon: Icons.approval_outlined,
