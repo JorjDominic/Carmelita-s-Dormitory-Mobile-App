@@ -48,7 +48,26 @@ class _AuthFlowState extends State<AuthFlow> {
 
   @override
   Widget build(BuildContext context) => AnimatedSwitcher(
-        duration: const Duration(milliseconds: 350),
+        duration: const Duration(milliseconds: 420),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          final curved = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeInCubic,
+          );
+          return FadeTransition(
+            opacity: curved,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, .055),
+                end: Offset.zero,
+              ).animate(curved),
+              child: child,
+            ),
+          );
+        },
         child: stage == 0
             ? const SplashPage(key: ValueKey('splash'))
             : stage == 1

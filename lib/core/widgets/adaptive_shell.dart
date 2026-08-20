@@ -152,23 +152,7 @@ class _AdaptiveRoleShellState extends State<AdaptiveRoleShell> {
       selectIndex: _select,
       child: Scaffold(
         extendBody: true,
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 260),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            final offset = Tween<Offset>(
-              begin: const Offset(.018, .015),
-              end: Offset.zero,
-            ).animate(animation);
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: offset,
-                child: child,
-              ),
-            );
-          },
+        body: RepaintBoundary(
           child: KeyedSubtree(
             key: ValueKey(index),
             child: destination.page,
@@ -220,8 +204,8 @@ class _FloatingIslandNavigation extends StatelessWidget {
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 18,
-                sigmaY: 18,
+                sigmaX: 7,
+                sigmaY: 7,
               ),
               child: Container(
                 height: 68,

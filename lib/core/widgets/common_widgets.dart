@@ -335,99 +335,147 @@ class PageFrame extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      extendBody: navScope != null,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        toolbarHeight: 72,
-        leadingWidth: 68,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 12),
-          child: IconButton(
-            tooltip: navScope != null
-                ? 'Menu'
-                : canPop
-                    ? 'Back'
-                    : 'Menu',
-            onPressed: () {
-              if (navScope != null) {
-                navScope.openMenu();
-              } else if (canPop) {
-                Navigator.of(context).maybePop();
-              }
-            },
-            icon: Icon(
-              navScope != null
-                  ? Icons.menu_rounded
-                  : Icons.arrow_back_ios_new_rounded,
+    return _PageEntrance(
+      enabled: !canPop,
+      child: Scaffold(
+        extendBody: navScope != null,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          toolbarHeight: 72,
+          leadingWidth: 68,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: IconButton(
+              tooltip: navScope != null
+                  ? 'Menu'
+                  : canPop
+                      ? 'Back'
+                      : 'Menu',
+              onPressed: () {
+                if (navScope != null) {
+                  navScope.openMenu();
+                } else if (canPop) {
+                  Navigator.of(context).maybePop();
+                }
+              },
+              icon: Icon(
+                navScope != null
+                    ? Icons.menu_rounded
+                    : Icons.arrow_back_ios_new_rounded,
+              ),
             ),
           ),
-        ),
-        titleSpacing: 4,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              heroTitle ?? title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontFamily: useScriptTitle ? 'GreatVibes' : null,
-                    fontSize: useScriptTitle ? 30 : null,
-                    fontWeight:
-                        useScriptTitle ? FontWeight.w600 : FontWeight.w700,
-                  ),
-            ),
-            if (subtitle != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  subtitle!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+          titleSpacing: 4,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                heroTitle ?? title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontFamily: useScriptTitle ? 'GreatVibes' : null,
+                      fontSize: useScriptTitle ? 30 : null,
+                      fontWeight:
+                          useScriptTitle ? FontWeight.w600 : FontWeight.w700,
+                    ),
               ),
+              if (subtitle != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(
+                    subtitle!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+            ],
+          ),
+          actions: [
+            ...?actions,
+            if (canShowNotifications && !actionSpaceOccupied)
+              notificationButton,
+            const SizedBox(width: 10),
           ],
         ),
-        actions: [
-          ...?actions,
-          if (canShowNotifications && !actionSpaceOccupied) notificationButton,
-          const SizedBox(width: 10),
-        ],
-      ),
-      floatingActionButton: resolvedFloatingActionButton,
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          child: ResponsiveContent(
-            padding: EdgeInsets.fromLTRB(
-              AppBreakpoints.horizontalPadding(context),
-              6,
-              AppBreakpoints.horizontalPadding(context),
-              extraBottom,
+        floatingActionButton: resolvedFloatingActionButton,
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
-            child: TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: .975, end: 1),
-              duration: const Duration(milliseconds: 280),
-              curve: Curves.easeOutCubic,
-              builder: (context, value, page) {
-                return Opacity(
-                  opacity: ((value - .975) / .025).clamp(0.0, 1.0),
-                  child: Transform.translate(
-                    offset: Offset(0, 12 * (1 - value)),
-                    child: page,
-                  ),
-                );
-              },
-              child: pageChild,
+            child: ResponsiveContent(
+              padding: EdgeInsets.fromLTRB(
+                AppBreakpoints.horizontalPadding(context),
+                6,
+                AppBreakpoints.horizontalPadding(context),
+                extraBottom,
+              ),
+              child: RepaintBoundary(child: pageChild),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _PageEntrance extends StatefulWidget {
+  const _PageEntrance({required this.child, this.enabled = true});
+  final Widget child;
+  final bool enabled;
+
+  @override
+  State<_PageEntrance> createState() => _PageEntranceState();
+}
+
+class _PageEntranceState extends State<_PageEntrance>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<double> opacity;
+  late final Animation<Offset> position;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    final curve = CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeOutCubic,
+    );
+    opacity = CurvedAnimation(
+      parent: controller,
+      curve: const Interval(0, .72, curve: Curves.easeOut),
+    );
+    position = Tween<Offset>(
+      begin: const Offset(0, .055),
+      end: Offset.zero,
+    ).animate(curve);
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.enabled || MediaQuery.disableAnimationsOf(context)) {
+      return widget.child;
+    }
+    return FadeTransition(
+      opacity: opacity,
+      child: SlideTransition(
+        position: position,
+        child: widget.child,
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'controllers/session_controller.dart';
 import 'controllers/theme_controller.dart';
+import 'core/constants/app_assets.dart';
 import 'core/theme/app_theme.dart';
 import 'models/models.dart';
 import 'views/auth/auth_views.dart';
@@ -19,6 +20,23 @@ class CarmelitaBootstrap extends StatefulWidget {
 class _CarmelitaBootstrapState extends State<CarmelitaBootstrap> {
   final ThemeController themeController = ThemeController.instance;
   final SessionController sessionController = SessionController.instance;
+  bool assetsCached = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (assetsCached) return;
+    assetsCached = true;
+    for (final asset in const [
+      AppAssets.logo,
+      AppAssets.courtyard,
+      AppAssets.room,
+      AppAssets.exterior,
+      AppAssets.dormOverview,
+    ]) {
+      precacheImage(AssetImage(asset), context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

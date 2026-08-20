@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import '../constants/app_colors.dart';
 
 class AppTheme {
@@ -144,14 +143,14 @@ class AppTheme {
       scaffoldBackgroundColor: scaffold,
       dividerColor: border,
       textTheme: textTheme,
-      splashFactory: InkSparkle.splashFactory,
+      splashFactory: InkRipple.splashFactory,
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.android: _CarmelitaPageTransitionsBuilder(),
+          TargetPlatform.iOS: _CarmelitaPageTransitionsBuilder(),
+          TargetPlatform.macOS: _CarmelitaPageTransitionsBuilder(),
+          TargetPlatform.windows: _CarmelitaPageTransitionsBuilder(),
+          TargetPlatform.linux: _CarmelitaPageTransitionsBuilder(),
         },
       ),
       appBarTheme: AppBarTheme(
@@ -272,6 +271,36 @@ class AppTheme {
           border: border,
         ),
       ],
+    );
+  }
+}
+
+class _CarmelitaPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _CarmelitaPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    if (route.settings.name == Navigator.defaultRouteName) return child;
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    return FadeTransition(
+      opacity: curved,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(.065, .012),
+          end: Offset.zero,
+        ).animate(curved),
+        child: child,
+      ),
     );
   }
 }
