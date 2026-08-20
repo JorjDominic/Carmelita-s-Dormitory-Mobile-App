@@ -97,26 +97,26 @@ class TenantDashboardPage extends StatelessWidget {
             subtitle: 'What matters right now',
           ),
           const SizedBox(height: 10),
-          AdaptiveGrid(
-            minTileWidth: 250,
-            children: [
-              MetricCard(
+          MutedDashboardGrid(
+            items: [
+              MutedDashboardItem(
                 label: 'Amount due',
                 value: money(payment.amount),
                 detail: 'August rent • Due Aug 15',
                 icon: Icons.account_balance_wallet_outlined,
+                color: const Color(0xFFAA8A45),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const PaymentsPage(),
                   ),
                 ),
-                highlight: true,
               ),
-              MetricCard(
+              MutedDashboardItem(
                 label: 'Gate status',
                 value: 'Inside',
                 detail: 'Last IN • 8:14 PM',
                 icon: Icons.sensor_door_outlined,
+                color: const Color(0xFF56886B),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const GateCurfewPage(),
@@ -160,38 +160,46 @@ class TenantDashboardPage extends StatelessWidget {
             subtitle: 'Common tasks, one tap away',
           ),
           const SizedBox(height: 10),
-          ActionGrid(
-            children: [
-              QuickAction(
+          MutedActionGrid(
+            items: [
+              MutedActionItem(
                 label: 'Upload proof',
+                detail: 'Submit a receipt',
                 icon: Icons.upload_file_outlined,
+                color: const Color(0xFF627FA8),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const UploadPaymentProofPage(),
                   ),
                 ),
               ),
-              QuickAction(
+              MutedActionItem(
                 label: 'Report issue',
+                detail: 'Request maintenance',
                 icon: Icons.handyman_outlined,
+                color: const Color(0xFFB47A52),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const SubmitMaintenancePage(),
                   ),
                 ),
               ),
-              QuickAction(
+              MutedActionItem(
                 label: 'Curfew request',
+                detail: 'Request an exception',
                 icon: Icons.schedule_outlined,
+                color: const Color(0xFF7D70A0),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const CurfewExceptionPage(),
                   ),
                 ),
               ),
-              QuickAction(
+              MutedActionItem(
                 label: 'Visitor',
+                detail: 'Register a visitor',
                 icon: Icons.person_add_alt_1_outlined,
+                color: const Color(0xFF568F8E),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const VisitorRequestPage(),

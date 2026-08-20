@@ -105,31 +105,31 @@ class GuardianDashboardPage extends StatelessWidget {
               subtitle: 'Gate, payment, and pending approvals',
             ),
             const SizedBox(height: 10),
-            AdaptiveGrid(
-              minTileWidth: 250,
-              children: [
-                MetricCard(
+            MutedDashboardGrid(
+              items: [
+                MutedDashboardItem(
                   label: 'Gate status',
                   value: 'Inside',
                   detail: 'Verified • 8:14 PM',
                   icon: Icons.sensor_door_outlined,
+                  color: const Color(0xFF56886B),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const GuardianGateActivityPage(),
                     ),
                   ),
                 ),
-                MetricCard(
+                MutedDashboardItem(
                   label: 'Outstanding',
                   value: money(controller.outstandingTotal),
                   detail: 'Unpaid / unverified',
                   icon: Icons.payments_outlined,
+                  color: const Color(0xFFAA8A45),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const GuardianPaymentStatusPage(),
                     ),
                   ),
-                  highlight: true,
                 ),
               ],
             ),
@@ -180,38 +180,46 @@ class GuardianDashboardPage extends StatelessWidget {
               subtitle: 'Common information without searching',
             ),
             const SizedBox(height: 10),
-            ActionGrid(
-              children: [
-                QuickAction(
+            MutedActionGrid(
+              items: [
+                MutedActionItem(
                   label: 'Tenant info',
+                  detail: 'View linked tenant',
                   icon: Icons.person_outline,
+                  color: const Color(0xFF56886B),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const GuardianTenantInfoPage(),
                     ),
                   ),
                 ),
-                QuickAction(
+                MutedActionItem(
                   label: 'Payments',
+                  detail: 'Check balances',
                   icon: Icons.receipt_long_outlined,
+                  color: const Color(0xFFAA8A45),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const GuardianPaymentStatusPage(),
                     ),
                   ),
                 ),
-                QuickAction(
+                MutedActionItem(
                   label: 'Announcements',
+                  detail: 'Read dormitory news',
                   icon: Icons.campaign_outlined,
+                  color: const Color(0xFF7D70A0),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const GuardianAnnouncementsPage(),
                     ),
                   ),
                 ),
-                QuickAction(
-                  label: 'Safety alerts',
+                MutedActionItem(
+                  label: 'Contact info',
+                  detail: 'Office and emergency',
                   icon: Icons.emergency_outlined,
+                  color: const Color(0xFFAA6870),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const EmergencySafetyAlertsPage(),

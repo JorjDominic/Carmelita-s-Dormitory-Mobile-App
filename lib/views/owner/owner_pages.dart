@@ -61,56 +61,59 @@ class OwnerDashboardPage extends StatelessWidget {
               subtitle: 'The numbers that matter most right now',
             ),
             const SizedBox(height: 10),
-            AdaptiveGrid(
-              minTileWidth: 245,
-              children: [
-                MetricCard(
+            MutedDashboardGrid(
+              items: [
+                MutedDashboardItem(
                   label: 'Occupancy',
                   value:
                       '${controller.occupiedBeds}/${controller.totalCapacity}',
                   detail: '${controller.rooms.length} rooms',
                   icon: Icons.bed_outlined,
+                  color: const Color(0xFF56886B),
                   onTap: () => _ownerPush(
                     context,
                     const RoomMonitoringPage(),
                   ),
-                  highlight: true,
                 ),
-                MetricCard(
+                MutedDashboardItem(
                   label: 'Payment reviews',
                   value: '${controller.pendingPaymentProofs}',
                   detail: 'Proofs waiting',
                   icon: Icons.payments_outlined,
+                  color: const Color(0xFFAA8A45),
                   onTap: () => _ownerPush(
                     context,
                     const PaymentVerificationPage(),
                   ),
                 ),
-                MetricCard(
+                MutedDashboardItem(
                   label: 'Maintenance',
                   value: '${controller.openMaintenance}',
                   detail: 'Open reports',
                   icon: Icons.handyman_outlined,
+                  color: const Color(0xFFB47A52),
                   onTap: () => _ownerPush(
                     context,
                     const MaintenanceManagementPage(),
                   ),
                 ),
-                MetricCard(
+                MutedDashboardItem(
                   label: 'Curfew',
                   value: '${controller.pendingCurfewReviews}',
                   detail: 'Requests to review',
                   icon: Icons.schedule_outlined,
+                  color: const Color(0xFF7D70A0),
                   onTap: () => _ownerPush(
                     context,
                     const CurfewRequestReviewPage(),
                   ),
                 ),
-                MetricCard(
+                MutedDashboardItem(
                   label: 'Gate alerts',
                   value: '${controller.pendingGateReviews}',
                   detail: 'Flagged events',
                   icon: Icons.security_outlined,
+                  color: const Color(0xFFAA6870),
                   onTap: () => _ownerPush(
                     context,
                     const GateMonitoringPage(),

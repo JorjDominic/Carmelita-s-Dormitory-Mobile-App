@@ -30,6 +30,166 @@ class CarmelitaLogo extends StatelessWidget {
   }
 }
 
+class MutedDashboardItem {
+  const MutedDashboardItem(
+      {required this.label,
+      required this.value,
+      required this.detail,
+      required this.icon,
+      required this.color,
+      this.onTap});
+  final String label;
+  final String value;
+  final String detail;
+  final IconData icon;
+  final Color color;
+  final VoidCallback? onTap;
+}
+
+class MutedDashboardGrid extends StatelessWidget {
+  const MutedDashboardGrid({required this.items, super.key});
+  final List<MutedDashboardItem> items;
+
+  @override
+  Widget build(BuildContext context) =>
+      LayoutBuilder(builder: (context, constraints) {
+        final columns = constraints.maxWidth < 700
+            ? (items.length >= 4 ? 4 : 2)
+            : items.length.clamp(2, 4);
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: items.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columns,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio:
+                constraints.maxWidth < 500 && columns == 4 ? .65 : 1.15,
+          ),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return InkWell(
+              onTap: item.onTap,
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: item.color.withValues(alpha: .035),
+                  border: Border.all(color: item.color.withValues(alpha: .10)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                              color: item.color.withValues(alpha: .09),
+                              borderRadius: BorderRadius.circular(9)),
+                          child: Icon(item.icon, color: item.color, size: 19)),
+                      const Spacer(),
+                      Text(item.value,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: item.color,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 17)),
+                      const SizedBox(height: 2),
+                      Text(item.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.w800)),
+                      Text(item.detail,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontSize: 9)),
+                    ]),
+              ),
+            );
+          },
+        );
+      });
+}
+
+class MutedActionItem {
+  const MutedActionItem(
+      {required this.label,
+      required this.detail,
+      required this.icon,
+      required this.color,
+      required this.onTap});
+  final String label;
+  final String detail;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+}
+
+class MutedActionGrid extends StatelessWidget {
+  const MutedActionGrid({required this.items, super.key});
+  final List<MutedActionItem> items;
+
+  @override
+  Widget build(BuildContext context) =>
+      LayoutBuilder(builder: (context, constraints) {
+        final columns = constraints.maxWidth >= 900 ? 3 : 2;
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: items.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columns,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: constraints.maxWidth < 520 ? 2.15 : 2.8),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return CarmelitaCard(
+              onTap: item.onTap,
+              padding: const EdgeInsets.all(10),
+              child: Row(children: [
+                Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                        color: item.color.withValues(alpha: .075),
+                        borderRadius: BorderRadius.circular(11)),
+                    child: Icon(item.icon, color: item.color, size: 21)),
+                const SizedBox(width: 9),
+                Expanded(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      Text(item.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 13)),
+                      const SizedBox(height: 2),
+                      Text(item.detail,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontSize: 10)),
+                    ])),
+                Icon(Icons.chevron_right_rounded,
+                    size: 18, color: Theme.of(context).colorScheme.outline),
+              ]),
+            );
+          },
+        );
+      });
+}
+
 class PageFrame extends StatelessWidget {
   const PageFrame({
     required this.title,
@@ -443,6 +603,7 @@ class MetricCard extends StatelessWidget {
     this.detail,
     this.onTap,
     this.highlight = false,
+    this.color,
     super.key,
   });
 
@@ -452,6 +613,7 @@ class MetricCard extends StatelessWidget {
   final String? detail;
   final VoidCallback? onTap;
   final bool highlight;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -464,12 +626,12 @@ class MetricCard extends StatelessWidget {
           final veryNarrow = constraints.maxWidth < 145;
           final iconSize = veryNarrow ? 40.0 : 44.0;
 
+          final accent = color ?? Theme.of(context).colorScheme.primary;
           final iconBox = Container(
             width: iconSize,
             height: iconSize,
             decoration: BoxDecoration(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: .09),
+              color: accent.withValues(alpha: .075),
               borderRadius: const BorderRadius.all(
                 Radius.circular(14),
               ),
@@ -478,7 +640,7 @@ class MetricCard extends StatelessWidget {
             child: Icon(
               icon,
               size: veryNarrow ? 19 : 21,
-              color: Theme.of(context).colorScheme.primary,
+              color: accent,
             ),
           );
 
@@ -578,15 +740,18 @@ class QuickAction extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onTap,
+    this.color,
     super.key,
   });
 
   final String label;
   final IconData icon;
   final VoidCallback onTap;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final accent = color ?? Theme.of(context).colorScheme.primary;
     return CarmelitaCard(
       onTap: onTap,
       padding: const EdgeInsets.symmetric(
@@ -601,8 +766,7 @@ class QuickAction extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: .09),
+              color: accent.withValues(alpha: .075),
               borderRadius: const BorderRadius.all(
                 Radius.circular(14),
               ),
@@ -611,7 +775,7 @@ class QuickAction extends StatelessWidget {
             child: Icon(
               icon,
               size: 20,
-              color: Theme.of(context).colorScheme.primary,
+              color: accent,
             ),
           ),
           const SizedBox(height: 9),
