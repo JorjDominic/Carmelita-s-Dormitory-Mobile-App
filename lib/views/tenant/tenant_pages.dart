@@ -920,7 +920,18 @@ class GateCurfewPage extends StatelessWidget {
         title: 'Gate & curfew',
         subtitle: 'Current status and recent gate activity',
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'GATE SUMMARY',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  letterSpacing: 1.3,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          const SizedBox(height: 8),
           CarmelitaCard(
+            padding: const EdgeInsets.all(14),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final compact = constraints.maxWidth < 330;
@@ -956,6 +967,8 @@ class GateCurfewPage extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 24,
+                            backgroundColor: Color(0x1356886B),
+                            foregroundColor: Color(0xFF56886B),
                             child: Icon(Icons.home_outlined),
                           ),
                           SizedBox(width: 12),
@@ -973,6 +986,8 @@ class GateCurfewPage extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       radius: 28,
+                      backgroundColor: Color(0x1356886B),
+                      foregroundColor: Color(0xFF56886B),
                       child: Icon(Icons.home_outlined),
                     ),
                     const SizedBox(width: 16),
@@ -985,45 +1000,59 @@ class GateCurfewPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 18),
-          const AdaptiveGrid(children: [
-            MetricCard(
+          const MutedDashboardGrid(compact: true, items: [
+            MutedDashboardItem(
                 label: 'Curfew',
                 value: '10:00 PM',
                 detail: 'Standard schedule',
-                icon: Icons.schedule_outlined),
-            MetricCard(
+                icon: Icons.schedule_outlined,
+                color: Color(0xFF7D70A0)),
+            MutedDashboardItem(
                 label: 'Late records',
                 value: '0',
                 detail: 'This month',
-                icon: Icons.warning_amber_outlined)
+                icon: Icons.warning_amber_outlined,
+                color: Color(0xFFAA8A45))
           ]),
           const SizedBox(height: 20),
-          Wrap(spacing: 10, runSpacing: 10, children: [
-            FilledButton.icon(
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          MutedActionGrid(items: [
+            MutedActionItem(
+                label: 'Curfew exception',
+                detail: 'Request a late return',
+                color: const Color(0xFF7D70A0),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => const CurfewExceptionPage())),
-                icon: const Icon(Icons.event_available_outlined),
-                label: const Text('Request exception')),
-            OutlinedButton.icon(
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                icon: Icons.event_available_outlined),
+            MutedActionItem(
+                label: 'Visitor request',
+                detail: 'Register a visitor',
+                color: const Color(0xFF568F8E),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => const VisitorRequestPage())),
-                icon: const Icon(Icons.person_add_alt_outlined),
-                label: const Text('Visitor request')),
+                icon: Icons.person_add_alt_outlined),
           ]),
           const SizedBox(height: 22),
           const SectionTitle('Recent gate records'),
           const SizedBox(height: 10),
-          CarmelitaCard(
-              child: Column(
-                  children: events
-                      .map((e) => TimelineTile(
-                          icon:
-                              e.direction == 'IN' ? Icons.login : Icons.logout,
-                          title: e.direction,
-                          subtitle:
-                              '${shortDate(e.time)} • ${timeText(e.time)} • ${e.verification}',
-                          trailing: StatusPill(e.status)))
-                      .toList())),
+          ...events.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: CarmelitaCard(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TimelineTile(
+                    compact: true,
+                    icon: e.direction == 'IN' ? Icons.login : Icons.logout,
+                    color: e.direction == 'IN'
+                        ? const Color(0xFF56886B)
+                        : const Color(0xFF627FA8),
+                    title: e.direction,
+                    subtitle:
+                        '${shortDate(e.time)} • ${timeText(e.time)} • ${e.verification}',
+                    trailing: StatusPill(e.status)),
+              ),
+            ),
+          ),
         ]));
   }
 }
@@ -1044,7 +1073,18 @@ class _CurfewExceptionPageState extends State<CurfewExceptionPage> {
       subtitle: 'Guardian approval is required',
       child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
-          child: Column(children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'REQUEST DETAILS',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 10),
             LabeledField(
                 label: 'Reason',
                 hint: 'Why do you need to return late?',
@@ -1057,27 +1097,44 @@ class _CurfewExceptionPageState extends State<CurfewExceptionPage> {
                 controller: destination),
             const SizedBox(height: 14),
             CarmelitaCard(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Row(children: [
-              const Icon(Icons.schedule_outlined),
-              const SizedBox(width: 12),
-              Expanded(
-                  child: Text(
-                      'Expected return: ${shortDate(expected)} • ${timeText(expected)}',
-                      style: const TextStyle(fontWeight: FontWeight.w700))),
-              TextButton(
-                  onPressed: () => setState(() =>
-                      expected = expected.add(const Duration(minutes: 30))),
-                  child: const Text('+30 min'))
-            ])),
+                  Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                          color:
+                              const Color(0xFF7D70A0).withValues(alpha: .075),
+                          borderRadius: BorderRadius.circular(11)),
+                      child: const Icon(Icons.schedule_outlined,
+                          color: Color(0xFF7D70A0), size: 19)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Text(
+                          'Expected return: ${shortDate(expected)} • ${timeText(expected)}',
+                          style: const TextStyle(fontWeight: FontWeight.w700))),
+                  TextButton(
+                      onPressed: () => setState(() =>
+                          expected = expected.add(const Duration(minutes: 30))),
+                      child: const Text('+30 min'))
+                ])),
             const SizedBox(height: 14),
-            const CarmelitaCard(
+            CarmelitaCard(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: ListTile(
+                    dense: true,
+                    visualDensity: const VisualDensity(vertical: -2),
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.verified_user_outlined),
-                    title: Text('Guardian approval required',
-                        style: TextStyle(fontWeight: FontWeight.w800)),
-                    subtitle: Text(
-                        'The request goes to the linked guardian before owner/caretaker review.'))),
+                    leading: const Icon(Icons.verified_user_outlined,
+                        color: Color(0xFF56886B)),
+                    title: const Text('Guardian confirmation',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800, fontSize: 13)),
+                    subtitle: const Text(
+                        'Guardian input supports the owner/caretaker’s final decision.',
+                        style: TextStyle(fontSize: 11)))),
             const SizedBox(height: 18),
             SizedBox(
                 width: double.infinity,
@@ -1127,7 +1184,18 @@ class _VisitorRequestPageState extends State<VisitorRequestPage> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 680),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'VISITOR DETAILS',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    letterSpacing: 1.3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(height: 10),
             LabeledField(
               label: 'Visitor name',
               controller: name,
@@ -1141,6 +1209,7 @@ class _VisitorRequestPageState extends State<VisitorRequestPage> {
             ),
             const SizedBox(height: 14),
             CarmelitaCard(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Column(
                 children: [
                   InfoRow(
