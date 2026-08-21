@@ -1171,6 +1171,7 @@ class AttentionCard extends StatelessWidget {
     required this.subtitle,
     this.status,
     this.onTap,
+    this.compact = false,
     super.key,
   });
 
@@ -1179,30 +1180,34 @@ class AttentionCard extends StatelessWidget {
   final String subtitle;
   final String? status;
   final VoidCallback? onTap;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     final accent = mutedAccentForIcon(context, icon);
     return CarmelitaCard(
       onTap: onTap,
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 10 : 14,
+        vertical: compact ? 9 : 14,
+      ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final compact = constraints.maxWidth < 320;
+          final stackStatus = constraints.maxWidth < 320;
+          final iconSize = compact ? 36.0 : 44.0;
 
           final leading = Container(
-            width: 44,
-            height: 44,
+            width: iconSize,
+            height: iconSize,
             decoration: BoxDecoration(
               color: accent.withValues(alpha: .075),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(15),
-              ),
+              borderRadius: BorderRadius.circular(compact ? 12 : 15),
             ),
             alignment: Alignment.center,
             child: Icon(
               icon,
               color: accent,
+              size: compact ? 19 : 24,
             ),
           );
 
@@ -1212,28 +1217,38 @@ class AttentionCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: compact
+                    ? Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        )
+                    : Theme.of(context).textTheme.titleMedium,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: compact ? 2 : 4),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: compact
+                    ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 11,
+                          height: 1.25,
+                        )
+                    : Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           );
 
-          if (compact && status != null) {
+          if (stackStatus && status != null) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 leading,
-                const SizedBox(width: 12),
+                SizedBox(width: compact ? 9 : 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       copy,
-                      const SizedBox(height: 10),
+                      SizedBox(height: compact ? 7 : 10),
                       StatusPill(status!),
                     ],
                   ),
@@ -1246,10 +1261,10 @@ class AttentionCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               leading,
-              const SizedBox(width: 13),
+              SizedBox(width: compact ? 9 : 13),
               Expanded(child: copy),
               if (status != null) ...[
-                const SizedBox(width: 10),
+                SizedBox(width: compact ? 7 : 10),
                 StatusPill(status!),
               ] else if (onTap != null) ...[
                 const SizedBox(width: 8),

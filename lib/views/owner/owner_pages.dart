@@ -87,17 +87,6 @@ class OwnerDashboardPage extends StatelessWidget {
                   ),
                 ),
                 MutedDashboardItem(
-                  label: 'Curfew',
-                  value: '${controller.pendingCurfewReviews}',
-                  detail: 'Requests to review',
-                  icon: Icons.schedule_outlined,
-                  color: const Color(0xFF7D70A0),
-                  onTap: () => _ownerPush(
-                    context,
-                    const CurfewRequestReviewPage(),
-                  ),
-                ),
-                MutedDashboardItem(
                   label: 'Gate alerts',
                   value: '${controller.pendingGateReviews}',
                   detail: 'Flagged events',
@@ -117,6 +106,7 @@ class OwnerDashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             AttentionCard(
+              compact: true,
               icon: Icons.event_busy_outlined,
               title: '1 contract expires within 30 days',
               subtitle: 'Review renewal or move-out arrangements.',
@@ -124,8 +114,9 @@ class OwnerDashboardPage extends StatelessWidget {
               onTap: () =>
                   _ownerPush(context, const ContractExpiryAlertsPage()),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AttentionCard(
+              compact: true,
               icon: Icons.receipt_long_outlined,
               title:
                   '${controller.pendingPaymentProofs} payment proof(s) waiting',
@@ -136,8 +127,9 @@ class OwnerDashboardPage extends StatelessWidget {
                 const PaymentVerificationPage(),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AttentionCard(
+              compact: true,
               icon: Icons.approval_outlined,
               title:
                   '${controller.pendingCurfewReviews} curfew request(s) waiting',
@@ -149,8 +141,9 @@ class OwnerDashboardPage extends StatelessWidget {
                 const CurfewRequestReviewPage(),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AttentionCard(
+              compact: true,
               icon: Icons.videocam_outlined,
               title: '${controller.pendingGateReviews} flagged gate event(s)',
               subtitle:
