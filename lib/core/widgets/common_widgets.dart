@@ -55,14 +55,20 @@ class CarmelitaLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(color: Colors.white),
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Image.asset(
-          AppAssets.logo,
-          height: height,
-          fit: BoxFit.contain,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: DecoratedBox(
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(13),
+            child: Image.asset(
+              AppAssets.logo,
+              height: height,
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
       ),
     );

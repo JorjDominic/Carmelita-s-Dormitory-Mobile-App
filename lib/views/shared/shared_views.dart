@@ -791,7 +791,7 @@ class DormitoryInfoPage extends StatelessWidget {
   const DormitoryInfoPage({super.key});
   @override
   Widget build(BuildContext context) => const PageFrame(
-        title: "Carmelita's Dormitory",
+        title: 'CarmeLink',
         subtitle: 'Dormitory information',
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           PhotoHero(

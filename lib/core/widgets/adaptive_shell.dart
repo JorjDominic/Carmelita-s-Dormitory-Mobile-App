@@ -378,7 +378,7 @@ class _RoleMenu extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Carmelita's Dormitory",
+                      'CarmeLink',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontFamily: 'GreatVibes',
                             fontWeight: FontWeight.w600,

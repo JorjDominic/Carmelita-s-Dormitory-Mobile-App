@@ -44,7 +44,7 @@ class _CarmelitaBootstrapState extends State<CarmelitaBootstrap> {
       animation: Listenable.merge([themeController, sessionController]),
       builder: (context, _) {
         return MaterialApp(
-          title: "Carmelita's Dormitory",
+          title: 'CarmeLink',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),

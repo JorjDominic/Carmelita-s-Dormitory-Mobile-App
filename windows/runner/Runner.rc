@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "carmelitas_dormitory_system" "\0"
+            VALUE "FileDescription", "CarmeLink" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "carmelitas_dormitory_system" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "carmelitas_dormitory_system.exe" "\0"
-            VALUE "ProductName", "carmelitas_dormitory_system" "\0"
+            VALUE "ProductName", "CarmeLink" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -93,7 +93,7 @@ class SplashPage extends StatelessWidget {
               CarmelitaLogo(height: 130),
               SizedBox(height: 20),
               Text(
-                "Carmelita's Dormitory",
+                'CarmeLink',
                 style: TextStyle(
                   fontFamily: 'GreatVibes',
                   fontWeight: FontWeight.w600,

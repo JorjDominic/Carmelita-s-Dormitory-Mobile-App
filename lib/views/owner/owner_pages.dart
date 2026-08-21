@@ -40,7 +40,7 @@ class OwnerDashboardPage extends StatelessWidget {
             const SizedBox(height: 22),
             const PhotoHero(
               image: AppAssets.dormOverview,
-              title: "Carmelita's Dormitory",
+              title: 'CarmeLink',
               subtitle: 'Quick monitoring for daily operations',
               height: 220,
             ),
@@ -478,7 +478,7 @@ class _OperationsHubPageState extends State<OperationsHubPage> {
 
     return PageFrame(
       title: 'Operations',
-      subtitle: "Carmelita's Dormitory",
+      subtitle: 'CarmeLink',
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(

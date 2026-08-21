@@ -1,6 +1,6 @@
 {
-    "name": "carmelitas_dormitory_system",
-    "short_name": "carmelitas_dormitory_system",
+    "name": "CarmeLink",
+    "short_name": "CarmeLink",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
