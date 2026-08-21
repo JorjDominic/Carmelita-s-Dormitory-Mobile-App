@@ -398,9 +398,6 @@ class PageFrame extends StatelessWidget {
           top: false,
           child: SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
             child: ResponsiveContent(
               padding: EdgeInsets.fromLTRB(
                 AppBreakpoints.horizontalPadding(context),

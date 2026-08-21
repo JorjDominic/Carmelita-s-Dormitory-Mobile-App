@@ -121,7 +121,6 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: ResponsiveContent(
             maxWidth: 1120,
             child: isPhone

@@ -458,35 +458,26 @@ class _RoleMenu extends StatelessWidget {
             (navIndex) {
               final item = destinations[navIndex];
               final selected = navIndex == currentIndex;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+              return Semantics(
+                selected: selected,
                 child: ListTile(
                   minTileHeight: 54,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16),
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
-                  selected: selected,
-                  selectedTileColor: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: .08),
+                  tileColor: selected
+                      ? Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: .08)
+                      : null,
                   leading: Icon(
                     selected ? item.selectedIcon : item.icon,
+                    color:
+                        selected ? Theme.of(context).colorScheme.primary : null,
                   ),
-                  title: Text(
-                    item.label,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  trailing: selected
-                      ? const Icon(
-                          Icons.check_rounded,
-                          size: 19,
-                        )
-                      : null,
+                  title: Text(item.label),
+                  trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => onSelect(navIndex),
                 ),
               );

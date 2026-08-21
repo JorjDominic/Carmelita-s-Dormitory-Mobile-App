@@ -643,19 +643,24 @@ class SettingsPage extends StatelessWidget {
             CarmelitaCard(
               child: Column(
                 children: [
-                  const ListTile(
+                  ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.notifications_outlined),
-                    title: Text(
+                    leading: const Icon(Icons.notifications_outlined),
+                    title: const Text(
                       'Notification preferences',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Payment, gate, maintenance, curfew, and announcement alerts.',
                     ),
-                    trailing: Icon(Icons.chevron_right_rounded),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const NotificationPreferencesPage(),
+                      ),
+                    ),
                   ),
                   const Divider(),
                   ListTile(
@@ -670,34 +675,44 @@ class SettingsPage extends StatelessWidget {
                         builder: (_) => const DeviceBindingPage())),
                   ),
                   const Divider(),
-                  const ListTile(
+                  ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.privacy_tip_outlined),
-                    title: Text(
+                    leading: const Icon(Icons.privacy_tip_outlined),
+                    title: const Text(
                       'Privacy and permissions',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Camera, location, storage, and notification permissions.',
                     ),
-                    trailing: Icon(Icons.chevron_right_rounded),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const PrivacyPermissionsPage(),
+                      ),
+                    ),
                   ),
                   const Divider(),
-                  const ListTile(
+                  ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.password_outlined),
-                    title: Text(
+                    leading: const Icon(Icons.password_outlined),
+                    title: const Text(
                       'Change password',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Will connect to Supabase Auth in the backend phase.',
                     ),
-                    trailing: Icon(Icons.chevron_right_rounded),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const ChangePasswordPage(),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -719,6 +734,202 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class NotificationPreferencesPage extends StatefulWidget {
+  const NotificationPreferencesPage({super.key});
+
+  @override
+  State<NotificationPreferencesPage> createState() =>
+      _NotificationPreferencesPageState();
+}
+
+class _NotificationPreferencesPageState
+    extends State<NotificationPreferencesPage> {
+  final enabled = <String, bool>{
+    'Payments': true,
+    'Gate activity': true,
+    'Maintenance': true,
+    'Curfew requests': true,
+    'Announcements': true,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    const icons = <String, IconData>{
+      'Payments': Icons.payments_outlined,
+      'Gate activity': Icons.sensor_door_outlined,
+      'Maintenance': Icons.build_outlined,
+      'Curfew requests': Icons.schedule_outlined,
+      'Announcements': Icons.campaign_outlined,
+    };
+
+    return PageFrame(
+      title: 'Notification preferences',
+      subtitle: 'Choose which updates you receive',
+      child: CarmelitaCard(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: Column(
+          children: enabled.entries.map((entry) {
+            return SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              secondary: Icon(icons[entry.key]),
+              title: Text(entry.key),
+              value: entry.value,
+              onChanged: (value) => setState(() => enabled[entry.key] = value),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class PrivacyPermissionsPage extends StatefulWidget {
+  const PrivacyPermissionsPage({super.key});
+
+  @override
+  State<PrivacyPermissionsPage> createState() => _PrivacyPermissionsPageState();
+}
+
+class _PrivacyPermissionsPageState extends State<PrivacyPermissionsPage> {
+  final permissions = <String, bool>{
+    'Camera': true,
+    'Location': true,
+    'Photos and storage': true,
+    'Notifications': true,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    const icons = <String, IconData>{
+      'Camera': Icons.camera_alt_outlined,
+      'Location': Icons.location_on_outlined,
+      'Photos and storage': Icons.folder_outlined,
+      'Notifications': Icons.notifications_outlined,
+    };
+
+    return PageFrame(
+      title: 'Privacy and permissions',
+      subtitle: 'Control access used by CarmeLink',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CarmelitaCard(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Column(
+              children: permissions.entries.map((entry) {
+                return SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  secondary: Icon(icons[entry.key]),
+                  title: Text(entry.key),
+                  value: entry.value,
+                  onChanged: (value) =>
+                      setState(() => permissions[entry.key] = value),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'System permission prompts will be connected when native services are enabled.',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ChangePasswordPage extends StatefulWidget {
+  const ChangePasswordPage({super.key});
+
+  @override
+  State<ChangePasswordPage> createState() => _ChangePasswordPageState();
+}
+
+class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  final currentPassword = TextEditingController();
+  final newPassword = TextEditingController();
+  final confirmPassword = TextEditingController();
+
+  @override
+  void dispose() {
+    currentPassword.dispose();
+    newPassword.dispose();
+    confirmPassword.dispose();
+    super.dispose();
+  }
+
+  void submit() {
+    if (currentPassword.text.isEmpty || newPassword.text.length < 8) {
+      showAppSnackBar(
+        context,
+        'Enter your current password and a new password of at least 8 characters.',
+      );
+      return;
+    }
+    if (newPassword.text != confirmPassword.text) {
+      showAppSnackBar(context, 'New passwords do not match.');
+      return;
+    }
+    showAppSnackBar(
+      context,
+      'Password change is ready for backend connection.',
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageFrame(
+      title: 'Change password',
+      subtitle: 'Update your account credentials',
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 640),
+        child: CarmelitaCard(
+          child: Column(
+            children: [
+              TextField(
+                controller: currentPassword,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Current password',
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: newPassword,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'New password',
+                  prefixIcon: Icon(Icons.password_outlined),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: confirmPassword,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm new password',
+                  prefixIcon: Icon(Icons.password_outlined),
+                ),
+                onSubmitted: (_) => submit(),
+              ),
+              const SizedBox(height: 18),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: submit,
+                  child: const Text('Update password'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
