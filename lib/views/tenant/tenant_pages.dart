@@ -828,14 +828,41 @@ class TenantAnnouncementsPage extends StatelessWidget {
               .toList()));
 }
 
-class TenantMessagesPage extends StatefulWidget {
+class TenantMessagesPage extends StatelessWidget {
   const TenantMessagesPage({super.key});
 
   @override
-  State<TenantMessagesPage> createState() => _TenantMessagesPageState();
+  Widget build(BuildContext context) {
+    final controller = TenantController.instance;
+
+    return PageFrame(
+      title: 'Messages',
+      subtitle: 'Choose who you want to chat with',
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => ConversationListCard(
+          name: 'Caretaker',
+          role: 'Owner / Caretaker',
+          lastMessage: controller.messages.last,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const TenantConversationPage(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _TenantMessagesPageState extends State<TenantMessagesPage> {
+class TenantConversationPage extends StatefulWidget {
+  const TenantConversationPage({super.key});
+
+  @override
+  State<TenantConversationPage> createState() => _TenantConversationPageState();
+}
+
+class _TenantConversationPageState extends State<TenantConversationPage> {
   final message = TextEditingController();
 
   @override
@@ -849,15 +876,27 @@ class _TenantMessagesPageState extends State<TenantMessagesPage> {
     final controller = TenantController.instance;
 
     return PageFrame(
-      title: 'Messages',
-      subtitle: 'Owner / caretaker conversation',
+      title: 'Caretaker',
+      subtitle: 'Owner / Caretaker',
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 780),
         child: AnimatedBuilder(
           animation: controller,
           builder: (context, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'CONVERSATION',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                      letterSpacing: 1.3,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(height: 8),
               CarmelitaCard(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   children: controller.messages
                       .map(
@@ -868,12 +907,52 @@ class _TenantMessagesPageState extends State<TenantMessagesPage> {
                           child: Container(
                             constraints: const BoxConstraints(maxWidth: 560),
                             margin: const EdgeInsets.symmetric(vertical: 6),
-                            child: Text(
-                              '${item.senderName}: ${item.body}\n'
-                              '${timeText(item.sentAt)}',
-                              textAlign: item.senderRole == 'tenant'
-                                  ? TextAlign.right
-                                  : TextAlign.left,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 9,
+                            ),
+                            decoration: BoxDecoration(
+                              color: item.senderRole == 'tenant'
+                                  ? const Color(0xFF627FA8)
+                                      .withValues(alpha: .10)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest
+                                      .withValues(alpha: .55),
+                              borderRadius: BorderRadius.only(
+                                topLeft: const Radius.circular(15),
+                                topRight: const Radius.circular(15),
+                                bottomLeft: Radius.circular(
+                                  item.senderRole == 'tenant' ? 15 : 4,
+                                ),
+                                bottomRight: Radius.circular(
+                                  item.senderRole == 'tenant' ? 4 : 15,
+                                ),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: item.senderRole == 'tenant'
+                                  ? CrossAxisAlignment.end
+                                  : CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.senderName,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  item.body,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  timeText(item.sentAt),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -886,6 +965,7 @@ class _TenantMessagesPageState extends State<TenantMessagesPage> {
                 controller: message,
                 decoration: InputDecoration(
                   hintText: 'Write a message',
+                  prefixIcon: const Icon(Icons.chat_bubble_outline_rounded),
                   suffixIcon: IconButton(
                     onPressed: () {
                       if (message.text.trim().isEmpty) return;

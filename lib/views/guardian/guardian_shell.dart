@@ -8,6 +8,7 @@ class GuardianShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const AdaptiveRoleShell(
         roleLabel: 'Guardian',
+        messagePage: GuardianMessagesPage(),
         destinations: [
           AppDestination(
               label: 'Home',

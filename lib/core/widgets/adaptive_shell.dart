@@ -23,12 +23,14 @@ class AppDestination {
 class CarmelitaNavScope extends InheritedWidget {
   const CarmelitaNavScope({
     required this.openMenu,
+    this.openMessages,
     required this.selectIndex,
     required super.child,
     super.key,
   });
 
   final VoidCallback openMenu;
+  final VoidCallback? openMessages;
   final ValueChanged<int> selectIndex;
 
   static CarmelitaNavScope? maybeOf(
@@ -42,6 +44,7 @@ class CarmelitaNavScope extends InheritedWidget {
     CarmelitaNavScope oldWidget,
   ) {
     return openMenu != oldWidget.openMenu ||
+        openMessages != oldWidget.openMessages ||
         selectIndex != oldWidget.selectIndex;
   }
 }
@@ -50,11 +53,13 @@ class AdaptiveRoleShell extends StatefulWidget {
   const AdaptiveRoleShell({
     required this.destinations,
     required this.roleLabel,
+    required this.messagePage,
     super.key,
   });
 
   final List<AppDestination> destinations;
   final String roleLabel;
+  final Widget messagePage;
 
   @override
   State<AdaptiveRoleShell> createState() => _AdaptiveRoleShellState();
@@ -143,12 +148,19 @@ class _AdaptiveRoleShellState extends State<AdaptiveRoleShell> {
     );
   }
 
+  void _openMessages() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => widget.messagePage),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final destination = widget.destinations[index];
 
     return CarmelitaNavScope(
       openMenu: _openMenu,
+      openMessages: _openMessages,
       selectIndex: _select,
       child: Scaffold(
         extendBody: true,

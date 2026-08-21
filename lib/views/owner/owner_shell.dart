@@ -8,6 +8,7 @@ class OwnerShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const AdaptiveRoleShell(
         roleLabel: 'Owner / Caretaker',
+        messagePage: OwnerMessagingPage(),
         destinations: [
           AppDestination(
               label: 'Dashboard',

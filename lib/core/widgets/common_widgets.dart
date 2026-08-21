@@ -257,7 +257,6 @@ class PageFrame extends StatelessWidget {
     this.floatingActionButton,
     this.heroTitle,
     this.useScriptTitle = true,
-    this.notificationInHeader = false,
     super.key,
   });
 
@@ -265,7 +264,6 @@ class PageFrame extends StatelessWidget {
   final String? subtitle;
   final String? heroTitle;
   final bool useScriptTitle;
-  final bool notificationInHeader;
   final Widget child;
   final List<Widget>? actions;
   final Widget? floatingActionButton;
@@ -278,8 +276,8 @@ class PageFrame extends StatelessWidget {
     final canShowNotifications =
         SessionController.instance.currentUser != null &&
             title.toLowerCase() != 'notifications';
-    final actionSpaceOccupied =
-        (actions?.isNotEmpty ?? false) && !notificationInHeader;
+    final canShowMessages =
+        navScope != null && title.toLowerCase() != 'messages';
     final ownerSection = SessionController.instance.currentUser?.role ==
             UserRole.ownerCaretaker &&
         title != 'Dashboard' &&
@@ -309,6 +307,14 @@ class PageFrame extends StatelessWidget {
           MaterialPageRoute(builder: (_) => const _GlobalNotificationsPage()),
         );
 
+    void openMessages() => navScope?.openMessages?.call();
+
+    final messageButton = IconButton(
+      tooltip: 'Messages',
+      onPressed: openMessages,
+      icon: const Icon(Icons.chat_bubble_outline_rounded),
+    );
+
     final notificationButton = IconButton(
       tooltip: 'Notifications',
       onPressed: openNotifications,
@@ -316,24 +322,6 @@ class PageFrame extends StatelessWidget {
     );
 
     Widget? resolvedFloatingActionButton = floatingActionButton;
-    if (canShowNotifications && actionSpaceOccupied) {
-      final notificationFab = IconButton(
-        tooltip: 'Notifications',
-        onPressed: openNotifications,
-        icon: const Icon(Icons.notifications_none_rounded),
-      );
-      resolvedFloatingActionButton = floatingActionButton == null
-          ? notificationFab
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                notificationFab,
-                const SizedBox(height: 12),
-                floatingActionButton!,
-              ],
-            );
-    }
     if (resolvedFloatingActionButton != null && navScope != null) {
       resolvedFloatingActionButton = Padding(
         padding: const EdgeInsets.only(bottom: 82),
@@ -400,8 +388,8 @@ class PageFrame extends StatelessWidget {
           ),
           actions: [
             ...?actions,
-            if (canShowNotifications && !actionSpaceOccupied)
-              notificationButton,
+            if (canShowMessages) messageButton,
+            if (canShowNotifications) notificationButton,
             const SizedBox(width: 10),
           ],
         ),
@@ -1279,6 +1267,66 @@ class AttentionCard extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class ConversationListCard extends StatelessWidget {
+  const ConversationListCard({
+    required this.name,
+    required this.role,
+    required this.lastMessage,
+    required this.onTap,
+    super.key,
+  });
+
+  final String name;
+  final String role;
+  final ChatMessage lastMessage;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return CarmelitaCard(
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      child: ListTile(
+        dense: true,
+        contentPadding: EdgeInsets.zero,
+        leading: CircleAvatar(
+          radius: 22,
+          backgroundColor:
+              Theme.of(context).colorScheme.primary.withValues(alpha: .10),
+          foregroundColor: Theme.of(context).colorScheme.primary,
+          child: Text(
+            name.substring(0, 1).toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              timeText(lastMessage.sentAt),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+        subtitle: Text(
+          '$role • ${lastMessage.body}',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: const Icon(Icons.chevron_right_rounded, size: 20),
       ),
     );
   }

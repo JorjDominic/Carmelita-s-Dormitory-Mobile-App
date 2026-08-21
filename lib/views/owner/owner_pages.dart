@@ -1831,36 +1831,14 @@ class OwnerMessagingPage extends StatelessWidget {
               .map(
                 (conversation) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: CarmelitaCard(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: ListTile(
-                      dense: true,
-                      visualDensity: const VisualDensity(vertical: -2),
-                      contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
-                        child: Text(
-                          conversation.personName[0],
-                        ),
-                      ),
-                      title: Text(
-                        conversation.personName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      subtitle: Text(
-                        '${conversation.personRole} • '
-                        '${conversation.messages.last.body}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => _ownerPush(
-                        context,
-                        OwnerConversationPage(
-                          conversation: conversation,
-                        ),
+                  child: ConversationListCard(
+                    name: conversation.personName,
+                    role: conversation.personRole,
+                    lastMessage: conversation.messages.last,
+                    onTap: () => _ownerPush(
+                      context,
+                      OwnerConversationPage(
+                        conversation: conversation,
                       ),
                     ),
                   ),

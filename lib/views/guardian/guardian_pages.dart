@@ -20,7 +20,6 @@ class GuardianDashboardPage extends StatelessWidget {
     return PageFrame(
       title: 'Home',
       subtitle: 'Guardian dashboard',
-      notificationInHeader: true,
       actions: [
         IconButton(
           tooltip: 'Safety alerts',
@@ -707,14 +706,42 @@ class GuardianAnnouncementsPage extends StatelessWidget {
               .toList()));
 }
 
-class GuardianMessagesPage extends StatefulWidget {
+class GuardianMessagesPage extends StatelessWidget {
   const GuardianMessagesPage({super.key});
 
   @override
-  State<GuardianMessagesPage> createState() => _GuardianMessagesPageState();
+  Widget build(BuildContext context) {
+    final controller = GuardianController.instance;
+
+    return PageFrame(
+      title: 'Messages',
+      subtitle: 'Choose who you want to chat with',
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => ConversationListCard(
+          name: 'Caretaker',
+          role: 'Owner / Caretaker',
+          lastMessage: controller.messages.last,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const GuardianConversationPage(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
+class GuardianConversationPage extends StatefulWidget {
+  const GuardianConversationPage({super.key});
+
+  @override
+  State<GuardianConversationPage> createState() =>
+      _GuardianConversationPageState();
+}
+
+class _GuardianConversationPageState extends State<GuardianConversationPage> {
   final message = TextEditingController();
 
   @override
@@ -728,8 +755,8 @@ class _GuardianMessagesPageState extends State<GuardianMessagesPage> {
     final controller = GuardianController.instance;
 
     return PageFrame(
-      title: 'Messages',
-      subtitle: 'Owner / caretaker communication',
+      title: 'Caretaker',
+      subtitle: 'Owner / Caretaker',
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 780),
         child: AnimatedBuilder(

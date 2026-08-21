@@ -8,6 +8,7 @@ class TenantShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const AdaptiveRoleShell(
         roleLabel: 'Tenant',
+        messagePage: TenantMessagesPage(),
         destinations: [
           AppDestination(
               label: 'Home',
